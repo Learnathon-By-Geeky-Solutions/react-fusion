@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "E:\\Project\\2025\\Learnathon\\backend\\logs\\winston\\successes\\.49ebf341a1e203cf1c313fae789c23930d4f2c43-audit.json",
+    "files": [
+        {
+            "date": 1740509314801,
+            "name": "E:\\Project\\2025\\Learnathon\\backend\\logs\\winston\\successes\\phu-2025-26-02-00-success.log",
+            "hash": "5db3092b6c3d7958d353236e6bbb09961b1dee8c524ad213932cb9f37b4338ac"
+        },
+        {
+            "date": 1740510841029,
+            "name": "E:\\Project\\2025\\Learnathon\\backend\\logs\\winston\\successes\\phu-2025-26-02-01-success.log",
+            "hash": "d72f7127c028ae5fd95ef4f373dc74d4ff78305a5d7e52c0cc2ecf499a959a3e"
+        },
+        {
+            "date": 1740566479089,
+            "name": "E:\\Project\\2025\\Learnathon\\backend\\logs\\winston\\successes\\phu-2025-26-02-16-success.log",
+            "hash": "f34b0a6dd24ebb68fba592f3f9336dc992d464a727371b9294e2d3c7278257fa"
+        },
+        {
+            "date": 1740567812237,
+            "name": "E:\\Project\\2025\\Learnathon\\backend\\logs\\winston\\successes\\phu-2025-26-02-17-success.log",
+            "hash": "8f5a0bce4baf1a82103817a4bf554316b8d2304699f758bd2796e4cdccc9b610"
+        }
+    ],
+    "hashType": "sha256"
+}

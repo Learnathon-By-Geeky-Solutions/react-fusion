@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String      @id @default(uuid())
+  email      String      @unique
+  password   String
+  role       UserRole
+  status     UserStatus  @default(PENDING)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  Admin      Admin?
+  Instructor Instructor?
+  Student    Student?
+
+  @@map("users")
+}
+
+model Admin {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  name          String
+  email         String   @unique
+  image         String?
+  contactNumber String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admins")
+}
+
+model Instructor {
+  id                  String             @id @default(uuid())
+  userId              String             @unique
+  name                String
+  email               String             @unique
+  experience          Int
+  gender              Gender
+  qualification       QualificationLevel
+  currentWorkingPlace String
+  designation         String
+  image               String?
+  contactNumber       String
+  OTP                 String
+  isDeleted           Boolean            @default(false)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("instructors")
+}
+
+model Student {
+  id                 String             @id @default(uuid())
+  userId             String             @unique
+  name               String
+  email              String             @unique
+  gender             Gender
+  qualification      QualificationLevel
+  currentInstitution String
+  image              String?
+  contactNumber      String
+  address            String
+  OTP                String
+  isDeleted          Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("students")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  INSTRUCTOR
+  STUDENT
+}
+
+enum UserStatus {
+  BLOCKED
+  ACTIVE
+  PENDING
+  DELETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum MaritalStatus {
+  MARRIED
+  UNMARRIED
+}
+
+enum QualificationLevel {
+  HIGH_SCHOOL
+  BACHELORS
+  MASTERS
+  PHD
+}

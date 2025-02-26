@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "E:\\Web development\\Level 2\\Extra\\Docker Project\\backend\\logs\\winston\\successes\\.78dbb035bc15e8895fedd2f06421d7466e663462-audit.json",
+    "files": [
+        {
+            "date": 1731339697494,
+            "name": "E:\\Web development\\Level 2\\Extra\\Docker Project\\backend\\logs\\winston\\successes\\phu-2024-11-11-21-success.log",
+            "hash": "d7c8fb188bcc17a045ece590c6b85ecc875b5bb97de24c2b540fb4896d99c779"
+        }
+    ],
+    "hashType": "sha256"
+}

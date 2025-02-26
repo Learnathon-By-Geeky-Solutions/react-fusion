@@ -1,0 +1,105 @@
+Wed Feb 26 2025 17:8:11 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ Invalid OTP
+Wed Feb 26 2025 17:10:26 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ Invalid OTP
+Wed Feb 26 2025 17:11:38 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ Invalid OTP
+Wed Feb 26 2025 17:11:40 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ Invalid OTP
+Wed Feb 26 2025 17:21:48 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.user.create()` invocation:
+
+{
+  data: {
+    email: "sunanrabbi1918@outlook.com",
+    password: "$2b$10$ZFNktLA.fSgNAisx8bkZSO.3NLYivF.sVfL0dV9JQP3w1AZn8F3r6",
+    role: "STUDENT",
+    Student: {
+      create: {
+        email: "sunanrabbi1918@outlook.com",
+        name: "Sunan Rabbi",
+        contactNumber: "1122334455",
+        currentInstitution: "ABC College",
+        gender: "FEMALE",
+        qualification: "BACHELORS",
+        currentWorkingPlace: "Intern at TechCorp",
+        ~~~~~~~~~~~~~~~~~~~
+        designation: "Intern",
+        address: "123 Main Street, City, Country",
+        image: "https://res.cloudinary.com/dzegkjwjh/image/upload/v1740568906/t7bzc89utcuqmxdftd5o.jpg",
+        OTP: "$2b$10$XtsF4xVWAW1AWu9ctnGmU.4rSPikE3KsA9raPC/lsDAwdxIvtaQRW",
+?       id?: String,
+?       isDeleted?: Boolean,
+?       createdAt?: DateTime,
+?       updatedAt?: DateTime
+      }
+    }
+  },
+  select: {
+    id: true,
+    email: true,
+    role: true,
+    Student: {
+      select: {
+        name: true,
+        contactNumber: true,
+        currentInstitution: true,
+        gender: true,
+        qualification: true,
+        address: true,
+        image: true
+      }
+    }
+  }
+}
+
+Unknown argument `currentWorkingPlace`. Available options are marked with ?.
+Wed Feb 26 2025 17:23:35 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.user.create()` invocation:
+
+{
+  data: {
+    email: "sunanrabbi1918@outlook.com",
+    password: "$2b$10$Gyh0ZlZv7RbofoW0/VOy..yTqU5tMCj55vx41IDFuqE7SVPVd36a6",
+    role: "STUDENT",
+    Student: {
+      create: {
+        email: "sunanrabbi1918@outlook.com",
+        name: "Sunan Rabbi",
+        contactNumber: "1122334455",
+        currentInstitution: "ABC College",
+        gender: "FEMALE",
+        qualification: "BACHELORS",
+        currentWorkingPlace: undefined,
+        designation: "Intern",
+        ~~~~~~~~~~~
+        address: "123 Main Street, City, Country",
+        image: "https://res.cloudinary.com/dzegkjwjh/image/upload/v1740569012/rtqoevh7ti7ykmcsgxdj.jpg",
+        OTP: "$2b$10$xoSOoU0aeS6nKf6r05Ia2.b5lbuD0Wsl7X/16r0.mCHwm.JTwp22K",
+?       id?: String,
+?       isDeleted?: Boolean,
+?       createdAt?: DateTime,
+?       updatedAt?: DateTime
+      }
+    }
+  },
+  select: {
+    id: true,
+    email: true,
+    role: true,
+    Student: {
+      select: {
+        name: true,
+        contactNumber: true,
+        currentInstitution: true,
+        gender: true,
+        qualification: true,
+        address: true,
+        image: true
+      }
+    }
+  }
+}
+
+Unknown argument `designation`. Available options are marked with ?.
+Wed Feb 26 2025 17:41:54 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ Password is incorrect
+Wed Feb 26 2025 17:46:48 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ invalid signature
+Wed Feb 26 2025 17:47:12 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ invalid signature
+Wed Feb 26 2025 17:47:53 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ invalid signature
+Wed Feb 26 2025 17:48:54 } [SoftWare Project 1] error: 🐱‍🏍 globalErrorHandler ~~ User does not exist
