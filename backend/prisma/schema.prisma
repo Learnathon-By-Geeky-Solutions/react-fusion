@@ -58,7 +58,7 @@ model Instructor {
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 
-  courses CourseTeacher[]
+  courses Course[]
   User    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("instructors")
@@ -82,7 +82,7 @@ model Student {
 
   User         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   courses      CourseStudent[]
-  transactions Trnsactions[]
+  transactions Transactions[]
 
   @@map("students")
 }
@@ -120,50 +120,49 @@ enum QualificationLevel {
 
 model Course {
   id           String          @id @default(uuid())
-  title String
-  description String
-  rating Float
+  title        String
+  description  String
+  rating       Float?
   milestones   Milestone[]
-  instructors  CourseTeacher[]
+  instructors  Instructor[]
   students     CourseStudent[]
-  transactions Trnsactions[]
+  transactions Transactions[]
 }
 
 model Milestone {
-  id       String   @id @default(uuid())
-  title String
+  id          String   @id @default(uuid())
+  title       String
   description String
-  courseId String   @unique
-  course   Course   @relation(fields: [courseId], references: [id])
-  modules  Module[]
+  courseId    String   
+  course      Course   @relation(fields: [courseId], references: [id])
+  modules     Module[]
 }
 
 model Module {
-  id         String    @id @default(uuid())
-  title String
+  id          String    @id @default(uuid())
+  title       String
   description String
-  milstoneId String    @unique
-  milestone  Milestone @relation(fields: [milstoneId], references: [id])
-  videos    Video[]
-  quizes    Quiz[]
+  milestoneId  String    
+  milestone   Milestone @relation(fields: [milestoneId], references: [id])
+  videos      Video[]
+  quizes      Quiz[]
 }
 
-
 model Quiz {
-  id        String   @id @default(uuid())
+  id       String   @id @default(uuid())
   moduleId String
-  module Module @relation(fields: [moduleId], references: [id])
-  question  String
-  options   String[]
-  answer    String
-  value     Float
+  module   Module   @relation(fields: [moduleId], references: [id])
+  question String
+  options  String[]
+  answer   String
+  value    Float
 }
 
 model Video {
   id           String        @id @default(uuid())
-  moduleId String
-  module Module @relation(fields: [moduleId], references: [id])
-  title String
+  moduleId     String
+  module       Module        @relation(fields: [moduleId], references: [id])
+  title        String
   url          String
   comments     Comment[]
   notes        Note[]
@@ -210,15 +209,6 @@ model Note {
   note    String
 }
 
-model CourseTeacher {
-  coureId      String
-  course       Course     @relation(fields: [coureId], references: [id])
-  instructorId String
-  instructor   Instructor @relation(fields: [instructorId], references: [id])
-
-  @@id([coureId, instructorId])
-}
-
 model CourseStudent {
   coureId   String
   course    Course  @relation(fields: [coureId], references: [id])
@@ -228,7 +218,7 @@ model CourseStudent {
   @@id([coureId, studentId])
 }
 
-model Trnsactions {
+model Transactions {
   id        String  @id @default(uuid())
   txnId     String
   courseId  String
