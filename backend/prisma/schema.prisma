@@ -120,6 +120,7 @@ enum QualificationLevel {
 
 model Course {
   id           String          @id @default(uuid())
+  descriptions String
   milestones   Milestone[]
   instructors  CourseTeacher[]
   students     CourseStudent[]
@@ -137,21 +138,15 @@ model Module {
   id         String    @id @default(uuid())
   milstoneId String    @unique
   milestone  Milestone @relation(fields: [milstoneId], references: [id])
-  lessons    Lesson[]
-}
-
-model Lesson {
-  id        String  @id @default(uuid())
-  lessionId String
-  moudle    Module  @relation(fields: [lessionId], references: [id])
   videos    Video[]
   quizes    Quiz[]
 }
 
+
 model Quiz {
   id        String   @id @default(uuid())
-  lessionId String
-  lession   Lesson   @relation(fields: [lessionId], references: [id])
+  moduleId String
+  module Module @relation(fields: [moduleId], references: [id])
   question  String
   options   String[]
   answer    String
@@ -160,8 +155,9 @@ model Quiz {
 
 model Video {
   id           String        @id @default(uuid())
-  lessionId    String
-  lession      Lesson        @relation(fields: [lessionId], references: [id])
+  moduleId String
+  module Module @relation(fields: [moduleId], references: [id])
+  title String
   url          String
   comments     Comment[]
   notes        Note[]
