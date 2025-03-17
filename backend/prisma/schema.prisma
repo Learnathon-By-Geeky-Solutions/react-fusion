@@ -8,16 +8,20 @@ datasource db {
 }
 
 model User {
-  id         String      @id @default(uuid())
-  email      String      @unique
+  id         String        @id @default(uuid())
+  email      String        @unique
   password   String
   role       UserRole
-  status     UserStatus  @default(PENDING)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  status     UserStatus    @default(PENDING)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
   Admin      Admin?
   Instructor Instructor?
   Student    Student?
+  comments   Comment[]
+  likes      LikeUser[]
+  dislikes   DislikeUser[]
+  notes      Note[]
 
   @@map("users")
 }
@@ -54,7 +58,8 @@ model Instructor {
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 
-  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courses CourseTeacher[]
+  User    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("instructors")
 }
@@ -75,7 +80,9 @@ model Student {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 
-  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courses      CourseStudent[]
+  transactions Trnsactions[]
 
   @@map("students")
 }
@@ -109,4 +116,121 @@ enum QualificationLevel {
   BACHELORS
   MASTERS
   PHD
+}
+
+model Course {
+  id           String          @id @default(uuid())
+  milestones   Milestone[]
+  instructors  CourseTeacher[]
+  students     CourseStudent[]
+  transactions Trnsactions[]
+}
+
+model Milestone {
+  id       String   @id @default(uuid())
+  courseId String   @unique
+  course   Course   @relation(fields: [courseId], references: [id])
+  modules  Module[]
+}
+
+model Module {
+  id         String    @id @default(uuid())
+  milstoneId String    @unique
+  milestone  Milestone @relation(fields: [milstoneId], references: [id])
+  lessons    Lesson[]
+}
+
+model Lesson {
+  id        String  @id @default(uuid())
+  lessionId String
+  moudle    Module  @relation(fields: [lessionId], references: [id])
+  videos    Video[]
+  quizes    Quiz[]
+}
+
+model Quiz {
+  id        String   @id @default(uuid())
+  lessionId String
+  lession   Lesson   @relation(fields: [lessionId], references: [id])
+  question  String
+  options   String[]
+  answer    String
+  value     Float
+}
+
+model Video {
+  id           String        @id @default(uuid())
+  lessionId    String
+  lession      Lesson        @relation(fields: [lessionId], references: [id])
+  url          String
+  comments     Comment[]
+  notes        Note[]
+  likeCount    Int
+  likes        LikeUser[]
+  dislikeCount Int
+  dislike      DislikeUser[]
+}
+
+model Comment {
+  id      String @id @default(uuid())
+  videoId String
+  video   Video  @relation(fields: [videoId], references: [id])
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  comment String
+  //TODO: DESIGN REPLY RELATION
+}
+
+model LikeUser {
+  videoId String
+  video   Video  @relation(fields: [videoId], references: [id])
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@id([videoId, userId])
+}
+
+model DislikeUser {
+  videoId String
+  video   Video  @relation(fields: [videoId], references: [id])
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@id([videoId, userId])
+}
+
+model Note {
+  id      String @id @default(uuid())
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  videoId String
+  video   Video  @relation(fields: [videoId], references: [id])
+  note    String
+}
+
+model CourseTeacher {
+  coureId      String
+  course       Course     @relation(fields: [coureId], references: [id])
+  instructorId String
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
+
+  @@id([coureId, instructorId])
+}
+
+model CourseStudent {
+  coureId   String
+  course    Course  @relation(fields: [coureId], references: [id])
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  @@id([coureId, studentId])
+}
+
+model Trnsactions {
+  id        String  @id @default(uuid())
+  txnId     String
+  courseId  String
+  course    Course  @relation(fields: [courseId], references: [id])
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
 }
