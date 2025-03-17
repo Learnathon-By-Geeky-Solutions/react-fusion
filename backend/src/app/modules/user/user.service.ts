@@ -133,10 +133,12 @@ const createInstructor = async (payload: IInstructor, file: IUploadFile) => {
   if (!result) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Instructor creation failed')
   }
-  await sendEmail(payload.instructor.email, "Verification OTP", `Your verification OTP is ${OTP}`)
+  //WARN: disabled for dev
+  //await sendEmail(payload.instructor.email, "Verification OTP", `Your verification OTP is ${OTP}`)
 
   return {
     data: result,
+    otp: OTP,
     token: verificationToken
   };
 };
@@ -208,10 +210,12 @@ const createStudent = async (payload: IStudent, file: IUploadFile) => {
   if (!result) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Student creation failed')
   }
-  await sendEmail(payload.student.email, "Verification OTP", `Your verification OTP is ${OTP}`)
+  //WARN: disabled for dev
+  //await sendEmail(payload.student.email, "Verification OTP", `Your verification OTP is ${OTP}`)
 
   return {
     data: result,
+    otp: OTP,
     token: verificationToken
   };
 };
