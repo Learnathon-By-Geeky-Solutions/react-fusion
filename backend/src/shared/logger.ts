@@ -7,7 +7,7 @@ const { combine, timestamp, label, printf } = format;
 //Customm Log Format
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
-  const date = new Date(timestamp);
+  const date = new Date(timestamp as any);
   const hour = date.getHours();
   const minutes = date.getMinutes();
   const seconds = date.getSeconds();
@@ -16,7 +16,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 
 const logger = createLogger({
   level: 'info',
-  format: combine(label({ label: 'SoftWare Project 1' }), timestamp(), myFormat),
+  format: combine(label({ label: 'React Fusion' }), timestamp(), myFormat),
   transports: [
     new transports.Console(),
     new DailyRotateFile({
@@ -37,7 +37,7 @@ const logger = createLogger({
 
 const errorlogger = createLogger({
   level: 'error',
-  format: combine(label({ label: 'SoftWare Project 1' }), timestamp(), myFormat),
+  format: combine(label({ label: 'React Fusion' }), timestamp(), myFormat),
   transports: [
     new transports.Console(),
     new DailyRotateFile({

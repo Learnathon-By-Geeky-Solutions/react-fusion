@@ -4,19 +4,20 @@ import { JwtPayload } from "../../../interfaces/common";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import prisma from "../../../shared/prisma";
 import { asyncForEach } from "../../../shared/utils";
+import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";
 
 //TODO: change paylod type
-const createCourse = async (payload: any) => {
+const createCourse = async (payload: ICreateCourse) => {
     const courseData = {
         title: payload.title,
         description: payload.description,
         instructors: {
-            connect: payload.instructors.map(x => ({
+            connect: payload.instructors.map((x: string) => ({
                 id: x
             })),
         },
         milestones: {
-            create: payload.milestones.map(milestone => ({
+            create: payload.milestones.map((milestone: IMilestones) => ({
                 title: milestone.title,
                 description: milestone.description,
                 modules: {
@@ -69,11 +70,12 @@ const createCourse = async (payload: any) => {
 }
 
 
-const getAllCourses = async (filters) => {
-    const includeTerms = {
+const getAllCourses = async (filters: any) => {
+
+    const includeTerms: IIncludeTerms = {
         instructors: false,
         milestones: false,
-    }
+    };
     if (filters.instructors) {
         includeTerms.instructors = true
     }
@@ -109,7 +111,6 @@ const getAllCourses = async (filters) => {
             }
         }
     }
-    console.log(includeTerms.milestones.include.modules)
     const result = await prisma.course.findMany({
         include: includeTerms
 

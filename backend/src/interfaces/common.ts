@@ -1,4 +1,5 @@
 import { IGenericErrorMessage } from './error';
+import { UserRole } from '@prisma/client';
 
 export type IGenericResponse<T> = {
   meta: {
