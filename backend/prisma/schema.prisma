@@ -207,6 +207,7 @@ model Note {
   videoId String
   video   Video  @relation(fields: [videoId], references: [id])
   note    String
+  @@unique([userId,videoId])
 }
 
 model CourseStudent {
