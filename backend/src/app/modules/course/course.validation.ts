@@ -28,12 +28,15 @@ const createCourseValidation = z.object({
 })
 
 const getCourseValidataion = z.object({
-    filters: z.object({
-        instructors: z.boolean(),
-        milestones: z.boolean(),
-        modules: z.boolean(),
-        quizes: z.boolean(),
-        videos: z.boolean()
+
+    body: z.object({
+        filters: z.object({
+            instructors: z.boolean(),
+            milestones: z.boolean(),
+            modules: z.boolean(),
+            quizes: z.boolean(),
+            videos: z.boolean()
+        })
     })
 
 })
