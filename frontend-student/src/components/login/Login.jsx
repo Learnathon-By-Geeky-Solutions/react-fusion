@@ -55,8 +55,8 @@ export default function Login() {
       password: "test00",
       contactNumber: "0123456789",
       currentInstitution: "RUET",
-      gender: "",
-      qualification: "",
+      gender: "MALE",
+      qualification: "PHD",
       address: "test addr 123",
     },
     onSubmit: (values) => {
@@ -153,7 +153,10 @@ export default function Login() {
 
                 <div className="space-y-1">
                   <Label htmlFor="gender">Gender</Label>
-                  <Select onValueChange={signupFormik.handleChange("gender")}>
+                  <Select
+                    onValueChange={signupFormik.handleChange("gender")}
+                    value={signupFormik.values.gender}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Gender" />
                     </SelectTrigger>
@@ -175,6 +178,7 @@ export default function Login() {
                   <Label htmlFor="qualification">Qualification</Label>
                   <Select
                     onValueChange={signupFormik.handleChange("qualification")}
+                    value={signupFormik.values.qualification}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Qualification" />

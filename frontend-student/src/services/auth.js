@@ -31,8 +31,24 @@ async function signUpUser(data) {
     body: formData,
   });
   const resJson = await res.json();
-  console.log("res ", resJson);
-  return resJson;
+  if (!resJson.success) {
+    console.log(resJson);
+    return resJson;
+  }
+  //return resJson;
+  //WARN: for dev only
+  const verifyRes = await fetch(`${BACKEND}/user/verify-user`, {
+    method: "POST",
+    headers: {
+      Authorization: resJson.data.token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      otp: resJson.data.otp,
+    }),
+  });
+  const verifyResJson = await verifyRes.json();
+  return verifyResJson;
 }
 
 export const authService = { logInUser, signUpUser };
