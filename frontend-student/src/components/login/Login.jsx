@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -7,17 +9,33 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FormikProvider, useFormik } from "formik";
+import { authService } from "@/src/services/auth";
+import { useFormik } from "formik";
 
 export default function Login() {
-  const handleLogIn = (data) => {
-    console.log("login", data);
+  const handleLogIn = async (data) => {
+    const result = await authService.logInUser(data);
+    console.log(result);
   };
-  const handleSignUp = (data) => {
-    console.log("signup ", data);
+  const handleSignUp = async (data) => {
+    const result = await authService.signUpUser(data);
+    console.log(result);
+    if (result.success === true) {
+      toast.success("User Created.");
+    } else {
+      toast.error("ERROR!");
+    }
+    signupFormik.resetForm();
   };
   const loginFormik = useFormik({
     initialValues: {
@@ -30,10 +48,16 @@ export default function Login() {
   });
 
   const signupFormik = useFormik({
+    //FIX: prefilled for testing
     initialValues: {
-      name: "",
-      email: "",
-      password: "",
+      name: "test",
+      email: "@s.com",
+      password: "test00",
+      contactNumber: "0123456789",
+      currentInstitution: "RUET",
+      gender: "",
+      qualification: "",
+      address: "test addr 123",
     },
     onSubmit: (values) => {
       handleSignUp(values);
@@ -76,7 +100,7 @@ export default function Login() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit">Log In</Button>
               </CardFooter>
             </Card>
           </form>
@@ -118,14 +142,68 @@ export default function Login() {
                     type="password"
                   />
                 </div>
+                <div className="space-y-1">
+                  <Label htmlFor="phone">Contact No</Label>
+                  <Input
+                    id="phone"
+                    onChange={signupFormik.handleChange("contactNumber")}
+                    value={signupFormik.values.contactNumber}
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <Label htmlFor="gender">Gender</Label>
+                  <Select onValueChange={signupFormik.handleChange("gender")}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MALE">Male</SelectItem>
+                      <SelectItem value="FEMALE">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="institution">Current Institution</Label>
+                  <Input
+                    id="institution"
+                    onChange={signupFormik.handleChange("currentInstitution")}
+                    value={signupFormik.values.currentInstitution}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="qualification">Qualification</Label>
+                  <Select
+                    onValueChange={signupFormik.handleChange("qualification")}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Qualification" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="HIGH_SCHOOL">High School</SelectItem>
+                      <SelectItem value="BACHELORS">Bachelors</SelectItem>
+                      <SelectItem value="MASTERS">Masters</SelectItem>
+                      <SelectItem value="PHD">PhD</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="address">Address</Label>
+                  <Input
+                    id="address"
+                    onChange={signupFormik.handleChange("address")}
+                    value={signupFormik.values.address}
+                  />
+                </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit">Sign Up</Button>
               </CardFooter>
             </Card>
           </form>
         </TabsContent>
       </Tabs>
+      <Toaster position="top-right" />
     </div>
   );
 }
