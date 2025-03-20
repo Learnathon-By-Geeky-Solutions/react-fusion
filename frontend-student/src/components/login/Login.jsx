@@ -21,11 +21,26 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { authService } from "@/src/services/auth";
 import { useFormik } from "formik";
+import useAuth from "@/src/context/authContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Login() {
+  const { user, storeToken } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user.authenticated) {
+      navigate("/");
+    }
+  }, [user, navigate]);
   const handleLogIn = async (data) => {
     const result = await authService.logInUser(data);
-    console.log(result);
+    if (result.success === true) {
+      toast.success("Log In Successful!");
+      storeToken(result.data.accessToken);
+    } else {
+      toast.error("ERROR!");
+    }
   };
   const handleSignUp = async (data) => {
     const result = await authService.signUpUser(data);
@@ -207,7 +222,6 @@ export default function Login() {
           </form>
         </TabsContent>
       </Tabs>
-      <Toaster position="top-right" />
     </div>
   );
 }

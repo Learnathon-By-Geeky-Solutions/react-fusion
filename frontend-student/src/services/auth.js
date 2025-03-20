@@ -1,14 +1,15 @@
 import { BACKEND } from "../constants";
 
 async function logInUser(data) {
-  /*
-{
-    "email":"a@s.com",
-    "password":"test12"
-}
-*/
-  console.log(data);
-  return "success";
+  const res = await fetch(`${BACKEND}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const resJson = await res.json();
+  return resJson;
 }
 
 async function signUpUser(data) {
