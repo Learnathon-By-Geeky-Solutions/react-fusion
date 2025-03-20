@@ -1,13 +1,14 @@
+import { JwtPayload } from "jsonwebtoken"
 import prisma from "../../../shared/prisma"
 import { ICreateNote, IGetNote } from "./note.interface"
 
-const getNote = async (payload: IGetNote) => {
+const getNote = async (user: JwtPayload, payload: IGetNote) => {
     const result = await prisma.note.findFirst({
         where: {
             AND: [
                 {
                     userId: {
-                        equals: payload.userId
+                        equals: user.userId
                     }
                 },
                 {
@@ -23,8 +24,14 @@ const getNote = async (payload: IGetNote) => {
     return result
 }
 
-const createNote = async (payload: ICreateNote) => {
-    const result = await prisma.note.create({ data: payload })
+const createNote = async (user: JwtPayload, payload: ICreateNote) => {
+    const result = await prisma.note.create({
+        data: {
+            ...payload,
+            userId: user.userId
+
+        }
+    })
     return result
 }
 

@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { noteService } from "./note.service";
@@ -5,7 +6,7 @@ import httpStatus from "http-status";
 
 
 const getNote = catchAsync(async (req, res, next) => {
-    const result = await noteService.getNote(req.body)
+    const result = await noteService.getNote(req.user as JwtPayload, req.body)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,
@@ -16,7 +17,7 @@ const getNote = catchAsync(async (req, res, next) => {
 
 
 const createNote = catchAsync(async (req, res, next) => {
-    const result = await noteService.createNote(req.body)
+    const result = await noteService.createNote(req.user as JwtPayload, req.body)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,
