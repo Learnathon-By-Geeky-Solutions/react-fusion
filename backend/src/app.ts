@@ -11,7 +11,9 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    //WARN:dev allowing all
+    //origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3000'],
+    origin: '*',
     credentials: true,
   }),
 );
