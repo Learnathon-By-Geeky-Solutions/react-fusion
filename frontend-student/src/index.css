@@ -3,6 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html, body, #root {
+  height: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+} 
+
+
 :root {
   --background: hsl(0, 0%, 90%);
   --foreground: hsl(240 10% 3.9%);

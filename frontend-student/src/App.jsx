@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <div>
+    <div style={{ height: "100vh", width: "100vw" }}>
       <NavBar></NavBar>
       <div>
         <Outlet></Outlet>
