@@ -59,7 +59,7 @@ model Instructor {
   updatedAt           DateTime           @updatedAt
 
   courses Course[]
-  User    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("instructors")
 }
@@ -123,6 +123,7 @@ model Course {
   title        String
   description  String
   rating       Float?
+  price        Float 
   milestones   Milestone[]
   instructors  Instructor[]
   students     CourseStudent[]
@@ -133,7 +134,7 @@ model Milestone {
   id          String   @id @default(uuid())
   title       String
   description String
-  courseId    String   
+  courseId    String
   course      Course   @relation(fields: [courseId], references: [id])
   modules     Module[]
 }
@@ -142,7 +143,7 @@ model Module {
   id          String    @id @default(uuid())
   title       String
   description String
-  milestoneId  String    
+  milestoneId String
   milestone   Milestone @relation(fields: [milestoneId], references: [id])
   videos      Video[]
   quizes      Quiz[]
@@ -207,7 +208,8 @@ model Note {
   videoId String
   video   Video  @relation(fields: [videoId], references: [id])
   note    String
-  @@unique([userId,videoId])
+
+  @@unique([userId, videoId])
 }
 
 model CourseStudent {
@@ -225,5 +227,5 @@ model Transactions {
   courseId  String
   course    Course  @relation(fields: [courseId], references: [id])
   studentId String
-  student   Student @relation(fields: [studentId], references: [id])
+  student   Student @relation(fields: [studentId], references: [userId])
 }
