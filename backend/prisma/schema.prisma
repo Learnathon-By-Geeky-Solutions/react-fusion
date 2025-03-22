@@ -124,9 +124,10 @@ model Course {
   description  String
   rating       Float?
   price        Float
-  thumbanil    String
+  thumbnail    String
+  instructorId String
+  instructor   Instructor      @relation(fields: [instructorId], references: [userId])
   milestones   Milestone[]
-  instructors  Instructor[]
   students     CourseStudent[]
   transactions Transactions[]
 }
