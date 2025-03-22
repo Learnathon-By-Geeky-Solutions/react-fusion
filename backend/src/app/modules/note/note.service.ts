@@ -1,4 +1,4 @@
-import { JwtPayload } from "jsonwebtoken"
+import { JwtPayload } from '../../../interfaces/common'
 import prisma from "../../../shared/prisma"
 import { ICreateNote, IGetNote } from "./note.interface"
 

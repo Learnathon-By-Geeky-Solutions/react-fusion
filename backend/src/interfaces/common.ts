@@ -17,7 +17,7 @@ export type IGenericErrorResponse = {
 };
 
 export interface JwtPayload {
-  userID: string;
+  userId: string;
   role: UserRole;
   iat: number;
   exp: number;

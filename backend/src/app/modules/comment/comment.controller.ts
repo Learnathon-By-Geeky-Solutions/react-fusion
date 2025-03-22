@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { commentService } from "./comment.service";
-import { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "../../../interfaces/common";
 
 const getCommentsByVideoId = catchAsync(async (req, res, next) => {
     const result = await commentService.getCommentsByVideoId(req.user as JwtPayload, req.body)

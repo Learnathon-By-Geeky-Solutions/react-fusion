@@ -1,4 +1,4 @@
-import { JwtPayload } from "jsonwebtoken";
+import { JwtPayload} from "../../../interfaces/common"
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { noteService } from "./note.service";

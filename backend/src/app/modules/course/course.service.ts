@@ -1,21 +1,15 @@
-import { Prisma } from "@prisma/client";
-import { paginationHelpers } from "../../../helpers/paginationHelper";
 import { JwtPayload } from "../../../interfaces/common";
-import { IPaginationOptions } from "../../../interfaces/pagination";
 import prisma from "../../../shared/prisma";
-import { asyncForEach } from "../../../shared/utils";
 import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";
 
-//TODO: change paylod type
-const createCourse = async (payload: ICreateCourse) => {
+const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
+    console.log('jwt ', user.userId)
     const courseData = {
         title: payload.title,
         description: payload.description,
-        instructors: {
-            connect: payload.instructors.map((x: string) => ({
-                id: x
-            })),
-        },
+        price: payload.price,
+        thumbnail: payload.thumbnail,
+        instructorId: user.userId,
         milestones: {
             create: payload.milestones.map((milestone: IMilestones) => ({
                 title: milestone.title,
@@ -61,7 +55,8 @@ const createCourse = async (payload: ICreateCourse) => {
 
                 },
             },
-            instructors: true
+            instructor: true
+
         }
     });
 
@@ -73,11 +68,11 @@ const createCourse = async (payload: ICreateCourse) => {
 const getAllCourses = async (filters: any) => {
 
     const includeTerms: IIncludeTerms = {
-        instructors: false,
+        instructor: false,
         milestones: false,
     };
     if (filters.instructors) {
-        includeTerms.instructors = true
+        includeTerms.instructor = true
     }
     if (filters.milestones) {
         includeTerms.milestones = true
@@ -137,7 +132,8 @@ const getSingleCourse = async (id: string) => {
 
                 },
             },
-            instructors: true
+            instructor: true
+
         }
 
     })

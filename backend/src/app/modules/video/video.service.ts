@@ -1,4 +1,4 @@
-import { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
@@ -29,7 +29,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
                         equals: courseId
                     },
                     studentId: {
-                        equals: user.uesrId
+                        equals: user.userId
                     }
                 }
             ]

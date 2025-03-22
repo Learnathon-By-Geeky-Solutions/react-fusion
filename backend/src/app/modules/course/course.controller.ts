@@ -7,7 +7,7 @@ import { courseService } from "./course.service";
 //const createCourse = catchAsync(async(req:Request, res:Response, next) => {
 const createCourse = catchAsync(async (req, res, next) => {
 
-    const result = await courseService.createCourse(req.body)
+    const result = await courseService.createCourse(req.user as JwtPayload, req.body)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,

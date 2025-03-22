@@ -1,4 +1,4 @@
-import { JwtPayload } from "jsonwebtoken"
+import { JwtPayload } from "../../../interfaces/common"
 import { ICommentsByVideoId, ICreateComment, IUpdateComment } from "./comment.interface"
 import prisma from "../../../shared/prisma"
 

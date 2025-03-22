@@ -1,4 +1,4 @@
-import { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "../../../interfaces/common";
 import { IBuyCourseSchema } from "./transactions.interface";
 import prisma from "../../../shared/prisma";
 

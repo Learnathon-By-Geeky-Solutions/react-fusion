@@ -1,5 +1,5 @@
 
-import { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "../../../interfaces/common";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";

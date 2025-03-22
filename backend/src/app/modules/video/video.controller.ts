@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { videoService } from "./video.service";
-import { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "../../../interfaces/common";
 
 
 const getVideo = catchAsync(async (req, res, next) => {

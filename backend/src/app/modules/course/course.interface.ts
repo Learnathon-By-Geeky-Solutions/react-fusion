@@ -1,8 +1,8 @@
 export interface ICreateCourse {
-
     title: string;
     description: string;
-    instructors: string[];
+    price: number,
+    thumbnail: string,
     milestones: {
         title: string;
         description: string;
@@ -46,7 +46,7 @@ export interface IMilestones {
 
 
 export interface IIncludeTerms {
-    instructors: boolean;
+    instructor: boolean;
     milestones: {
         include: {
             modules: {
@@ -58,5 +58,3 @@ export interface IIncludeTerms {
         };
     } | boolean;
 }
-
-

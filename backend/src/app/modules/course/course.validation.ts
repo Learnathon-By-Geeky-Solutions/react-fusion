@@ -4,7 +4,8 @@ const createCourseValidation = z.object({
     body: z.object({
         title: z.string(),
         description: z.string(),
-        instructors: z.array(z.string()),
+        price: z.number(),
+        thumbnail: z.string(),
         milestones: z.array(z.object({
             title: z.string(),
             description: z.string(),
