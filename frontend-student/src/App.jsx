@@ -6,11 +6,11 @@ import { Outlet } from "react-router-dom";
 function App() {
   return (
     <div>
-      <NavBar/>
+      <NavBar />
       <div>
         <Outlet></Outlet>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
