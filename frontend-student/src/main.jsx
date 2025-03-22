@@ -7,6 +7,8 @@ import Home from "./components/home/Home";
 import NavBar from "./components/navBar/NavBar";
 import Login from "./components/login/Login";
 import { AuthProvider } from "./context/authContext";
+import Courses from "./components/allcourses/Courses";
+import Footer from "./components/footer/Footer";
 
 const routes = createBrowserRouter([
   {
@@ -14,8 +16,8 @@ const routes = createBrowserRouter([
     element: <App></App>,
     errorElement: (
       <div>
-        <NavBar></NavBar>
-        <h1>No Component!</h1>
+        <NavBar/>
+        <Footer/>
       </div>
     ),
     children: [
@@ -27,6 +29,10 @@ const routes = createBrowserRouter([
         path: "/login",
         element: <Login></Login>,
       },
+      {
+        path: "/courses",
+        element: <Courses/>
+      }
     ],
   },
 ]);
