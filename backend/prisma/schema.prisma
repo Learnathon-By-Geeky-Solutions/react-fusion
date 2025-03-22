@@ -123,7 +123,8 @@ model Course {
   title        String
   description  String
   rating       Float?
-  price        Float 
+  price        Float
+  thumbanil    String
   milestones   Milestone[]
   instructors  Instructor[]
   students     CourseStudent[]
