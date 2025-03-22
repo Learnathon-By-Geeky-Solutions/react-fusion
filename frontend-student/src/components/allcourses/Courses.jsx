@@ -17,7 +17,7 @@ export default function Courses() {
     async function fetchCourses() {
       try {
         const data = await getAllCourses();
-        setCourses(data);
+        setCourses(data.data);
       } catch (error) {
         console.error("Error fetching courses:", error);
       } finally {

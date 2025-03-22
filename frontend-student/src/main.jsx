@@ -17,7 +17,8 @@ const routes = createBrowserRouter([
     errorElement: (
       <div>
         <NavBar />
-        <Footer />
+        <h1>No Component Error</h1>
+        <Footer></Footer>
       </div>
     ),
     children: [
@@ -31,7 +32,7 @@ const routes = createBrowserRouter([
       },
       {
         path: "/courses",
-        element: <Courses />,
+        element: <Courses></Courses>,
       },
     ],
   },

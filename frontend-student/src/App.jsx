@@ -5,9 +5,9 @@ import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <div>
+    <div className="h-screen flex flex-col">
       <NavBar />
-      <div>
+      <div className="grow shrink-0 basis-auto">
         <Outlet></Outlet>
       </div>
       <Footer />
