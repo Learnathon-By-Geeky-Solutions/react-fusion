@@ -5,6 +5,7 @@ import { courseRoutes } from '../modules/course/course.routes';
 import { noteRoutes } from '../modules/note/note.routes';
 import { commentRoutes } from '../modules/comment/comment.routes';
 import { transactionRoutes } from '../modules/transactions/transactions.routes';
+import { videoRoutes } from '../modules/video/video.routes';
 
 const router = express.Router();
 
@@ -33,6 +34,10 @@ const moduleRoutes = [
   {
     path: '/transaction',
     route: transactionRoutes
+  },
+  {
+    path: '/video',
+    route: videoRoutes
   }
 ];
 
