@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import getAllCourses from "@/src/services/course";
 
 import {
@@ -12,14 +13,16 @@ import {
 export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchCourses() {
       try {
         const data = await getAllCourses();
         setCourses(data.data);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+        setError("Failed to load courses. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -36,7 +39,9 @@ export default function Courses() {
       </p>
 
       {loading ? (
-        <p>Loading courses...</p>
+        <p className="text-gray-600">Loading courses...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {courses.map((course) => (
@@ -58,9 +63,11 @@ export default function Courses() {
                 </p>
               </CardContent>
               <CardFooter>
-                <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-                  View Details
-                </button>
+                <Link to={`/courses/${course.id}`}>
+                  <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
+                    View Details
+                  </button>
+                </Link>
               </CardFooter>
             </Card>
           ))}

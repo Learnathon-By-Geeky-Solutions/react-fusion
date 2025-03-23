@@ -8,31 +8,36 @@ import NavBar from "./components/navBar/NavBar";
 import Login from "./components/login/Login";
 import { AuthProvider } from "./context/authContext";
 import Courses from "./components/allcourses/Courses";
+import CourseDetails from "./components/allcourses/CourseDetails"; // Import CourseDetails component
 import Footer from "./components/footer/Footer";
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <App></App>,
+    element: <App />,
     errorElement: (
       <div>
         <NavBar />
         <h1>No Component Error</h1>
-        <Footer></Footer>
+        <Footer />
       </div>
     ),
     children: [
       {
         path: "/",
-        element: <Home></Home>,
+        element: <Home />,
       },
       {
         path: "/login",
-        element: <Login></Login>,
+        element: <Login />,
       },
       {
         path: "/courses",
-        element: <Courses></Courses>,
+        element: <Courses />,
+      },
+      {
+        path: "/courses/:id", 
+        element: <CourseDetails />,
       },
     ],
   },
@@ -41,7 +46,7 @@ const routes = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={routes}></RouterProvider>
+      <RouterProvider router={routes} />
     </AuthProvider>
-  </StrictMode>,
+  </StrictMode>
 );
