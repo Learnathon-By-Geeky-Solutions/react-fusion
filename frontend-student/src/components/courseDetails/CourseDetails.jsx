@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import getSingleCourse from "@/src/services/singleCourse";
+import { noimage } from "../../assets";
 
 export default function CourseDetails() {
   const { id } = useParams(); 
@@ -12,6 +13,7 @@ export default function CourseDetails() {
       try {
         const data = await getSingleCourse(id);
         setCourse(data);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching course details:", error);
       } finally {
@@ -27,6 +29,7 @@ export default function CourseDetails() {
 
   return (
     <div className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-10">
+      {console.log(course)}
       {/* Left Side: Course Details */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{course.title}</h1>
@@ -49,10 +52,10 @@ export default function CourseDetails() {
         </div>
       </div>
 
-      {/* Right Side: Thumbnail & Pricing */}
       <div className="p-6 bg-white shadow-lg rounded-lg">
+        {/* {console.log(course.thumbnail)} */}
         <img
-          src={course.thumbnail}
+          src={course.thumbnail === "str" ? noimage : course.thumbnail}
           alt={course.title}
           className="w-full h-60 object-cover rounded-lg"
         />

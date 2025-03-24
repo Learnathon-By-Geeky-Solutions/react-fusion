@@ -8,7 +8,7 @@ import NavBar from "./components/navBar/NavBar";
 import Login from "./components/login/Login";
 import { AuthProvider } from "./context/authContext";
 import Courses from "./components/allcourses/Courses";
-import CourseDetails from "./components/allcourses/CourseDetails"; // Import CourseDetails component
+import CourseDetails from "./components/CourseDetails/CourseDetails";
 import Footer from "./components/footer/Footer";
 
 const routes = createBrowserRouter([
