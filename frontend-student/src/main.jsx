@@ -10,6 +10,7 @@ import { AuthProvider } from "./context/authContext";
 import Courses from "./components/allcourses/Courses";
 import CourseDetails from "./components/CourseDetails/CourseDetails";
 import Footer from "./components/footer/Footer";
+import LecturePage from "./components/lecturePage/LecturePage";
 
 const routes = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const routes = createBrowserRouter([
       {
         path: "/courses/:id", 
         element: <CourseDetails />,
+      },
+      {
+        path: "/lecture/:id", 
+        element: <LecturePage />,
       },
     ],
   },
