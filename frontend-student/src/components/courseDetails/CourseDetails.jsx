@@ -18,9 +18,8 @@ export default function CourseDetails() {
     async function fetchCourse() {
       try {
         const response = await getSingleCourse(id);
-        console.log(response); // Debugging
         if (response.success) {
-          setCourse(response.data); // Ensure we're setting the correct data
+          setCourse(response.data);
         }
       } catch (error) {
         console.error("Error fetching course details:", error);
@@ -37,13 +36,13 @@ export default function CourseDetails() {
 
   return (
     <div className="max-w-[1280px] mx-auto">
-      <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 py-8">
-        {/* Left Side: Course Details (Takes 2/3 in desktop) */}
+      <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 py-8">
+        {/* Left Side: Course Details */}
         <div className="md:col-span-2">
           <h1 className="text-3xl font-bold text-gray-900">{course.title}</h1>
           <p className="text-gray-700 mt-4 text-left">{course.description}</p>
 
-          {/* Course Milestones & Modules Accordion */}
+          {/* Course Modules Accordion */}
           <div className="mt-6">
             <h2 className="text-2xl font-semibold text-gray-900">Course Content</h2>
             <Accordion type="single" collapsible className="mt-4">
@@ -53,14 +52,28 @@ export default function CourseDetails() {
                   value={milestone.id}
                   className="bg-gray-300 rounded-lg p-2 mb-2"
                 >
-                  <AccordionTrigger className="font-semibold text-lg">
+                  <AccordionTrigger className="font-semibold text-lg px-4">
                     {milestone.title}
                   </AccordionTrigger>
-                  <AccordionContent className="ml-4">
+                  <AccordionContent>
                     {milestone.modules.map((module) => (
-                      <div key={module.id} className="bg-gray-100 p-4 rounded-lg mb-2 text-left mx-6">
-                        {module.title}
-                      </div>
+                      <Accordion type="single" collapsible key={module.id} className="mx-4 mt-2">
+                        <AccordionItem value={module.id} className="bg-gray-100 py-1 px-4 rounded-lg">
+                          <AccordionTrigger className="text-lg font-semibold">
+                            {module.title}
+                          </AccordionTrigger>
+                          <AccordionContent className="space-y-2 mt-2">
+                            {module.videos.map((video, index) => (
+                              <div
+                                key={video.id}
+                                className="bg-gray-200 py-2 px-4 rounded-md text-left"
+                              >
+                                Video {index + 1}: {video.title}
+                              </div>
+                            ))}
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
                     ))}
                   </AccordionContent>
                 </AccordionItem>
@@ -69,7 +82,7 @@ export default function CourseDetails() {
           </div>
         </div>
 
-        {/* Right Side: Thumbnail, Pricing & Instructor Info (Takes 1/3 in desktop) */}
+        {/* Right Side: Thumbnail, Pricing & Instructor Info */}
         <div className="md:col-span-1 p-6 bg-white shadow-lg rounded-lg">
           <img
             src={course.thumbnail === "str" ? noimage : course.thumbnail}
