@@ -1,8 +1,7 @@
 import useAuth from "../context/authContext";
-import { BACKEND } from "../constants";
 
 export default function useApi() {
-  const { user, storeToken } = useAuth();
+  const { user } = useAuth();
   const fetchData = async (apiFunction, params) => {
     console.log(apiFunction, params);
     let newParams = {
