@@ -132,9 +132,9 @@ export default function LecturePage() {
                                                                 videoNumber: vIndex + 1,
                                                             })
                                                         }
-                                                        className={`block w-full text-left text-sm px-6 py-2 rounded-md ${selectedVideo?.id === video.id
+                                                        className={`block w-full text-left text-sm px-6 py-2 mx-4 rounded-md ${selectedVideo?.id === video.id
                                                                 ? "bg-blue-500 text-white"
-                                                                : "bg-gray-50 hover:bg-gray-200"
+                                                                : "bg-gray-50 hover:bg-blue-100"
                                                             }`}
                                                     >
                                                         {mIndex + 1}.{modIndex + 1}.{vIndex + 1} - {video.title}
