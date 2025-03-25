@@ -36,7 +36,7 @@ export default function CourseDetails() {
 
   return (
     <div className="max-w-[1280px] mx-auto">
-      <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 py-8">
+      <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 py-8">
         {/* Left Side: Course Details */}
         <div className="md:col-span-2">
           <h1 className="text-3xl font-bold text-gray-900">{course.title}</h1>
@@ -52,13 +52,13 @@ export default function CourseDetails() {
                   value={milestone.id}
                   className="bg-gray-300 rounded-lg p-2 mb-2"
                 >
-                  <AccordionTrigger className="font-semibold text-lg">
+                  <AccordionTrigger className="font-semibold text-lg px-4">
                     {milestone.title}
                   </AccordionTrigger>
                   <AccordionContent>
                     {milestone.modules.map((module) => (
-                      <Accordion type="single" collapsible key={module.id} className="ml-6 mt-2">
-                        <AccordionItem value={module.id} className="bg-gray-100 p-4 rounded-lg">
+                      <Accordion type="single" collapsible key={module.id} className="mx-4 mt-2">
+                        <AccordionItem value={module.id} className="bg-gray-100 py-1 px-4 rounded-lg">
                           <AccordionTrigger className="text-lg font-semibold">
                             {module.title}
                           </AccordionTrigger>
@@ -66,7 +66,7 @@ export default function CourseDetails() {
                             {module.videos.map((video, index) => (
                               <div
                                 key={video.id}
-                                className="bg-gray-200 p-3 rounded-md text-left"
+                                className="bg-gray-200 py-2 px-4 rounded-md text-left"
                               >
                                 Video {index + 1}: {video.title}
                               </div>
