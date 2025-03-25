@@ -225,7 +225,7 @@ model CourseStudent {
 
 model Transactions {
   id        String  @id @default(uuid())
-  txnId     String
+  txnId     String @unique
   courseId  String
   course    Course  @relation(fields: [courseId], references: [id])
   studentId String

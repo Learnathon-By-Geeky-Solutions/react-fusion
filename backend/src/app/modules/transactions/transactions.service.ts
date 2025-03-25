@@ -21,7 +21,7 @@ const buyCourse = async (user: JwtPayload, payload: IBuyCourseSchema) => {
 
     const isDuplicate = await prisma.transactions.findUnique({
         where: {
-            txnId: payload.courseId
+            txnId: payload.txnId
         }
     })
     if (isDuplicate) {
