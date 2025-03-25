@@ -1,12 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@layer base {
-  .dark {
-    @apply bg-gray-900 text-white;
-  }
-}
-
+@custom-variant dark (&:is(.dark *));
 
 html,
 body,
