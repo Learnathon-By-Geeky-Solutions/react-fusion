@@ -6,7 +6,7 @@ import { errorlogger, logger } from './shared/logger';
 
 async function bootstrap() {
   const server: Server = app.listen(config.port, () => {
-    //logger.info(`Server running on port ${config.port}`);
+    logger.info(`Server running on port ${config.port}`);
     console.log(`Server running on port ${config.port}`);
 
   });
@@ -14,7 +14,7 @@ async function bootstrap() {
   const exitHandler = () => {
     if (server) {
       server.close(() => {
-        //logger.info('Server closed');
+        logger.info('Server closed');
         console.log('Server closed');
       });
     }
@@ -22,7 +22,7 @@ async function bootstrap() {
   };
 
   const unexpectedErrorHandler = (error: unknown) => {
-    //errorlogger.error(error);
+    errorlogger.error(error);
     console.log(error);
 
     exitHandler();
@@ -31,12 +31,12 @@ async function bootstrap() {
   process.on('uncaughtException', unexpectedErrorHandler);
   process.on('unhandledRejection', unexpectedErrorHandler);
 
-  // process.on('SIGTERM', () => {
-  //   logger.info('SIGTERM received');
-  //   if (server) {
-  //     server.close();
-  //   }
-  // });
+  process.on('SIGTERM', () => {
+    logger.info('SIGTERM received');
+    if (server) {
+      server.close();
+    }
+  });
 }
 
 bootstrap();

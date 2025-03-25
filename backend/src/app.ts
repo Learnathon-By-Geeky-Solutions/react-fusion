@@ -4,8 +4,6 @@ import httpStatus from 'http-status';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import routes from './app/routes';
 import cookieParser from 'cookie-parser';
-import cron from 'node-cron';
-import { errorlogger } from './shared/logger';
 
 const app: Application = express();
 
@@ -32,14 +30,6 @@ app.get('/test', async (req: Request, res: Response) => {
   });
 });
 
-// Schedule to run every minute
-cron.schedule('* * * * *', async (): Promise<void> => {
-  try {
-
-  } catch (error) {
-    errorlogger.error(error);
-  }
-});
 
 //global error handler
 app.use(globalErrorHandler);
