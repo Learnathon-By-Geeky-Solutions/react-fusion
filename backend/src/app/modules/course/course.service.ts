@@ -85,22 +85,46 @@ const getAllCourses = async (filters: any) => {
             if (filters.quizes) {
                 includeTerms.milestones.include.modules = {
                     include: {
-                        quizes: true
+                        quizes: {
+                            select: {
+                                id: true,
+                            }
+                        }
                     }
                 }
             }
             if (filters.videos) {
                 includeTerms.milestones.include.modules = {
                     include: {
-                        videos: true
+
+                        videos: {
+                            select: {
+                                id: true,
+                                moduleId: true,
+                                title: true,
+                            }
+                        }
                     }
                 }
             }
             if (filters.videos && filters.quizes) {
                 includeTerms.milestones.include.modules = {
                     include: {
-                        quizes: true,
-                        videos: true
+                        quizes: {
+                            select: {
+                                id: true,
+                            }
+                        }
+                        ,
+                        videos: {
+                            select: {
+                                id: true,
+                                moduleId: true,
+                                title: true,
+                            }
+                        }
+
+
                     }
                 }
             }

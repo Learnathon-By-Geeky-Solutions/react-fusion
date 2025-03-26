@@ -51,8 +51,18 @@ export interface IIncludeTerms {
         include: {
             modules: {
                 include: {
-                    quizes?: boolean;
-                    videos?: boolean;
+                    quizes?: {
+                        select: {
+                            id: boolean,
+                        }
+                    }
+                    videos?: {
+                        select: {
+                            id: boolean;
+                            moduleId: boolean;
+                            title: boolean;
+                        }
+                    };
                 };
             } | boolean;
         };
