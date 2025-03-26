@@ -145,21 +145,39 @@ const getSingleCourse = async (id: string) => {
             id: id
         },
         include: {
+            instructor: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    designation: true,
+                    experience: true,
+                    qualification: true,
+                    currentWorkingPlace: true,
+                }
+            },
             milestones: {
                 include: {
                     modules: {
                         include: {
-                            videos: true,
-                            quizes: true
+                            videos: {
+                                select: {
+                                    id: true,
+                                    moduleId: true,
+                                    title: true,
+                                }
+                            },
+                            quizes: {
+                                select: {
+                                    id: true,
+                                }
+                            }
                         }
                     },
 
                 },
             },
-            instructor: true
-
         }
-
     })
     return result
 }
