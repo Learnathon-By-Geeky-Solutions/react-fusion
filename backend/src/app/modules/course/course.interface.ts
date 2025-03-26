@@ -57,6 +57,7 @@ export interface IIncludeTerms {
                         }
                     }
                     videos?: {
+                        where: { isDeleted: boolean },
                         select: {
                             id: boolean;
                             moduleId: boolean;

@@ -96,8 +96,8 @@ const getAllCourses = async (filters: any) => {
             if (filters.videos) {
                 includeTerms.milestones.include.modules = {
                     include: {
-
                         videos: {
+                            where: { isDeleted: false },
                             select: {
                                 id: true,
                                 moduleId: true,
@@ -114,15 +114,15 @@ const getAllCourses = async (filters: any) => {
                             select: {
                                 id: true,
                             }
-                        }
-                        ,
+                        },
                         videos: {
+                            where: { isDeleted: false },
                             select: {
                                 id: true,
                                 moduleId: true,
                                 title: true,
                             }
-                        }
+                        },
 
 
                     }
@@ -161,6 +161,7 @@ const getSingleCourse = async (id: string) => {
                     modules: {
                         include: {
                             videos: {
+                                where: { isDeleted: false },
                                 select: {
                                     id: true,
                                     moduleId: true,

@@ -167,6 +167,7 @@ model Video {
   module       Module        @relation(fields: [moduleId], references: [id])
   title        String
   url          String
+  isDeleted    Boolean       @default(false)
   comments     Comment[]
   notes        Note[]
   likeCount    Int
@@ -225,7 +226,7 @@ model CourseStudent {
 
 model Transactions {
   id        String  @id @default(uuid())
-  txnId     String @unique
+  txnId     String  @unique
   courseId  String
   course    Course  @relation(fields: [courseId], references: [id])
   studentId String
