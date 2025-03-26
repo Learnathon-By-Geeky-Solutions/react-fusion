@@ -3,7 +3,6 @@ import prisma from "../../../shared/prisma";
 import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";
 
 const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
-    console.log('jwt ', user.userId)
     const courseData = {
         title: payload.title,
         description: payload.description,
@@ -28,10 +27,14 @@ const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
                         },
                         quizes: {
                             create: module.quizes.map(quiz => ({
-                                question: quiz.question,
-                                options: quiz.options,
-                                answer: quiz.answer,
-                                value: quiz.value
+                                questions: {
+                                    create: quiz.questions.map(ques => ({
+                                        question: ques.question,
+                                        options: ques.options,
+                                        answer: ques.answer,
+                                        points: ques.points
+                                    })),
+                                }
                             }))
                         }
                     }))

@@ -14,10 +14,12 @@ export interface ICreateCourse {
                 url: string;
             }[];
             quizes: {
-                question: string;
-                options: string[];
-                answer: string;
-                value: number;
+                questions: {
+                    question: string;
+                    options: string[];
+                    answer: string;
+                    points: number;
+                }[]
             }[];
         }[];
     }[];
@@ -35,11 +37,14 @@ export interface IMilestones {
             title: string;
             url: string;
         }[];
+
         quizes: {
-            question: string;
-            options: string[];
-            answer: string;
-            value: number;
+            questions: {
+                question: string;
+                options: string[];
+                answer: string;
+                points: number;
+            }[]
         }[];
     }[];
 };
