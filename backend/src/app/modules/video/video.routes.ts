@@ -7,4 +7,6 @@ const router = express.Router()
 
 router.get('/:id', auth(UserRole.STUDENT), videoController.getVideo)
 
+//TODO:
+//  update delete for instructor
 export const videoRoutes = router

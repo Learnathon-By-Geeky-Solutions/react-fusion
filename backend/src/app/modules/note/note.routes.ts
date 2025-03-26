@@ -10,4 +10,6 @@ const router = express.Router()
 router.post("/get", auth(UserRole.STUDENT), validateRequest(noteValidataionSchema.noteGetSchema), noteController.getNote)
 router.post("/create", auth(UserRole.STUDENT), validateRequest(noteValidataionSchema.noteCreateSchema), noteController.createNote)
 
+//TODO:
+//  update delete
 export const noteRoutes = router

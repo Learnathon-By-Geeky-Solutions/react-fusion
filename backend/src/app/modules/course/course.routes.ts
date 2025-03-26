@@ -12,4 +12,8 @@ router.post('/create', auth(UserRole.INSTRUCTOR), validateRequest(courseZodSchem
 //router.post('/', courseController.createCourse)
 router.post("/get-courses", validateRequest(courseZodSchema.getCourseValidataion), courseController.getAllCourses)
 router.get("/:id", courseController.getSingleCourse)
+//TODO:
+//  update for instructor
+//  add isActive for courses
+//  delete for instructor
 export const courseRoutes = router
