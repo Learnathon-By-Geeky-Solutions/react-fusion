@@ -1,7 +1,7 @@
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import ApiError from "../../../errors/ApiError";
-import httpStatus from "http-status";
+import { IVideo } from "./video.interface";
+
 
 const getVideo = async (user: JwtPayload, videoId: string) => {
     const video = await prisma.video.findUnique({
@@ -14,31 +14,45 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
                     milestone: true
                 }
             },
-            notes: true,
+            notes: {
+                where: {
+                    userId: user.userId
+                }
+            },
             comments: true
         }
 
 
     })
-    const courseId = video?.module.milestone.courseId
-    const transaction = await prisma.transactions.findFirst({
-        where: {
-            AND: [
-                {
-                    courseId: {
-                        equals: courseId
-                    },
-                    studentId: {
-                        equals: user.userId
-                    }
-                }
-            ]
-        }
-    })
-    if (transaction === null) {
-        throw new ApiError(httpStatus.UNAUTHORIZED, 'Course Not Purchased!');
+    if (video?.isDeleted) {
+        video.url = ""
+        video.comments = []
     }
     return video
 }
 
-export const videoService = { getVideo }
+
+const updateVideo = async (videoId: string, payload: IVideo) => {
+    const result = await prisma.video.update({
+        where: {
+            id: videoId
+        },
+        data: {
+            ...payload
+        }
+    })
+    return result
+}
+
+const deleteVideo = async (videoId: string) => {
+    const result = await prisma.video.update({
+        where: {
+            id: videoId
+        }, data: {
+            isDeleted: true
+        }
+    })
+    return result
+}
+
+export const videoService = { getVideo, updateVideo, deleteVideo }

@@ -2,10 +2,11 @@ import { JwtPayload } from "../../../interfaces/common"
 import { ICommentsByVideoId, ICreateComment, IUpdateComment } from "./comment.interface"
 import prisma from "../../../shared/prisma"
 
-const getCommentsByVideoId = async (user: JwtPayload, payload: ICommentsByVideoId) => {
+
+const getCommentsByVideoId = async (payload: ICommentsByVideoId) => {
     const result = await prisma.comment.findMany({
         where: {
-            ...payload
+            ...payload,
         }
     })
     return result
@@ -22,23 +23,9 @@ const createComment = async (user: JwtPayload, payload: ICreateComment) => {
     return result
 }
 
-const updateComment = async (user: JwtPayload, payload: IUpdateComment) => {
-    const result = await prisma.comment.updateMany({
-        where: {
-            AND: [
-                {
-                    id: {
-                        equals: payload.id
-                    }
-                },
-
-                {
-                    userId: {
-                        equals: user.userId
-                    }
-                },
-            ]
-        },
+const updateComment = async (payload: IUpdateComment) => {
+    const result = await prisma.comment.update({
+        where: { id: payload.commentId },
         data: {
             comment: payload.comment
         }
@@ -46,21 +33,10 @@ const updateComment = async (user: JwtPayload, payload: IUpdateComment) => {
     return result
 }
 
-const deleteComment = async (user: JwtPayload, id: string) => {
+const deleteComment = async (commentId: string) => {
     const result = await prisma.comment.deleteMany({
         where: {
-            AND: [
-                {
-                    id: {
-                        equals: id
-                    }
-                },
-                {
-                    userId: {
-                        equals: user.userId
-                    }
-                },
-            ]
+            id: commentId
         },
     })
     return result

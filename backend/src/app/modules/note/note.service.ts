@@ -35,4 +35,48 @@ const createNote = async (user: JwtPayload, payload: ICreateNote) => {
     return result
 }
 
-export const noteService = { getNote, createNote }
+const updateNote = async (user: JwtPayload, payload: ICreateNote) => {
+    const result = await prisma.note.updateMany({
+        where: {
+            AND: [
+                {
+                    videoId: {
+                        equals: payload.videoId
+                    }
+                },
+                {
+                    userId: {
+                        equals: user.userId
+                    }
+                }
+            ]
+        },
+        data: {
+            note: payload.note
+
+        }
+    })
+    return result
+}
+
+const deleteNote = async (user: JwtPayload, payload: IGetNote) => {
+    const result = await prisma.note.deleteMany({
+        where: {
+            AND: [
+                {
+                    videoId: {
+                        equals: payload.videoId
+                    }
+                },
+                {
+                    userId: {
+                        equals: user.userId
+                    }
+                }
+            ]
+        }
+    })
+    return result
+}
+
+export const noteService = { getNote, createNote, updateNote, deleteNote }

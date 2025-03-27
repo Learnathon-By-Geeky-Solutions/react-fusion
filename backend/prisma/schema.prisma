@@ -152,13 +152,20 @@ model Module {
 }
 
 model Quiz {
+  id        String     @id @default(uuid())
+  moduleId  String
+  module    Module     @relation(fields: [moduleId], references: [id])
+  questions Question[]
+}
+
+model Question {
   id       String   @id @default(uuid())
-  moduleId String
-  module   Module   @relation(fields: [moduleId], references: [id])
+  quizId   String
+  quiz     Quiz     @relation(fields: [quizId], references: [id])
   question String
   options  String[]
   answer   String
-  value    Float
+  points   Float
 }
 
 model Video {
@@ -167,6 +174,7 @@ model Video {
   module       Module        @relation(fields: [moduleId], references: [id])
   title        String
   url          String
+  isDeleted    Boolean       @default(false)
   comments     Comment[]
   notes        Note[]
   likeCount    Int
@@ -215,17 +223,17 @@ model Note {
 }
 
 model CourseStudent {
-  coureId   String
-  course    Course  @relation(fields: [coureId], references: [id])
+  courseId  String
+  course    Course  @relation(fields: [courseId], references: [id])
   studentId String
   student   Student @relation(fields: [studentId], references: [id])
 
-  @@id([coureId, studentId])
+  @@id([courseId, studentId])
 }
 
 model Transactions {
   id        String  @id @default(uuid())
-  txnId     String
+  txnId     String  @unique
   courseId  String
   course    Course  @relation(fields: [courseId], references: [id])
   studentId String
