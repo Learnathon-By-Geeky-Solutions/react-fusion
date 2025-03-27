@@ -14,9 +14,8 @@ router.post("/create", auth(UserRole.INSTRUCTOR), validateRequest(quizValidation
 
 router.put("/update/:quizId", auth(UserRole.INSTRUCTOR), validateRequest(quizValidationSchema.quizUpdateSchema), accessValidation('quiz'), quizController.updateQuiz)
 
-router.delete("/delete/:quizId", auth(UserRole.INSTRUCTOR), quizController.deleteQuiz)
+router.delete("/delete/:quizId", auth(UserRole.INSTRUCTOR), accessValidation('quiz'), quizController.deleteQuiz)
 //TODO:
-//  complete above routes
 //  add route to check quiz -> return marks
 
 

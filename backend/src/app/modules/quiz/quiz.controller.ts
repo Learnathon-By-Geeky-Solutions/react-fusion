@@ -34,7 +34,7 @@ const updateQuiz = catchAsync(async (req, res, next) => {
 })
 
 const deleteQuiz = catchAsync(async (req, res, next) => {
-    const result = await quizService.createQuiz(req.user as JwtPayload, req.body)
+    const result = await quizService.deleteQuiz(req.params.quizId)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,

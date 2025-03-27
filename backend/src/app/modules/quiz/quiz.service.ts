@@ -63,8 +63,21 @@ const updateQuiz = async (quizId: string, payload: IUpdateQuiz) => {
     return result
 }
 
-const deleteQuiz = async (user: JwtPayload, payload) => {
-    const result = 'hi'
+const deleteQuiz = async (quizId: string) => {
+    const result = await prisma.$transaction(async (prisma) => {
+        await prisma.question.deleteMany({
+            where: {
+                quizId: quizId
+            }
+        })
+        const deletedQuiz = await prisma.quiz.delete({
+            where: {
+                id: quizId
+            }
+        })
+
+        return deletedQuiz
+    })
     return result
 }
 
