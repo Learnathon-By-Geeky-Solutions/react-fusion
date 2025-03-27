@@ -8,10 +8,12 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
   try {
     const quizId = req.params.quizId || req.body.quizId || null;
     const videoId = req.params.videoId || req.body.videoId || null;
-    console.log('quiz ', quizId)
-    console.log('vid ', videoId)
-    console.log(req.user, resourceType)
+    const moduleId = req.body.moduleId || req.body.moduleId || null;
+
     let resource = null
+    let instructorId = null
+    let courseId = null
+
     if (resourceType === 'quiz') {
       resource = await prisma.quiz.findUnique({
         where: { id: quizId },
@@ -28,7 +30,11 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
           }
         }
       })
+
+      instructorId = resource?.module?.milestone?.course?.instructorId
+      courseId = resource?.module?.milestone?.courseId
     }
+
     else if (resourceType === 'video') {
       resource = await prisma.video.findUnique({
         where: { id: videoId },
@@ -44,21 +50,37 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
           }
         }
       })
+      instructorId = resource?.module?.milestone?.course?.instructorId
+      courseId = resource?.module?.milestone?.courseId
     }
+    else if (resourceType === 'module') {
+      resource = await prisma.module.findUnique({
+        where: { id: moduleId },
+        include: {
+          milestone: {
+            include: {
+              course: true
+            }
+          }
+        }
+      })
+      instructorId = resource?.milestone?.course?.instructorId
+      courseId = resource?.milestone?.courseId
+    }
+
     if (!resource) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
     }
 
-    const instructorId = resource?.module?.milestone?.course?.instructorId
-    const courseId = resource?.module?.milestone?.courseId
-    if (req?.user?.role === 'INSTRUCTOR' && req.user.id === instructorId) {
+
+    if (req?.user?.role === 'INSTRUCTOR' && req.user.userId === instructorId) {
       return next()
     }
     if (req?.user?.role === 'STUDENT') {
       const studentId = req.user.id
       const studentCourse = await prisma.transactions.findFirst({
         where: {
-          courseId: courseId,
+          courseId: courseId || "",
           studentId: studentId
         }
       })
