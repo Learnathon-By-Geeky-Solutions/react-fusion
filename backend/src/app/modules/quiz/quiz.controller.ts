@@ -24,7 +24,7 @@ const getQuiz = catchAsync(async (req, res, next) => {
 })
 
 const updateQuiz = catchAsync(async (req, res, next) => {
-    const result = await quizService.createQuiz(req.user as JwtPayload, req.body)
+    const result = await quizService.updateQuiz(req.params.quizId, req.body)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,

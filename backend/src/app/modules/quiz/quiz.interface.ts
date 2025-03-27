@@ -7,3 +7,13 @@ export interface ICreateQuiz {
         points: number
     })[]
 }
+
+
+export interface IUpdateQuiz {
+    questions: ({
+        question: string,
+        options: string[],
+        answer: string,
+        points: number
+    })[]
+}
