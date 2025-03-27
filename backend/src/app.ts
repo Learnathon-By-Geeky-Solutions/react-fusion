@@ -4,20 +4,10 @@ import httpStatus from 'http-status';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import routes from './app/routes';
 import cookieParser from 'cookie-parser';
-import { rateLimit } from 'express-rate-limit'
 
 const app: Application = express();
 
 
-const rateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 500,
-  standardHeaders: 'draft-8',
-  legacyHeaders: false,
-  message: 'Too many requests, please try again later.',
-})
-
-app.use(rateLimiter);
 
 app.use(
   cors({

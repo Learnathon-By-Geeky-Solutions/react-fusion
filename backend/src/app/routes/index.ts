@@ -7,8 +7,18 @@ import { commentRoutes } from '../modules/comment/comment.routes';
 import { transactionRoutes } from '../modules/transactions/transactions.routes';
 import { videoRoutes } from '../modules/video/video.routes';
 import { quizRoutes } from '../modules/quiz/quiz.routes';
+import { rateLimit } from 'express-rate-limit'
 
 const router = express.Router();
+
+const rateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 500,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: 'Too many requests, please try again later.',
+})
+
 
 const moduleRoutes = [
   // ... routes
@@ -46,5 +56,5 @@ const moduleRoutes = [
   }
 ];
 
-moduleRoutes.forEach(route => router.use(route.path, route.route));
+moduleRoutes.forEach(route => router.use(route.path, route.route, rateLimiter));
 export default router;
