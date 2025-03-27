@@ -1,19 +1,18 @@
-import { useState } from 'react'
-import './App.css'
-import { Button } from "@/components/ui/button"
-function App() {
-  const [count, setCount] = useState(0)
+import "./App.css";
+import Footer from "./components/footer/Footer";
+import NavBar from "./components/navBar/NavBar";
+import { Outlet } from "react-router-dom";
 
+function App() {
   return (
-    <>
-      <h1 class="text-3xl font-bold underline">
-        Instructor Here!
-      </h1>
-      <div className="flex flex-col items-center justify-center min-h-svh">
-      <Button>Click me</Button>
+    <div className="h-screen flex flex-col">
+      <NavBar />
+      <div className="grow shrink-0 basis-auto">
+        <Outlet></Outlet>
+      </div>
+      <Footer />
     </div>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;
