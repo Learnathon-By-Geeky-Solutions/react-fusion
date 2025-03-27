@@ -77,10 +77,10 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
       return next()
     }
     if (req?.user?.role === 'STUDENT') {
-      const studentId = req.user.id
+      const studentId = req.user.userId
       const studentCourse = await prisma.transactions.findFirst({
         where: {
-          courseId: courseId || "",
+          courseId: courseId ?? '',
           studentId: studentId
         }
       })
