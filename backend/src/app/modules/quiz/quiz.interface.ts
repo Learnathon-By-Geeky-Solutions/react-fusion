@@ -17,3 +17,11 @@ export interface IUpdateQuiz {
         points: number
     })[]
 }
+
+
+export interface ICheckQuiz {
+    answers: {
+        id: string,
+        answer: string
+    }[]
+}

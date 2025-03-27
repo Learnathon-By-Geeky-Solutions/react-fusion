@@ -15,8 +15,7 @@ router.post("/create", auth(UserRole.INSTRUCTOR), validateRequest(quizValidation
 router.put("/update/:quizId", auth(UserRole.INSTRUCTOR), validateRequest(quizValidationSchema.quizUpdateSchema), accessValidation('quiz'), quizController.updateQuiz)
 
 router.delete("/delete/:quizId", auth(UserRole.INSTRUCTOR), accessValidation('quiz'), quizController.deleteQuiz)
-//TODO:
-//  add route to check quiz -> return marks
 
+router.post("/check/:quizId", auth(UserRole.STUDENT), validateRequest(quizValidationSchema.quizCheckingSchema), accessValidation('quiz'), quizController.checkQuiz)
 
 export const quizRoutes = router;

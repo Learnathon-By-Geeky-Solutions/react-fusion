@@ -43,4 +43,14 @@ const deleteQuiz = catchAsync(async (req, res, next) => {
     })
 })
 
-export const quizController = { createQuiz, getQuiz, updateQuiz, deleteQuiz }
+const checkQuiz = catchAsync(async (req, res, next) => {
+    const result = await quizService.checkQuiz(req.params.quizId, req.body)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: 'Marks Calculated Successfully',
+        data: result
+    })
+})
+
+export const quizController = { createQuiz, getQuiz, updateQuiz, deleteQuiz, checkQuiz }

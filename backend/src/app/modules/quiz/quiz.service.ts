@@ -1,6 +1,6 @@
 import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
-import { ICreateQuiz, IUpdateQuiz } from "./quiz.interface"
+import { ICheckQuiz, ICreateQuiz, IUpdateQuiz } from "./quiz.interface"
 const createQuiz = async (payload: ICreateQuiz) => {
     const result = await prisma.quiz.create({
         data: {
@@ -81,4 +81,22 @@ const deleteQuiz = async (quizId: string) => {
     return result
 }
 
-export const quizService = { createQuiz, getQuiz, updateQuiz, deleteQuiz }
+
+const checkQuiz = async (quizId: string, payload: ICheckQuiz) => {
+    const quiz = await prisma.quiz.findUnique({
+        where: { id: quizId },
+        include: { questions: true }
+    })
+    let marks = 0
+    payload.answers.forEach((item, index) => {
+        const quesstion = quiz?.questions.find((ques) => ques.id === item.id)
+        if (quesstion?.answer === item.answer) {
+            marks += quesstion.points
+        }
+    })
+
+    const result = { marks: marks, quiz: quiz }
+    return result
+}
+
+export const quizService = { createQuiz, getQuiz, updateQuiz, deleteQuiz, checkQuiz }

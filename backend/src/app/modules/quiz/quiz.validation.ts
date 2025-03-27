@@ -26,4 +26,12 @@ const quizUpdateSchema = z.object({
     })
 })
 
-export const quizValidationSchema = { quizCreateSchema, quizUpdateSchema }
+const quizCheckingSchema = z.object({
+    body: z.object({
+        answers: z.array(z.object({
+            id: z.string(),
+            answer: z.string()
+        }))
+    })
+})
+export const quizValidationSchema = { quizCreateSchema, quizUpdateSchema, quizCheckingSchema }
