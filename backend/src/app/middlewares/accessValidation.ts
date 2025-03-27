@@ -8,7 +8,8 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
   try {
     const quizId = req.params.quizId || req.body.quizId || null;
     const videoId = req.params.videoId || req.body.videoId || null;
-    const moduleId = req.body.moduleId || req.body.moduleId || null;
+    const moduleId = req.params.moduleId || req.body.moduleId || null;
+    const commentId = req.params.commentId || req.body.commentId || null
 
     let resource = null
     let instructorId = null
@@ -66,6 +67,13 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
       })
       instructorId = resource?.milestone?.course?.instructorId
       courseId = resource?.milestone?.courseId
+    }
+    else if (resourceType === 'comment') {
+      const comment = await prisma.comment.findUnique({ where: { id: commentId } })
+      if (comment?.userId !== req?.user?.userId) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized')
+      }
+      return next()
     }
 
     if (!resource) {
