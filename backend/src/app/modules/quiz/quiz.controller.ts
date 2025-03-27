@@ -5,7 +5,7 @@ import { JwtPayload } from "../../../interfaces/common";
 import { quizService } from "./quiz.service";
 
 const createQuiz = catchAsync(async (req, res, next) => {
-    const result = await quizService.createQuiz(req.user as JwtPayload, req.body)
+    const result = await quizService.createQuiz(req.body)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,

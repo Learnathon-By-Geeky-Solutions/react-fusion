@@ -1,7 +1,21 @@
 import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
-const createQuiz = async (user: JwtPayload, payload) => {
-    const result = 'hi'
+import { ICreateQuiz } from "./quiz.interface"
+const createQuiz = async (payload: ICreateQuiz) => {
+    const result = await prisma.quiz.create({
+        data: {
+            moduleId: payload.moduleId,
+            questions: {
+                create: payload.questions.map((ques) => ({
+                    question: ques.question,
+                    options: ques.options,
+                    answer: ques.answer,
+                    points: ques.points
+
+                }))
+            }
+        }
+    })
     return result
 
 }
