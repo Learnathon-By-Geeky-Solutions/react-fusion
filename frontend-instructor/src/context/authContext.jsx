@@ -3,11 +3,11 @@ import { Spinner } from "@/components/ui/spinner";
 
 const InstructorAuthContext = createContext();
 
-const useInstructorAuth = () => {
+const useAuth = () => {
   return useContext(InstructorAuthContext);
 };
 
-export const InstructorAuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [instructor, setInstructor] = useState({
     authenticated: false,
@@ -76,4 +76,4 @@ export const InstructorAuthProvider = ({ children }) => {
   );
 };
 
-export default useInstructorAuth;
+export default useAuth;

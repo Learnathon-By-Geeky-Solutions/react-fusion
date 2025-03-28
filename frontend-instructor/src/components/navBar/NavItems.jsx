@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
-import useAuth from "@/src/context/authContext";
+import useInstructorAuth from "@/src/context/authContext"; // ✅ Correct import
 import { Link, useLocation } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 
 export default function NavItems() {
-  const { user, logOutUser } = useAuth();
+  const { instructor, logOutInstructor } = useInstructorAuth(); // ✅ Correct hook and variable
   const location = useLocation();
+
   const handleLogOut = () => {
-    logOutUser();
+    logOutInstructor(); // ✅ Correct function
     toast.success("User Logged Out");
   };
 
@@ -21,14 +22,8 @@ export default function NavItems() {
       >
         <Link to="/">Home</Link>
       </Button>
-      <Button
-        variant={location.pathname === "/courses" ? "default" : "outline"}
-        className="ml-2"
-        asChild
-      >
-        <Link to="/courses">Courses</Link>
-      </Button>
-      {user.authenticated ? (
+      
+      {instructor.authenticated ? ( // ✅ Correct authentication check
         <Button
           variant={location.pathname === "/logout" ? "default" : "outline"}
           className="ml-2"
@@ -45,6 +40,7 @@ export default function NavItems() {
           <Link to="/login">Login</Link>
         </Button>
       )}
+
       <Toaster position="bottom-right" richColors />
     </div>
   );

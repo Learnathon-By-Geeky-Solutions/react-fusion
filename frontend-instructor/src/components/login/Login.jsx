@@ -19,9 +19,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { instructorAuthService } from "@/src/services/instructorAuth";
+import { instructorAuthService } from "@/src/services/auth";
 import { useFormik } from "formik";
-import useInstructorAuth from "@/src/context/instructorAuthContext";
+import useInstructorAuth from "@/src/context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -31,7 +31,7 @@ export default function InstructorLogin() {
 
   useEffect(() => {
     if (instructor.authenticated) {
-      navigate("/instructor-dashboard");
+      navigate("/dashboard");
     }
   }, [instructor, navigate]);
 

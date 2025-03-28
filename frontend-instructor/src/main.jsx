@@ -1,22 +1,33 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./components/login/Login"; // Import the correct Login component
-import { AuthProvider } from "./context/authContext"; // Import AuthProvider
+import Login from "./components/login/Login"; 
+import Dashboard from "./components/dashboard/Dashboard"; 
+import { AuthProvider } from "./context/authContext"; 
+import App from "./App.jsx"; 
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Login />, 
+    element: <App />,
     errorElement: <div>Not Found</div>,
+    children: [
+      {
+        path: "/",
+        element: <Login />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+    ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
+    <AuthProvider> 
       <RouterProvider router={routes} />
     </AuthProvider>
   </StrictMode>
