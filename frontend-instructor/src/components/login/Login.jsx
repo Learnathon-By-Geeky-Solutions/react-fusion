@@ -67,15 +67,15 @@ export default function InstructorLogin() {
 
   const signupFormik = useFormik({
     initialValues: {
-      name: "test",
-      email: "instructor@s.com",
-      password: "test00",
-      contactNumber: "0123456789",
-      experience: 5,
-      gender: "MALE",
-      qualification: "MASTERS",
-      currentWorkingPlace: "XYZ University",
-      designation: "Senior Lecturer",
+      name: "",
+      email: "",
+      password: "",
+      contactNumber: "",
+      experience: "",
+      gender: "",
+      qualification: "",
+      currentWorkingPlace: "",
+      designation: "",
     },
     onSubmit: (values) => {
       handleSignUp(values);
