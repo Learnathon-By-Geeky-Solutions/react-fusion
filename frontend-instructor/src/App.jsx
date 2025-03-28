@@ -8,7 +8,7 @@ function App() {
     <div className="h-screen flex flex-col">
       <NavBar />
       <div className="grow shrink-0 basis-auto">
-        <Outlet></Outlet>
+        <Outlet/>
       </div>
       <Footer />
     </div>

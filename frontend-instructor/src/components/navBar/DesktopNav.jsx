@@ -9,7 +9,7 @@ export default function DesktopNav() {
   EduNexus
 </Link>
         <div>
-          <NavItems></NavItems>
+          <NavItems/>
         </div>
       </div>
     </div>
