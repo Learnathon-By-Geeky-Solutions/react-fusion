@@ -67,7 +67,7 @@ export default function Login() {
     initialValues: {
       name: "test",
       email: "@s.com",
-      password: "test00",
+      password: "",
       contactNumber: "0123456789",
       currentInstitution: "RUET",
       gender: "MALE",
