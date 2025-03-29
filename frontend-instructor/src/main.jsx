@@ -6,6 +6,7 @@ import Login from "./components/login/Login";
 import Dashboard from "./components/dashboard/Dashboard"; 
 import { AuthProvider } from "./context/authContext"; 
 import App from "./App.jsx"; 
+import SignUp from "./components/signup/SignUp";
 
 const routes = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const routes = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,  // ✅ Fixed syntax error
       },
     ],
   },

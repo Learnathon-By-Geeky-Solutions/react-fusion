@@ -3,6 +3,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 const InstructorAuthContext = createContext();
 
+
 const useAuth = () => {
   return useContext(InstructorAuthContext);
 };

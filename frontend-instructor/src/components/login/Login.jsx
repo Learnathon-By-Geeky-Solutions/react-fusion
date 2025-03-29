@@ -1,29 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/sonner";
-import { toast } from "sonner";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { instructorAuthService } from "@/src/services/auth";
-import { useFormik } from "formik";
-import useInstructorAuth from "@/src/context/authContext";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useFormik } from "formik";
+import { toast, Toaster } from "sonner";
+import useInstructorAuth from "@/src/context/authContext";
+import { instructorAuthService } from "@/src/services/auth";
 
 export default function InstructorLogin() {
   const { instructor, storeToken } = useInstructorAuth();
@@ -37,22 +17,13 @@ export default function InstructorLogin() {
 
   const handleLogIn = async (data) => {
     const result = await instructorAuthService.logInInstructor(data);
-    if (result.success === true) {
+    if (result.success) {
       toast.success("Log In Successful!");
       storeToken(result.data.accessToken);
+      navigate("/dashboard");
     } else {
       toast.error("ERROR!");
     }
-  };
-
-  const handleSignUp = async (data) => {
-    const result = await instructorAuthService.signUpInstructor(data);
-    if (result.success === true) {
-      toast.success("Instructor Account Created.");
-    } else {
-      toast.error("ERROR!");
-    }
-    signupFormik.resetForm();
   };
 
   const loginFormik = useFormik({
@@ -60,179 +31,55 @@ export default function InstructorLogin() {
       email: "",
       password: "",
     },
-    onSubmit: (values) => {
-      handleLogIn(values);
-    },
-  });
-
-  const signupFormik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      password: "",
-      contactNumber: "",
-      experience: "",
-      gender: "",
-      qualification: "",
-      currentWorkingPlace: "",
-      designation: "",
-    },
-    onSubmit: (values) => {
-      handleSignUp(values);
-    },
+    onSubmit: handleLogIn,
   });
 
   return (
-    <div className="flex align-middle my-12 justify-around">
-      <Tabs defaultValue="login" className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="login">Log In</TabsTrigger>
-          <TabsTrigger value="signup">Sign Up</TabsTrigger>
-        </TabsList>
+    <div className="flex flex-col items-center justify-center mt-14">
+      <div className="w-96 bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold mb-4">Instructor Log In</h2>
+        <p className="text-sm text-gray-500 mb-4">Enter email and password to log in</p>
 
-        <TabsContent value="login">
-          <form onSubmit={loginFormik.handleSubmit}>
-            <Card>
-              <CardHeader>
-                <CardTitle>Instructor Log In</CardTitle>
-                <CardDescription>
-                  Enter email and password to log in
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    onChange={loginFormik.handleChange("email")}
-                    value={loginFormik.values.email}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    onChange={loginFormik.handleChange("password")}
-                    value={loginFormik.values.password}
-                    type="password"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button type="submit">Log In</Button>
-              </CardFooter>
-            </Card>
-          </form>
-        </TabsContent>
+        <form onSubmit={loginFormik.handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="w-full p-2 border rounded-md"
+              onChange={loginFormik.handleChange}
+              value={loginFormik.values.email}
+            />
+          </div>
 
-        <TabsContent value="signup">
-          <form onSubmit={signupFormik.handleSubmit}>
-            <Card>
-              <CardHeader>
-                <CardTitle>Instructor Sign Up</CardTitle>
-                <CardDescription>
-                  Enter details to create an instructor account
-                </CardDescription>
-              </CardHeader>
+          <div>
+            <label className="block text-sm font-medium">Password</label>
+            <input
+              type="password"
+              id="password"
+              className="w-full p-2 border rounded-md"
+              onChange={loginFormik.handleChange}
+              value={loginFormik.values.password}
+            />
+          </div>
 
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    onChange={signupFormik.handleChange("name")}
-                    value={signupFormik.values.name}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    onChange={signupFormik.handleChange("email")}
-                    value={signupFormik.values.email}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    onChange={signupFormik.handleChange("password")}
-                    value={signupFormik.values.password}
-                    type="password"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="phone">Contact No</Label>
-                  <Input
-                    id="phone"
-                    onChange={signupFormik.handleChange("contactNumber")}
-                    value={signupFormik.values.contactNumber}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="experience">Experience (Years)</Label>
-                  <Input
-                    id="experience"
-                    type="number"
-                    onChange={signupFormik.handleChange("experience")}
-                    value={signupFormik.values.experience}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="gender">Gender</Label>
-                  <Select
-                    onValueChange={signupFormik.handleChange("gender")}
-                    value={signupFormik.values.gender}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="MALE">Male</SelectItem>
-                      <SelectItem value="FEMALE">Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="qualification">Qualification</Label>
-                  <Select
-                    onValueChange={signupFormik.handleChange("qualification")}
-                    value={signupFormik.values.qualification}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Qualification" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="BACHELORS">Bachelors</SelectItem>
-                      <SelectItem value="MASTERS">Masters</SelectItem>
-                      <SelectItem value="PHD">PhD</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="currentWorkingPlace">Current Workplace</Label>
-                  <Input
-                    id="currentWorkingPlace"
-                    onChange={signupFormik.handleChange("currentWorkingPlace")}
-                    value={signupFormik.values.currentWorkingPlace}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="designation">Designation</Label>
-                  <Input
-                    id="designation"
-                    onChange={signupFormik.handleChange("designation")}
-                    value={signupFormik.values.designation}
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button type="submit">Sign Up</Button>
-              </CardFooter>
-            </Card>
-          </form>
-        </TabsContent>
-      </Tabs>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Log In
+          </button>
+        </form>
+
+        <p className="text-sm mt-4">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-blue-600 hover:underline">
+            Sign Up
+          </Link>
+        </p>
+      </div>
+
+      <Toaster position="bottom-right" richColors />
     </div>
   );
 }

@@ -1,44 +1,23 @@
-import { Button } from "@/components/ui/button";
-import useInstructorAuth from "@/src/context/authContext"; // ✅ Correct import
-import { Link, useLocation } from "react-router-dom";
-import { Toaster } from "@/components/ui/sonner";
-import { toast } from "sonner";
+import useInstructorAuth from "@/src/context/authContext";
+import { toast, Toaster } from "sonner";
 
 export default function NavItems() {
-  const { instructor, logOutInstructor } = useInstructorAuth(); // ✅ Correct hook and variable
-  const location = useLocation();
+  const { instructor, logOutInstructor } = useInstructorAuth();
 
   const handleLogOut = () => {
-    logOutInstructor(); // ✅ Correct function
+    logOutInstructor();
     toast.success("User Logged Out");
   };
 
   return (
-    <div>
-      <Button
-        variant={location.pathname === "/" ? "default" : "outline"}
-        className="ml-2"
-        asChild
-      >
-        <Link to="/">Home</Link>
-      </Button>
-      
-      {instructor.authenticated ? ( // ✅ Correct authentication check
-        <Button
-          variant={location.pathname === "/logout" ? "default" : "outline"}
-          className="ml-2"
+    <div className="flex items-center space-x-2">
+      {instructor.authenticated && (
+        <button
           onClick={handleLogOut}
+          className="px-4 py-2 rounded-md text-sm font-medium transition-all bg-blue-600 text-white"
         >
           Log Out
-        </Button>
-      ) : (
-        <Button
-          variant={location.pathname === "/login" ? "default" : "outline"}
-          className="ml-2"
-          asChild
-        >
-          <Link to="/login">Login</Link>
-        </Button>
+        </button>
       )}
 
       <Toaster position="bottom-right" richColors />
