@@ -1,9 +1,18 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
 
 const InstructorAuthContext = createContext();
 
 const useAuth = () => {
   return useContext(InstructorAuthContext);
+};
+
+const LoadingSpinner = () => {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
+    </div>
+  );
 };
 
 export const AuthProvider = ({ children }) => {
@@ -49,30 +58,24 @@ export const AuthProvider = ({ children }) => {
     loadToken();
   }, []);
 
-  // ✅ Tailwind-based Loading Spinner
-  const LoadingSpinner = () => {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
-      </div>
-    );
-  };
-
-  const values = {
+  const values = useMemo(() => ({
     instructor,
     setInstructor,
     loadToken,
     storeToken,
     isLoading,
-    LoadingSpinner,
     logOutInstructor,
-  };
+  }), [instructor, isLoading]);
 
   return (
     <InstructorAuthContext.Provider value={values}>
       {isLoading ? <LoadingSpinner /> : children}
     </InstructorAuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default useAuth;
