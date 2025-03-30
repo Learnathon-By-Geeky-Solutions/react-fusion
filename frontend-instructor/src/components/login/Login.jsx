@@ -42,7 +42,7 @@ export default function InstructorLogin() {
 
         <form onSubmit={loginFormik.handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium">Email</label>
             <input
               type="email"
               id="email"
@@ -53,7 +53,7 @@ export default function InstructorLogin() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium">Password</label>
             <input
               type="password"
               id="password"
