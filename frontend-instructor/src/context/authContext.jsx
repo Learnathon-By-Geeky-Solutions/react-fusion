@@ -1,8 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { Spinner } from "@/components/ui/spinner";
 
 const InstructorAuthContext = createContext();
-
 
 const useAuth = () => {
   return useContext(InstructorAuthContext);
@@ -51,11 +49,11 @@ export const AuthProvider = ({ children }) => {
     loadToken();
   }, []);
 
+  // ✅ Tailwind-based Loading Spinner
   const LoadingSpinner = () => {
     return (
-      <div>
-        loading
-        <Spinner show={true} />
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
       </div>
     );
   };
