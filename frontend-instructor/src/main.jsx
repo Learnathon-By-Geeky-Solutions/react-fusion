@@ -7,6 +7,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import { AuthProvider } from "./context/authContext"; 
 import App from "./App.jsx"; 
 import SignUp from "./components/signup/SignUp";
+import MyCourses from "./components/mycourses/MyCourses";
 
 const routes = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const routes = createBrowserRouter([
       },
       {
         path: "/signup",
-        element: <SignUp />,  // ✅ Fixed syntax error
+        element: <SignUp />, 
+      },
+      {
+        path: "/my-courses",
+        element: <MyCourses />, 
       },
     ],
   },
