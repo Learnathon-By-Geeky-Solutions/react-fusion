@@ -43,7 +43,6 @@ export default function NavItems() {
           </button>
         </>
       )}
-
       <Toaster position="bottom-right" richColors />
     </div>
   );
