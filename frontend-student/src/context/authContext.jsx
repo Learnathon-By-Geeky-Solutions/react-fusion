@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 const useAuth = () => {
   return useContext(AuthContext);
@@ -62,7 +62,6 @@ export const AuthProvider = ({ children }) => {
   const values = useMemo(() => ({
     user,
     setUser,
-    loadToken,
     storeToken,
     isLoading,
     logOutUser,

@@ -9,6 +9,6 @@ export interface ICreateComment {
 }
 
 export interface IUpdateComment {
-    id: string,
+    commentId: string,
     comment: string
 }

@@ -17,10 +17,13 @@ const createCourseValidation = z.object({
                     url: z.string(),
                 })),
                 quizes: z.array(z.object({
-                    question: z.string(),
-                    options: z.array(z.string()),
-                    answer: z.string(),
-                    value: z.number()
+                    questions: z.array(z.object({
+                        question: z.string(),
+                        options: z.array(z.string()),
+                        answer: z.string(),
+                        points: z.number()
+
+                    })),
                 }))
 
             }))

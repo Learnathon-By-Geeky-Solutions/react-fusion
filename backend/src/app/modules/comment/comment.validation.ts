@@ -18,7 +18,7 @@ const createCommentsSchema = z.object({
 
 const updateCommentsSchema = z.object({
     body: z.object({
-        id: z.string(),
+        commentId: z.string(),
         comment: z.string()
     })
 })

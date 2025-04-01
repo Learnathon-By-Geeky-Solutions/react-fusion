@@ -118,12 +118,20 @@ CREATE TABLE "Module" (
 CREATE TABLE "Quiz" (
     "id" TEXT NOT NULL,
     "moduleId" TEXT NOT NULL,
+
+    CONSTRAINT "Quiz_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Question" (
+    "id" TEXT NOT NULL,
+    "quizId" TEXT NOT NULL,
     "question" TEXT NOT NULL,
     "options" TEXT[],
     "answer" TEXT NOT NULL,
-    "value" DOUBLE PRECISION NOT NULL,
+    "points" DOUBLE PRECISION NOT NULL,
 
-    CONSTRAINT "Quiz_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Question_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -132,6 +140,7 @@ CREATE TABLE "Video" (
     "moduleId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "url" TEXT NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "likeCount" INTEGER NOT NULL,
     "dislikeCount" INTEGER NOT NULL,
 
@@ -176,10 +185,10 @@ CREATE TABLE "Note" (
 
 -- CreateTable
 CREATE TABLE "CourseStudent" (
-    "coureId" TEXT NOT NULL,
+    "courseId" TEXT NOT NULL,
     "studentId" TEXT NOT NULL,
 
-    CONSTRAINT "CourseStudent_pkey" PRIMARY KEY ("coureId","studentId")
+    CONSTRAINT "CourseStudent_pkey" PRIMARY KEY ("courseId","studentId")
 );
 
 -- CreateTable
@@ -326,6 +335,9 @@ CREATE UNIQUE INDEX "students_email_key" ON "students"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "Note_userId_videoId_key" ON "Note"("userId", "videoId");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Transactions_txnId_key" ON "Transactions"("txnId");
+
 -- AddForeignKey
 ALTER TABLE "admins" ADD CONSTRAINT "admins_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -346,6 +358,9 @@ ALTER TABLE "Module" ADD CONSTRAINT "Module_milestoneId_fkey" FOREIGN KEY ("mile
 
 -- AddForeignKey
 ALTER TABLE "Quiz" ADD CONSTRAINT "Quiz_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Question" ADD CONSTRAINT "Question_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Video" ADD CONSTRAINT "Video_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -375,7 +390,7 @@ ALTER TABLE "Note" ADD CONSTRAINT "Note_userId_fkey" FOREIGN KEY ("userId") REFE
 ALTER TABLE "Note" ADD CONSTRAINT "Note_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES "Video"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CourseStudent" ADD CONSTRAINT "CourseStudent_coureId_fkey" FOREIGN KEY ("coureId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CourseStudent" ADD CONSTRAINT "CourseStudent_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CourseStudent" ADD CONSTRAINT "CourseStudent_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

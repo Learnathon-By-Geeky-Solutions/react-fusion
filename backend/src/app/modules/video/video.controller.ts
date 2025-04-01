@@ -6,7 +6,7 @@ import { JwtPayload } from "../../../interfaces/common";
 
 
 const getVideo = catchAsync(async (req, res, next) => {
-    const result = await videoService.getVideo(req.user as JwtPayload, req.params.id)
+    const result = await videoService.getVideo(req.user as JwtPayload, req.params.videoId)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
@@ -15,5 +15,25 @@ const getVideo = catchAsync(async (req, res, next) => {
     })
 })
 
+const updateVideo = catchAsync(async (req, res, next) => {
+    const result = await videoService.updateVideo(req.params.videoId, req.body)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: 'Video Updated Successfully',
+        data: result
+    })
+})
 
-export const videoController = { getVideo }
+
+const deleteVideo = catchAsync(async (req, res, next) => {
+    const result = await videoService.deleteVideo(req.params.videoId)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: 'Video Deleted Successfully',
+        data: result
+    })
+})
+
+export const videoController = { getVideo, updateVideo, deleteVideo }

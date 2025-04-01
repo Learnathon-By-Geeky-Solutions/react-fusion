@@ -4,7 +4,6 @@ import prisma from "../../../shared/prisma";
 import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";
 
 const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
-    console.log('jwt ', user.userId)
     const courseData = {
         title: payload.title,
         description: payload.description,
@@ -29,10 +28,14 @@ const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
                         },
                         quizes: {
                             create: module.quizes.map(quiz => ({
-                                question: quiz.question,
-                                options: quiz.options,
-                                answer: quiz.answer,
-                                value: quiz.value
+                                questions: {
+                                    create: quiz.questions.map(ques => ({
+                                        question: ques.question,
+                                        options: ques.options,
+                                        answer: ques.answer,
+                                        points: ques.points
+                                    })),
+                                }
                             }))
                         }
                     }))
@@ -86,22 +89,46 @@ const getAllCourses = async (payload: any) => {
             if (items.quizes) {
                 includeTerms.milestones.include.modules = {
                     include: {
-                        quizes: true
+                        quizes: {
+                            select: {
+                                id: true,
+                            }
+                        }
                     }
                 }
             }
             if (items.videos) {
                 includeTerms.milestones.include.modules = {
                     include: {
-                        videos: true
+                        videos: {
+                            where: { isDeleted: false },
+                            select: {
+                                id: true,
+                                moduleId: true,
+                                title: true,
+                            }
+                        }
                     }
                 }
             }
             if (items.videos && items.quizes) {
                 includeTerms.milestones.include.modules = {
                     include: {
-                        quizes: true,
-                        videos: true
+                        quizes: {
+                            select: {
+                                id: true,
+                            }
+                        },
+                        videos: {
+                            where: { isDeleted: false },
+                            select: {
+                                id: true,
+                                moduleId: true,
+                                title: true,
+                            }
+                        },
+
+
                     }
                 }
             }
@@ -134,21 +161,40 @@ const getSingleCourse = async (id: string) => {
             id: id
         },
         include: {
+            instructor: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    designation: true,
+                    experience: true,
+                    qualification: true,
+                    currentWorkingPlace: true,
+                }
+            },
             milestones: {
                 include: {
                     modules: {
                         include: {
-                            videos: true,
-                            quizes: true
+                            videos: {
+                                where: { isDeleted: false },
+                                select: {
+                                    id: true,
+                                    moduleId: true,
+                                    title: true,
+                                }
+                            },
+                            quizes: {
+                                select: {
+                                    id: true,
+                                }
+                            }
                         }
                     },
 
                 },
             },
-            instructor: true
-
         }
-
     })
     return result
 }
