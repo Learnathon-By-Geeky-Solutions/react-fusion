@@ -192,6 +192,116 @@ CREATE TABLE "Transactions" (
     CONSTRAINT "Transactions_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "student_analytics" (
+    "id" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "courseCompleted" INTEGER NOT NULL,
+    "totalTimeSpent" DOUBLE PRECISION NOT NULL,
+    "progress" DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT "student_analytics_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "course_progress" (
+    "id" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "courseId" TEXT NOT NULL,
+    "progress" DOUBLE PRECISION NOT NULL,
+    "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "course_progress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "video_progress" (
+    "id" TEXT NOT NULL,
+    "courseProgressId" TEXT NOT NULL,
+    "videoId" TEXT NOT NULL,
+    "completed" BOOLEAN NOT NULL,
+    "timeWatched" DOUBLE PRECISION NOT NULL,
+    "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "video_progress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "quiz_progress" (
+    "id" TEXT NOT NULL,
+    "courseProgressId" TEXT NOT NULL,
+    "quizId" TEXT NOT NULL,
+    "completed" BOOLEAN NOT NULL,
+    "score" DOUBLE PRECISION NOT NULL,
+    "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "quiz_progress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "module_progress" (
+    "id" TEXT NOT NULL,
+    "courseProgressId" TEXT NOT NULL,
+    "moduleId" TEXT NOT NULL,
+    "completed" BOOLEAN NOT NULL,
+    "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "module_progress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "milestone_progress" (
+    "id" TEXT NOT NULL,
+    "courseProgressId" TEXT NOT NULL,
+    "milestoneId" TEXT NOT NULL,
+    "completed" BOOLEAN NOT NULL,
+    "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "milestone_progress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "instructor_analytics" (
+    "id" TEXT NOT NULL,
+    "instructorId" TEXT NOT NULL,
+    "coursesCreated" INTEGER NOT NULL,
+    "totalStudents" INTEGER NOT NULL,
+    "averageRating" DOUBLE PRECISION NOT NULL,
+    "totalEarnings" DOUBLE PRECISION NOT NULL,
+    "studentFeedback" DOUBLE PRECISION NOT NULL,
+    "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "instructor_analytics_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "course_analytics" (
+    "id" TEXT NOT NULL,
+    "courseId" TEXT NOT NULL,
+    "totalEnrollments" INTEGER NOT NULL,
+    "totalViews" INTEGER NOT NULL,
+    "averageRating" DOUBLE PRECISION NOT NULL,
+    "totalComments" INTEGER NOT NULL,
+    "totalLikes" INTEGER NOT NULL,
+    "totalDislikes" INTEGER NOT NULL,
+    "totalTransactions" INTEGER NOT NULL,
+    "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "course_analytics_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "instructor_feedback" (
+    "id" TEXT NOT NULL,
+    "instructorId" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "feedback" TEXT NOT NULL,
+    "rating" DOUBLE PRECISION NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "instructor_feedback_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -275,3 +385,48 @@ ALTER TABLE "Transactions" ADD CONSTRAINT "Transactions_courseId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "Transactions" ADD CONSTRAINT "Transactions_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "student_analytics" ADD CONSTRAINT "student_analytics_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "course_progress" ADD CONSTRAINT "course_progress_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "course_progress" ADD CONSTRAINT "course_progress_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "video_progress" ADD CONSTRAINT "video_progress_courseProgressId_fkey" FOREIGN KEY ("courseProgressId") REFERENCES "course_progress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "video_progress" ADD CONSTRAINT "video_progress_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES "Video"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "quiz_progress" ADD CONSTRAINT "quiz_progress_courseProgressId_fkey" FOREIGN KEY ("courseProgressId") REFERENCES "course_progress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "quiz_progress" ADD CONSTRAINT "quiz_progress_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "module_progress" ADD CONSTRAINT "module_progress_courseProgressId_fkey" FOREIGN KEY ("courseProgressId") REFERENCES "course_progress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "module_progress" ADD CONSTRAINT "module_progress_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "milestone_progress" ADD CONSTRAINT "milestone_progress_courseProgressId_fkey" FOREIGN KEY ("courseProgressId") REFERENCES "course_progress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "milestone_progress" ADD CONSTRAINT "milestone_progress_milestoneId_fkey" FOREIGN KEY ("milestoneId") REFERENCES "Milestone"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "instructor_analytics" ADD CONSTRAINT "instructor_analytics_instructorId_fkey" FOREIGN KEY ("instructorId") REFERENCES "instructors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "course_analytics" ADD CONSTRAINT "course_analytics_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "instructor_feedback" ADD CONSTRAINT "instructor_feedback_instructorId_fkey" FOREIGN KEY ("instructorId") REFERENCES "instructors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "instructor_feedback" ADD CONSTRAINT "instructor_feedback_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
