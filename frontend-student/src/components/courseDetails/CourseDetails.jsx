@@ -2,12 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import getSingleCourse from "@/src/services/singleCourse";
 import { noimage } from "../../assets";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 export default function CourseDetails() {
   const { id } = useParams();
@@ -42,43 +36,30 @@ export default function CourseDetails() {
           <h1 className="text-3xl font-bold text-gray-900">{course.title}</h1>
           <p className="text-gray-700 mt-4 text-left">{course.description}</p>
 
-          {/* Course Modules Accordion */}
+          {/* Course Modules */}
           <div className="mt-6">
             <h2 className="text-2xl font-semibold text-gray-900">Course Content</h2>
-            <Accordion type="single" collapsible className="mt-4">
+            <div className="mt-4 space-y-2">
               {course.milestones.map((milestone) => (
-                <AccordionItem
-                  key={milestone.id}
-                  value={milestone.id}
-                  className="bg-gray-300 rounded-lg p-2 mb-2"
-                >
-                  <AccordionTrigger className="font-semibold text-lg px-4">
-                    {milestone.title}
-                  </AccordionTrigger>
-                  <AccordionContent>
+                <details key={milestone.id} className="bg-gray-300 rounded-lg p-3 cursor-pointer">
+                  <summary className="font-semibold text-lg">{milestone.title}</summary>
+                  <div className="ml-4 mt-2 space-y-2">
                     {milestone.modules.map((module) => (
-                      <Accordion type="single" collapsible key={module.id} className="mx-4 mt-2">
-                        <AccordionItem value={module.id} className="bg-gray-100 py-1 px-4 rounded-lg">
-                          <AccordionTrigger className="text-lg font-semibold">
-                            {module.title}
-                          </AccordionTrigger>
-                          <AccordionContent className="space-y-2 mt-2">
-                            {module.videos.map((video, index) => (
-                              <div
-                                key={video.id}
-                                className="bg-gray-200 py-2 px-4 rounded-md text-left"
-                              >
-                                Video {index + 1}: {video.title}
-                              </div>
-                            ))}
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
+                      <details key={module.id} className="bg-gray-100 p-3 rounded-lg cursor-pointer">
+                        <summary className="text-lg font-semibold">{module.title}</summary>
+                        <div className="ml-4 mt-2 space-y-2">
+                          {module.videos.map((video, index) => (
+                            <div key={video.id} className="bg-gray-200 py-2 px-4 rounded-md">
+                              Video {index + 1}: {video.title}
+                            </div>
+                          ))}
+                        </div>
+                      </details>
                     ))}
-                  </AccordionContent>
-                </AccordionItem>
+                  </div>
+                </details>
               ))}
-            </Accordion>
+            </div>
           </div>
         </div>
 

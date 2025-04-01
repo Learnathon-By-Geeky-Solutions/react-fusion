@@ -10,6 +10,7 @@ import { AuthProvider } from "./context/authContext";
 import Courses from "./components/allcourses/Courses";
 import CourseDetails from "./components/CourseDetails/CourseDetails";
 import Footer from "./components/footer/Footer";
+import Signup from "./components/signup/SignUp";
 
 const routes = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const routes = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
       },
       {
         path: "/courses",

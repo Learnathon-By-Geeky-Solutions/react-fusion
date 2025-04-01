@@ -1,5 +1,4 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { Spinner } from "@/components/ui/spinner";
 
 const AuthContext = createContext();
 
@@ -51,8 +50,9 @@ export const AuthProvider = ({ children }) => {
   const LoadingSpinner = () => {
     return (
       <div>
-        loading
-        <Spinner show={true} />
+        Loading...
+        {/* Add a simple spinner here if needed, like a rotating circle */}
+        <div className="animate-spin h-8 w-8 border-4 border-t-4 border-blue-500 rounded-full"></div>
       </div>
     );
   };
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={values}>
-      {isLoading ? <LoadingSpinner></LoadingSpinner> : children}
+      {isLoading ? <LoadingSpinner /> : children}
     </AuthContext.Provider>
   );
 };
