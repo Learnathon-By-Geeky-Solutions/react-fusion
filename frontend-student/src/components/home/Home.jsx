@@ -37,7 +37,7 @@ export default function Home() {
           className="flex w-full h-full animate-carousel"
         >
           {[image1, image2, image3].map((img, index) => (
-            <div key={index} className="w-full flex-shrink-0">
+            <div key="Carousel Images" className="w-full flex-shrink-0">
               <img
                 src={img}
                 alt={`Image ${index + 1}`}
