@@ -1,3 +1,4 @@
+import { any } from "zod";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";
@@ -65,38 +66,38 @@ const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
 }
 
 
-const getAllCourses = async (filters: any) => {
-
+const getAllCourses = async (payload: any) => {
+    const items = payload.items
     const includeTerms: IIncludeTerms = {
         instructor: false,
         milestones: false,
     };
-    if (filters.instructors) {
+    if (items.instructors) {
         includeTerms.instructor = true
     }
-    if (filters.milestones) {
+    if (items.milestones) {
         includeTerms.milestones = true
-        if (filters.modules) {
+        if (items.modules) {
             includeTerms.milestones = {
                 include: {
                     modules: true
                 }
             }
-            if (filters.quizes) {
+            if (items.quizes) {
                 includeTerms.milestones.include.modules = {
                     include: {
                         quizes: true
                     }
                 }
             }
-            if (filters.videos) {
+            if (items.videos) {
                 includeTerms.milestones.include.modules = {
                     include: {
                         videos: true
                     }
                 }
             }
-            if (filters.videos && filters.quizes) {
+            if (items.videos && items.quizes) {
                 includeTerms.milestones.include.modules = {
                     include: {
                         quizes: true,
@@ -106,10 +107,22 @@ const getAllCourses = async (filters: any) => {
             }
         }
     }
+    const whereTerms = {
+        instructorId: payload.filters?.instructorId,
+        title: {
+            contains: payload.filters?.title,
+        }
+    }
+    let sortBy = [] as any
+    if (payload?.sortBy) {
+        const sortingEntries = Object.entries(payload.sortBy);
+        sortingEntries.map(([key, value]) => (sortBy.push({ [key]: value })))
+    }
+
     const result = await prisma.course.findMany({
-        include: includeTerms
-
-
+        where: whereTerms,
+        include: includeTerms,
+        orderBy: sortBy
     })
     return result
 
