@@ -24,6 +24,10 @@ export default function Courses() {
     fetchCourses();
   }, []);
 
+  const getThumbnail = (thumbnail) => {
+    return thumbnail === "str" ? noimage : thumbnail;
+  };
+
   return (
     <div className="p-6 max-w-[1280px] mx-auto">
       <h1 className="text-3xl font-bold">All Courses</h1>
@@ -41,7 +45,7 @@ export default function Courses() {
             <div key={course.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
               <div className="w-full h-60">
                 <img
-                  src={course.thumbnail === "str" ? noimage : course.thumbnail}
+                  src={getThumbnail(course.thumbnail)}
                   alt={course.title}
                   className="w-full h-full object-cover"
                 />
