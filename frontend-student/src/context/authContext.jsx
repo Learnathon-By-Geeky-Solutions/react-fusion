@@ -1,9 +1,19 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
 
 const AuthContext = createContext();
 
 const useAuth = () => {
   return useContext(AuthContext);
+};
+
+const LoadingSpinner = () => {
+  return (
+    <div>
+      Loading...
+      <div className="animate-spin h-8 w-8 border-4 border-t-4 border-blue-500 rounded-full"></div>
+    </div>
+  );
 };
 
 export const AuthProvider = ({ children }) => {
@@ -12,6 +22,7 @@ export const AuthProvider = ({ children }) => {
     authenticated: false,
     token: null,
   });
+
   const loadToken = async () => {
     try {
       const storedToken = localStorage.getItem("token");
@@ -35,6 +46,7 @@ export const AuthProvider = ({ children }) => {
       token: token,
     });
   };
+
   const logOutUser = async () => {
     localStorage.removeItem("token");
     setUser({
@@ -47,31 +59,24 @@ export const AuthProvider = ({ children }) => {
     loadToken();
   }, []);
 
-  const LoadingSpinner = () => {
-    return (
-      <div>
-        Loading...
-        {/* Add a simple spinner here if needed, like a rotating circle */}
-        <div className="animate-spin h-8 w-8 border-4 border-t-4 border-blue-500 rounded-full"></div>
-      </div>
-    );
-  };
-
-  const values = {
+  const values = useMemo(() => ({
     user,
     setUser,
     loadToken,
     storeToken,
     isLoading,
-    LoadingSpinner,
     logOutUser,
-  };
+  }), [user, isLoading]);
 
   return (
     <AuthContext.Provider value={values}>
       {isLoading ? <LoadingSpinner /> : children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default useAuth;
