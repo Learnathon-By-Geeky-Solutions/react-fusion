@@ -43,7 +43,7 @@ export default function Home() {
             <CarouselItem key={index} className="relative">
               <img
                 src={img}
-                alt={`Image ${index + 1}`}
+                alt={`${index + 1}`}
                 className="w-full h-full object-cover"
               />
             </CarouselItem>

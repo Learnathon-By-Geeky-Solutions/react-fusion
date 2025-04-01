@@ -1,10 +1,20 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
 import { Spinner } from "@/components/ui/spinner";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 const useAuth = () => {
   return useContext(AuthContext);
+};
+
+const LoadingSpinner = () => {
+  return (
+    <div>
+      loading
+      <Spinner show={true} />
+    </div>
+  );
 };
 
 export const AuthProvider = ({ children }) => {
@@ -13,65 +23,50 @@ export const AuthProvider = ({ children }) => {
     authenticated: false,
     token: null,
   });
-  const loadToken = async () => {
-    try {
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        setUser({
-          authenticated: true,
-          token: storedToken,
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const storeToken = async (token) => {
-    localStorage.setItem("token", token);
-    setUser({
-      authenticated: true,
-      token: token,
-    });
-  };
-  const logOutUser = async () => {
-    localStorage.removeItem("token");
-    setUser({
-      authenticated: false,
-      token: null,
-    });
-  };
 
   useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const storedToken = localStorage.getItem("token");
+        if (storedToken) {
+          setUser({ authenticated: true, token: storedToken });
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     loadToken();
   }, []);
 
-  const LoadingSpinner = () => {
-    return (
-      <div>
-        loading
-        <Spinner show={true} />
-      </div>
-    );
+  const storeToken = (token) => {
+    localStorage.setItem("token", token);
+    setUser({ authenticated: true, token });
   };
 
-  const values = {
+  const logOutUser = () => {
+    localStorage.removeItem("token");
+    setUser({ authenticated: false, token: null });
+  };
+
+  const values = useMemo(() => ({
     user,
     setUser,
-    loadToken,
     storeToken,
-    isLoading,
-    LoadingSpinner,
     logOutUser,
-  };
+    isLoading,
+  }), [user, isLoading]);
 
   return (
     <AuthContext.Provider value={values}>
-      {isLoading ? <LoadingSpinner></LoadingSpinner> : children}
+      {isLoading ? <LoadingSpinner /> : children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default useAuth;
