@@ -5,7 +5,7 @@ import { commentService } from "./comment.service";
 import { JwtPayload } from "../../../interfaces/common";
 
 const getCommentsByVideoId = catchAsync(async (req, res, next) => {
-    const result = await commentService.getCommentsByVideoId(req.user as JwtPayload, req.body)
+    const result = await commentService.getCommentsByVideoId(req.body)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
@@ -26,7 +26,7 @@ const createComment = catchAsync(async (req, res, next) => {
 
 
 const updateComment = catchAsync(async (req, res, next) => {
-    const result = await commentService.updateComment(req.user as JwtPayload, req.body)
+    const result = await commentService.updateComment(req.body)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
@@ -37,8 +37,7 @@ const updateComment = catchAsync(async (req, res, next) => {
 
 
 const deleteComment = catchAsync(async (req, res, next) => {
-    const id = req.params.id
-    const result = await commentService.deleteComment(req.user as JwtPayload, id)
+    const result = await commentService.deleteComment(req.params.commentId)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
