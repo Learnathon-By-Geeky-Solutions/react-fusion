@@ -56,18 +56,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const loadToken = async () => {
-      try {
-        const storedToken = localStorage.getItem("token");
-        if (storedToken) {
-          setUser({ authenticated: true, token: storedToken });
-        }
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     loadToken();
   }, []);
 
