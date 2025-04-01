@@ -40,7 +40,7 @@ export default function Home() {
             <div key="Carousel Images" className="w-full flex-shrink-0">
               <img
                 src={img}
-                alt={`Image ${index + 1}`}
+                alt={`${index + 1}`}
                 className="w-full h-full object-cover"
               />
             </div>
