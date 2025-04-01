@@ -1,13 +1,21 @@
 import { image1, image2, image3 } from "../../assets";
-import Autoplay from "embla-carousel-autoplay";
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+import { useEffect, useRef } from "react";
 
 export default function Home() {
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (carouselRef.current) {
+        const firstChild = carouselRef.current.firstElementChild;
+        carouselRef.current.appendChild(firstChild.cloneNode(true));
+        carouselRef.current.removeChild(firstChild);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="relative bg-background w-full m-0 p-0">
       {/* Static Overlay Content */}
@@ -22,34 +30,23 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Image Carousel */}
-      <Carousel
-        className="w-full mx-auto"
-        opts={{
-          loop: true,
-          align: "start",
-          skipSnaps: false,
-        }}
-        plugins={[
-          Autoplay({
-            delay: 3000,
-            stopOnInteraction: false,
-            stopOnMouseEnter: false,
-          }),
-        ]}
-      >
-        <CarouselContent className="h-[80vh]">
+      {/* Image Carousel using Tailwind CSS */}
+      <div className="relative w-full h-[80vh] overflow-hidden">
+        <div
+          ref={carouselRef}
+          className="flex w-full h-full animate-carousel"
+        >
           {[image1, image2, image3].map((img, index) => (
-            <CarouselItem key={index} className="relative">
+            <div key={index} className="w-full flex-shrink-0">
               <img
                 src={img}
                 alt={`Image ${index + 1}`}
                 className="w-full h-full object-cover"
               />
-            </CarouselItem>
+            </div>
           ))}
-        </CarouselContent>
-      </Carousel>
+        </div>
+      </div>
     </div>
   );
 }
