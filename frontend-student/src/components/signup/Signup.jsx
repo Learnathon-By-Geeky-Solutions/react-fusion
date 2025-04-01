@@ -39,7 +39,7 @@ export default function Signup() {
         <p className="text-gray-600 text-center">Create a new account</p>
         <form onSubmit={signupFormik.handleSubmit} className="mt-4 space-y-3">
           <div>
-            <label className="block text-gray-700 font-medium">Name</label>
+            <label htmlFor="name" className="block text-gray-700 font-medium">Name</label>
             <input
               id="name"
               className="w-full border px-3 py-2 rounded-md"
@@ -48,7 +48,7 @@ export default function Signup() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">Email</label>
+            <label htmlFor="email" className="block text-gray-700 font-medium">Email</label>
             <input
               id="email"
               type="email"
@@ -58,7 +58,7 @@ export default function Signup() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">Password</label>
+            <label htmlFor="password" className="block text-gray-700 font-medium">Password</label>
             <input
               id="password"
               type="password"
@@ -68,7 +68,7 @@ export default function Signup() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">Contact Number</label>
+            <label htmlFor="contactNumber" className="block text-gray-700 font-medium">Contact Number</label>
             <input
               id="contactNumber"
               className="w-full border px-3 py-2 rounded-md"
@@ -77,7 +77,7 @@ export default function Signup() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">Gender</label>
+            <label htmlFor="gender" className="block text-gray-700 font-medium">Gender</label>
             <select
               id="gender"
               className="w-full border px-3 py-2 rounded-md"
@@ -90,7 +90,7 @@ export default function Signup() {
             </select>
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">Current Institution</label>
+            <label htmlFor="currentInstitution" className="block text-gray-700 font-medium">Current Institution</label>
             <input
               id="currentInstitution"
               className="w-full border px-3 py-2 rounded-md"
@@ -99,7 +99,7 @@ export default function Signup() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">Qualification</label>
+            <label htmlFor="qualification" className="block text-gray-700 font-medium">Qualification</label>
             <select
               id="qualification"
               className="w-full border px-3 py-2 rounded-md"
@@ -114,7 +114,7 @@ export default function Signup() {
             </select>
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">Address</label>
+            <label htmlFor="address" className="block text-gray-700 font-medium">Address</label>
             <input
               id="address"
               className="w-full border px-3 py-2 rounded-md"
