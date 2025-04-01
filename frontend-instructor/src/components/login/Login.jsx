@@ -49,6 +49,7 @@ export default function InstructorLogin() {
               className="w-full p-2 border rounded-md"
               onChange={loginFormik.handleChange}
               value={loginFormik.values.email}
+              required
             />
           </div>
 
