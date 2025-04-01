@@ -65,14 +65,14 @@ export default function Login() {
   const signupFormik = useFormik({
     //FIX: prefilled for testing
     initialValues: {
-      name: "test",
-      email: "@s.com",
-      password: "test00",
-      contactNumber: "0123456789",
-      currentInstitution: "RUET",
-      gender: "MALE",
-      qualification: "PHD",
-      address: "test addr 123",
+      name: "",
+      email: "",
+      password: "",
+      contactNumber: "",
+      currentInstitution: "",
+      gender: "",
+      qualification: "",
+      address: "",
     },
     onSubmit: (values) => {
       handleSignUp(values);
