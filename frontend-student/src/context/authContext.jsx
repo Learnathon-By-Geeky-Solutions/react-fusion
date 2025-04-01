@@ -1,6 +1,5 @@
 import { createContext, useState, useContext, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import { Spinner } from "@/components/ui/spinner";
 
 const AuthContext = createContext(null);
 
@@ -11,8 +10,8 @@ const useAuth = () => {
 const LoadingSpinner = () => {
   return (
     <div>
-      loading
-      <Spinner show={true} />
+      Loading...
+      <div className="animate-spin h-8 w-8 border-4 border-t-4 border-blue-500 rounded-full"></div>
     </div>
   );
 };
@@ -23,6 +22,38 @@ export const AuthProvider = ({ children }) => {
     authenticated: false,
     token: null,
   });
+
+  const loadToken = async () => {
+    try {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setUser({
+          authenticated: true,
+          token: storedToken,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const storeToken = async (token) => {
+    localStorage.setItem("token", token);
+    setUser({
+      authenticated: true,
+      token: token,
+    });
+  };
+
+  const logOutUser = async () => {
+    localStorage.removeItem("token");
+    setUser({
+      authenticated: false,
+      token: null,
+    });
+  };
 
   useEffect(() => {
     const loadToken = async () => {
@@ -40,22 +71,12 @@ export const AuthProvider = ({ children }) => {
     loadToken();
   }, []);
 
-  const storeToken = (token) => {
-    localStorage.setItem("token", token);
-    setUser({ authenticated: true, token });
-  };
-
-  const logOutUser = () => {
-    localStorage.removeItem("token");
-    setUser({ authenticated: false, token: null });
-  };
-
   const values = useMemo(() => ({
     user,
     setUser,
     storeToken,
-    logOutUser,
     isLoading,
+    logOutUser,
   }), [user, isLoading]);
 
   return (
