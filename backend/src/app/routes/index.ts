@@ -6,6 +6,7 @@ import { noteRoutes } from '../modules/note/note.routes';
 import { commentRoutes } from '../modules/comment/comment.routes';
 import { transactionRoutes } from '../modules/transactions/transactions.routes';
 import { videoRoutes } from '../modules/video/video.routes';
+import { progressRoutes } from '../modules/progress/progress.routes';
 
 const router = express.Router();
 
@@ -38,6 +39,10 @@ const moduleRoutes = [
   {
     path: '/video',
     route: videoRoutes
+  },
+  {
+    path: '/progress',
+    route: progressRoutes
   }
 ];
 
