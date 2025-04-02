@@ -237,7 +237,7 @@ model CourseStudent {
   courseId  String
   course    Course  @relation(fields: [courseId], references: [id])
   studentId String
-  student   Student @relation(fields: [studentId], references: [id])
+  student   Student @relation(fields: [studentId], references: [userId])
 
   @@id([courseId, studentId])
 }
@@ -265,7 +265,7 @@ model StudentAnalytics {
 model CourseProgress {
   id                String              @id @default(uuid())
   studentId         String
-  student           Student             @relation(fields: [studentId], references: [id])
+  student           Student             @relation(fields: [studentId], references: [userId])
   courseId          String
   course            Course              @relation(fields: [courseId], references: [id])
   progress          Float // Overall progress in the course (calculated)
@@ -275,6 +275,7 @@ model CourseProgress {
   ModuleProgress    ModuleProgress[]
   MilestoneProgress MilestoneProgress[]
 
+  @@unique([studentId, courseId])
   @@map("course_progress")
 }
 
@@ -284,10 +285,11 @@ model VideoProgress {
   courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
   videoId          String
   video            Video          @relation(fields: [videoId], references: [id])
-  completed        Boolean // Whether the student has completed watching the video
+  isCompleted      Boolean // Whether the student has completed watching the video
   timeWatched      Float // Time watched in seconds (if partial progress is tracked)
   lastUpdated      DateTime       @default(now())
 
+  @@unique([courseProgressId, videoId])
   @@map("video_progress")
 }
 
@@ -297,10 +299,11 @@ model QuizProgress {
   courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
   quizId           String
   quiz             Quiz           @relation(fields: [quizId], references: [id])
-  completed        Boolean // Whether the student has completed the quiz
+  isCompleted      Boolean // Whether the student has completed the quiz
   score            Float // Score obtained on the quiz
   lastUpdated      DateTime       @default(now())
 
+  @@unique([courseProgressId, quizId])
   @@map("quiz_progress")
 }
 
@@ -310,9 +313,10 @@ model ModuleProgress {
   courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
   moduleId         String
   module           Module         @relation(fields: [moduleId], references: [id])
-  completed        Boolean // Whether the student has completed the module
+  isCompleted      Boolean // Whether the student has completed the module
   lastUpdated      DateTime       @default(now())
 
+  @@unique([courseProgressId, moduleId])
   @@map("module_progress")
 }
 
@@ -322,9 +326,10 @@ model MilestoneProgress {
   courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
   milestoneId      String
   milestone        Milestone      @relation(fields: [milestoneId], references: [id])
-  completed        Boolean // Whether the student has completed the milestone
+  isCompleted      Boolean // Whether the student has completed the milestone
   lastUpdated      DateTime       @default(now())
 
+  @@unique([courseProgressId, milestoneId])
   @@map("milestone_progress")
 }
 
@@ -363,7 +368,7 @@ model InstructorFeedback {
   instructorId String
   instructor   Instructor @relation(fields: [instructorId], references: [id])
   studentId    String
-  student      Student    @relation(fields: [studentId], references: [id])
+  student      Student    @relation(fields: [studentId], references: [userId])
   feedback     String
   rating       Float // Rating given to the instructor
   createdAt    DateTime   @default(now())
