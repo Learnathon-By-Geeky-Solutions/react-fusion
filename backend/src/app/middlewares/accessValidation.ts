@@ -10,6 +10,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
     const videoId = req.params.videoId || req.body.videoId || null;
     const moduleId = req.params.moduleId || req.body.moduleId || null;
     const commentId = req.params.commentId || req.body.commentId || null
+    const milestoneId = req.params.milestoneId || req.body.milestoneId || null
 
     let resource = null
     let instructorId = null
@@ -74,6 +75,12 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized')
       }
       return next()
+    }
+    else if (resourceType === 'milestone') {
+      resource = await prisma.milestone.findUnique({ where: { id: milestoneId }, include: { course: true } })
+      instructorId = resource?.course?.instructorId
+      courseId = resource?.courseId
+
     }
 
     if (!resource) {
