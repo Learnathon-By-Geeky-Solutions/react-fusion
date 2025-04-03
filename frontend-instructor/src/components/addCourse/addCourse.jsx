@@ -48,20 +48,23 @@ export default function AddCourse() {
     setCourse({ ...course, milestones: updatedMilestones });
   };
 
-  const addQuiz = (milestoneIndex) => {
+  const addQuiz = (milestoneIndex, moduleIndex) => {
     const updatedMilestones = [...course.milestones];
-    const quizCount = updatedMilestones[milestoneIndex].items.filter(
-      (item) => item.type === "quiz"
-    ).length;
 
-    updatedMilestones[milestoneIndex].items.push({
+    if (!updatedMilestones[milestoneIndex].items[moduleIndex].quizzes) {
+      updatedMilestones[milestoneIndex].items[moduleIndex].quizzes = [];
+    }
+
+    updatedMilestones[milestoneIndex].items[moduleIndex].quizzes.push({
       type: "quiz",
-      title: `Quiz ${quizCount + 1}`,
+      title: `Quiz ${updatedMilestones[milestoneIndex].items[moduleIndex].quizzes.length + 1}`,
       questions: [],
     });
 
     setCourse({ ...course, milestones: updatedMilestones });
   };
+
+
 
   const addQuestion = (milestoneIndex, itemIndex) => {
     const updatedMilestones = [...course.milestones];
@@ -139,14 +142,7 @@ export default function AddCourse() {
         className="w-full p-2 border mt-2 rounded-lg"
       />
 
-      {/* Add Milestone Button */}
-      <button
-        type="button"
-        onClick={addMilestone}
-        className="mt-4 px-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
-      >
-        Add Milestone
-      </button>
+
 
       {/* Milestones List */}
       {course.milestones.map((milestone, milestoneIndex) => (
@@ -166,40 +162,19 @@ export default function AddCourse() {
             className="w-full p-2 border mt-2 rounded-lg"
           />
 
-          {/* Add Module & Quiz Buttons */}
-          <div className="flex gap-2 mt-2">
-            <button
-              type="button"
-              onClick={() => addModule(milestoneIndex)}
-              className="px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
-            >
-              Add Module
-            </button>
-            <button
-              type="button"
-              onClick={() => addQuiz(milestoneIndex)}
-              className="px-4 bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition"
-            >
-              Add Quiz
-            </button>
-          </div>
-
           {/* Modules & Quizzes List */}
           {milestone.items.map((item, itemIndex) => (
             <div key={itemIndex} className="mt-2 p-3 border rounded-lg">
-              <h3 className="font-medium">{item.type === "module" ? `Module ${itemIndex + 1}` : item.title}</h3>
+              <h3 className="font-medium">
+                {item.type === "module"
+                  ? `Module ${course.milestones[milestoneIndex].items.filter(i => i.type === "module").indexOf(item) + 1}`
+                  : item.title}
+              </h3>
+
 
               {/* Module Content */}
               {item.type === "module" && (
                 <>
-                  <button
-                    type="button"
-                    onClick={() => addVideo(milestoneIndex, itemIndex)}
-                    className="px-4 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition mt-2"
-                  >
-                    Add Video
-                  </button>
-
                   {/* Video List */}
                   {item.videos.map((video, videoIndex) => (
                     <div key={videoIndex} className="mt-2 flex gap-2">
@@ -229,19 +204,89 @@ export default function AddCourse() {
                       />
                     </div>
                   ))}
+
+
+                  {/* Quiz List inside the module */}
+                  {item.quizzes &&
+                    item.quizzes.map((quiz, quizIndex) => (
+                      <div key={quizIndex} className="mt-2 p-3 border rounded-lg">
+                        <h3 className="font-medium">{quiz.title}</h3>
+
+                        {quiz.questions.map((question, questionIndex) => (
+                          <div key={questionIndex} className="mt-2 p-3 border rounded-lg">
+                            <input
+                              type="text"
+                              placeholder="Question"
+                              value={question.question}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  e,
+                                  `milestones.${milestoneIndex}.items.${itemIndex}.quizzes.${quizIndex}.questions.${questionIndex}.question`
+                                )
+                              }
+                              className="w-full p-2 border mt-2 rounded-lg"
+                            />
+                            {question.options.map((option, optionIndex) => (
+                              <input
+                                key={optionIndex}
+                                type="text"
+                                placeholder={`Option ${optionIndex + 1}`}
+                                value={option}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    e,
+                                    `milestones.${milestoneIndex}.items.${itemIndex}.quizzes.${quizIndex}.questions.${questionIndex}.options.${optionIndex}`
+                                  )
+                                }
+                                className="w-full p-2 border mt-2 rounded-lg"
+                              />
+                            ))}
+                            <input
+                              type="text"
+                              placeholder="Correct Answer"
+                              value={question.answer}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  e,
+                                  `milestones.${milestoneIndex}.items.${itemIndex}.quizzes.${quizIndex}.questions.${questionIndex}.answer`
+                                )
+                              }
+                              className="w-full p-2 border mt-2 rounded-lg"
+                            />
+                          </div>
+                        ))}
+
+                        <button
+                          type="button"
+                          onClick={() => addQuestion(milestoneIndex, itemIndex, quizIndex)}
+                          className="px-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition mt-2"
+                        >
+                          Add Question
+                        </button>
+                      </div>
+                    ))}
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => addVideo(milestoneIndex, itemIndex)}
+                      className="px-4 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition mt-2"
+                    >
+                      Add Video
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addQuiz(milestoneIndex, itemIndex)}
+                      className="px-4 bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition mt-2"
+                    >
+                      Add Quiz
+                    </button>
+                  </div>
                 </>
               )}
 
               {/* Quiz Content */}
               {item.type === "quiz" && (
                 <div>
-                  <button
-                    type="button"
-                    onClick={() => addQuestion(milestoneIndex, itemIndex)}
-                    className="px-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition mt-2"
-                  >
-                    Add Question
-                  </button>
                   {item.questions.map((question, questionIndex) => (
                     <div key={questionIndex} className="mt-2 p-3 border rounded-lg">
                       <input
@@ -285,13 +330,40 @@ export default function AddCourse() {
                       />
                     </div>
                   ))}
-                  
+
+                  <button
+                    type="button"
+                    onClick={() => addQuestion(milestoneIndex, itemIndex)}
+                    className="px-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition mt-2"
+                  >
+                    Add Question
+                  </button>
+
                 </div>
               )}
             </div>
           ))}
+
+          {/* Add Module Buttons */}
+          <button
+            type="button"
+            onClick={() => addModule(milestoneIndex)}
+            className="px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition mt-2"
+          >
+            Add Module
+          </button>
+
         </div>
       ))}
+
+      {/* Add Milestone Button */}
+      <button
+        type="button"
+        onClick={addMilestone}
+        className="mt-4 px-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
+      >
+        Add Milestone
+      </button>
 
       <button
         type="button"
