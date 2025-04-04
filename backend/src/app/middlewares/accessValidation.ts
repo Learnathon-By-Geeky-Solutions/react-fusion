@@ -11,10 +11,11 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
     const moduleId = req.params.moduleId || req.body.moduleId || null;
     const commentId = req.params.commentId || req.body.commentId || null
     const milestoneId = req.params.milestoneId || req.body.milestoneId || null
+    let courseId = req.params.courseId || req.body.courseId || null
+
 
     let resource = null
     let instructorId = null
-    let courseId = null
 
     if (resourceType === 'quiz') {
       resource = await prisma.quiz.findUnique({
@@ -81,6 +82,9 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
       instructorId = resource?.course?.instructorId
       courseId = resource?.courseId
 
+    }
+    else if (resourceType === 'course') {
+      resource = await prisma.course.findUnique({ where: { id: courseId } })
     }
 
     if (!resource) {
