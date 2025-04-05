@@ -184,6 +184,7 @@ model Video {
   module        Module          @relation(fields: [moduleId], references: [id])
   title         String
   url           String
+  length        Float // Length in seconds
   isDeleted     Boolean         @default(false)
   comments      Comment[]
   notes         Note[]
@@ -253,7 +254,7 @@ model Transactions {
 
 model StudentAnalytics {
   id              String  @id @default(uuid())
-  studentId       String @unique
+  studentId       String  @unique
   student         Student @relation(fields: [studentId], references: [userId])
   courseCompleted Int
   totalTimeSpent  Float
