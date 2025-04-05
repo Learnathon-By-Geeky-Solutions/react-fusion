@@ -10,6 +10,8 @@ router.get('/student-all', auth(UserRole.STUDENT), analyticsController.getStuden
 
 router.get('/student/:courseId', auth(UserRole.STUDENT), accessValidation("course"), analyticsController.getStudentOne)
 
+router.get('/instructor-all', auth(UserRole.INSTRUCTOR), analyticsController.getInstructorAll)
 
+router.get("/instructor/:courseId", auth(UserRole.INSTRUCTOR), accessValidation("course"), analyticsController.getInstructorOne)
 
 export const analyticsRoutes = router

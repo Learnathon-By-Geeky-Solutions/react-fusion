@@ -24,7 +24,25 @@ const getStudentOne = catchAsync(async (req, res, next) => {
 	})
 })
 
+const getInstructorAll = catchAsync(async (req, res, next) => {
+	const result = await analyticsService.getInstructorAll(req.user as JwtPayload)
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: 'Analytics Retrieved Successfully',
+		data: result
+	})
+})
+
+const getInstructorOne = catchAsync(async (req, res, next) => {
+	const result = await analyticsService.getInstructorOne(req.user as JwtPayload, req.params.courseId)
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: 'Course Analytics Retrieved Successfully',
+		data: result
+	})
+})
 
 
-
-export const analyticsController = { getStudentAll, getStudentOne }
+export const analyticsController = { getStudentAll, getStudentOne, getInstructorAll, getInstructorOne }
