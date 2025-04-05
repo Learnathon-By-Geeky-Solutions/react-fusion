@@ -1,4 +1,3 @@
-import { any } from "zod";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";

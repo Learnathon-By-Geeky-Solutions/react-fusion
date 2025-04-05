@@ -1,4 +1,3 @@
-import { allowedNodeEnvironmentFlags } from "process";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 
