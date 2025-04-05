@@ -10,10 +10,12 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
     const videoId = req.params.videoId || req.body.videoId || null;
     const moduleId = req.params.moduleId || req.body.moduleId || null;
     const commentId = req.params.commentId || req.body.commentId || null
+    const milestoneId = req.params.milestoneId || req.body.milestoneId || null
+    let courseId = req.params.courseId || req.body.courseId || null
+
 
     let resource = null
     let instructorId = null
-    let courseId = null
 
     if (resourceType === 'quiz') {
       resource = await prisma.quiz.findUnique({
@@ -75,6 +77,16 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
       }
       return next()
     }
+    else if (resourceType === 'milestone') {
+      resource = await prisma.milestone.findUnique({ where: { id: milestoneId }, include: { course: true } })
+      instructorId = resource?.course?.instructorId
+      courseId = resource?.courseId
+
+    }
+    else if (resourceType === 'course') {
+      resource = await prisma.course.findUnique({ where: { id: courseId } })
+      instructorId = resource?.instructorId
+    }
 
     if (!resource) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
@@ -88,7 +100,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
       const studentId = req.user.userId
       const studentCourse = await prisma.transactions.findFirst({
         where: {
-          courseId: courseId ?? '',
+          courseId: courseId,
           studentId: studentId
         }
       })

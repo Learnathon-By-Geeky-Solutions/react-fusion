@@ -6,7 +6,9 @@ import { noteRoutes } from '../modules/note/note.routes';
 import { commentRoutes } from '../modules/comment/comment.routes';
 import { transactionRoutes } from '../modules/transactions/transactions.routes';
 import { videoRoutes } from '../modules/video/video.routes';
+import { progressRoutes } from '../modules/progress/progress.routes';
 import { quizRoutes } from '../modules/quiz/quiz.routes';
+import { analyticsRoutes } from '../modules/analytics/analytics.routes';
 
 const router = express.Router();
 
@@ -41,8 +43,16 @@ const moduleRoutes = [
     route: videoRoutes
   },
   {
+    path: '/progress',
+    route: progressRoutes
+  },
+  {
     path: '/quiz',
     route: quizRoutes
+  },
+  {
+    path: "/analytics",
+    route: analyticsRoutes
   }
 ];
 

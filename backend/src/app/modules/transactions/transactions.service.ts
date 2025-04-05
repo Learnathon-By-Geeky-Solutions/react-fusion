@@ -28,13 +28,26 @@ const buyCourse = async (user: JwtPayload, payload: IBuyCourseSchema) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Course Already Purchased!')
     }
 
-    const result = await prisma.transactions.create({
-        data: {
-            studentId: user.userId,
-            courseId: payload.courseId,
-            txnId: payload.txnId
-        }
+
+    const result = await prisma.$transaction(async (prisma) => {
+
+        const txn = await prisma.transactions.create({
+            data: {
+                studentId: user.userId,
+                courseId: payload.courseId,
+                txnId: payload.txnId
+            }
+        })
+        await prisma.courseProgress.create({
+            data: {
+                studentId: user.userId,
+                courseId: payload.courseId,
+                progress: 0.0
+            }
+        })
+        return txn
     })
+
     return result
 }
 
