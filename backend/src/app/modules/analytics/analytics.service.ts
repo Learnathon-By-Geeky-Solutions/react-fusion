@@ -45,7 +45,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 	})
 
 
-	const progressId = courseProgress?.id || ""
+	const progressId = courseProgress?.id ?? ""
 
 	const totalVideos = await prisma.video.count({
 		where: {

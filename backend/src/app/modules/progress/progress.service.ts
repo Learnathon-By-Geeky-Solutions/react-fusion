@@ -17,7 +17,7 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 			},
 		}
 	})
-	const courseId = video?.module.milestone.courseId || ""
+	const courseId = video?.module.milestone.courseId ?? ""
 	const progressData = await prisma.courseProgress.findUnique({
 		where: {
 			studentId_courseId: {
@@ -65,7 +65,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		}
 	})
 
-	const courseId = quiz?.module.milestone.courseId || ""
+	const courseId = quiz?.module.milestone.courseId ?? ""
 	const progressData = await prisma.courseProgress.findUnique({
 		where: {
 			studentId_courseId: {
@@ -110,7 +110,7 @@ const updateModule = async (user: JwtPayload, payload: IModuleUpdate) => {
 		}
 	})
 
-	const courseId = module?.milestone.courseId || ""
+	const courseId = module?.milestone.courseId ?? ""
 
 	const progressData = await prisma.courseProgress.findUnique({
 		where: {
@@ -153,7 +153,7 @@ const updateMilestone = async (user: JwtPayload, payload: IMilestoneUpdate) => {
 		},
 	})
 
-	const courseId = milestone?.courseId || ""
+	const courseId = milestone?.courseId ?? ""
 
 	const progressData = await prisma.courseProgress.findUnique({
 		where: {
