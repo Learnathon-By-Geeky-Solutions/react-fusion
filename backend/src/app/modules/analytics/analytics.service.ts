@@ -19,7 +19,7 @@ const getStudentAll = async (user: JwtPayload) => {
 	const result = {
 		studentAnalytics: {
 			...studentAnalytics,
-			totalEnrolles: enrolledCourses.length,
+			totalEnrollments: enrolledCourses.length,
 		},
 		enrolledCourses
 	}
@@ -57,7 +57,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 		}
 	})
 
-	const completedVidoes = await prisma.videoProgress.count({
+	const completedVideos = await prisma.videoProgress.count({
 		where: {
 			AND: [
 				{
@@ -74,7 +74,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 		}
 	})
 
-	const totalQuizes = await prisma.quiz.count({
+	const totalQuizzes = await prisma.quiz.count({
 		where: {
 			module: {
 				milestone: {
@@ -84,7 +84,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 		}
 	})
 
-	const completedQuizes = await prisma.quizProgress.count({
+	const completedQuizzes = await prisma.quizProgress.count({
 		where: {
 			AND: [
 				{
@@ -196,13 +196,13 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 		courseProgress,
 		summary: {
 			totalVideos: totalVideos,
-			completedVidoes: completedVidoes,
-			totalwatchTime: totalWatchTime._sum.length,
-			userWatchTime: userWatchTime._sum.timeWatched,
-			totalQuizes: totalQuizes,
-			completedQuizes: completedQuizes,
-			totalScore: totalScore._sum.points,
-			userScore: userScore._sum.score,
+			completedVideos: completedVideos,
+			totalWatchTime: totalWatchTime._sum.length ?? 0,
+			userWatchTime: userWatchTime._sum.timeWatched ?? 0,
+			totalQuizzes: totalQuizzes,
+			completedQuizzes: completedQuizzes,
+			totalScore: totalScore._sum.points ?? 0,
+			userScore: userScore._sum.score ?? 0,
 			totalModules: totalModules,
 			completedModules: completedModules,
 			totalMilestones: totalMilestones,
@@ -244,7 +244,7 @@ const getInstructorAll = async (user: JwtPayload) => {
 	const result = {
 		totalCourses: allCourses.length,
 		totalStudents,
-		avgRating: avgRating._avg.rating,
+		avgRating: avgRating._avg.rating ?? 0,
 		indtructorFeedback: instructorFeedback,
 	}
 
@@ -296,9 +296,9 @@ const getInstructorOne = async (user: JwtPayload, courseId: string) => {
 
 	const result = {
 		totalEnrollments,
-		avgRating: avgRating._avg.rating,
-		totalLikes: totalLikes._sum.likeCount,
-		totalDisLikes: totalDisLikes._sum.dislikeCount
+		avgRating: avgRating._avg.rating ?? 0,
+		totalLikes: totalLikes._sum.likeCount ?? 0,
+		totalDisLikes: totalDisLikes._sum.dislikeCount ?? 0
 	}
 	return result
 }

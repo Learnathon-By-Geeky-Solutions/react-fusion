@@ -3,7 +3,7 @@ const videoUpdateSchema = z.object({
 	body: z.object({
 		videoId: z.string(),
 		isCompleted: z.boolean(),
-		timeWatched: z.number()
+		timeWatched: z.number().nonnegative()
 	})
 })
 
@@ -30,8 +30,5 @@ const milestoneUpdateSchema = z.object({
 		isCompleted: z.boolean(),
 	})
 })
-
-
-
 
 export const progressValidationSchema = { videoUpdateSchema, quizUpdateSchema, moduleUpdateSchema, milestoneUpdateSchema }

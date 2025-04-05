@@ -4,7 +4,6 @@ import httpStatus from "http-status";
 import { JwtPayload } from "../../../interfaces/common";
 import { courseService } from "./course.service";
 
-//const createCourse = catchAsync(async(req:Request, res:Response, next) => {
 const createCourse = catchAsync(async (req, res, next) => {
 
     const result = await courseService.createCourse(req.user as JwtPayload, req.body)
