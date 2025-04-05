@@ -6,12 +6,12 @@ import prisma from '../../shared/prisma';
 
 const accessValidation = (resourceType: string) => async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const quizId = req.params.quizId ?? req.body.quizId ?? null;
-    const videoId = req.params.videoId ?? req.body.videoId ?? null;
-    const moduleId = req.params.moduleId ?? req.body.moduleId ?? null;
-    const commentId = req.params.commentId ?? req.body.commentId ?? null
-    const milestoneId = req.params.milestoneId ?? req.body.milestoneId ?? null
-    let courseId = req.params.courseId ?? req.body.courseId ?? null
+    const quizId = req.params.quizId || req.body.quizId || null;
+    const videoId = req.params.videoId || req.body.videoId || null;
+    const moduleId = req.params.moduleId || req.body.moduleId || null;
+    const commentId = req.params.commentId || req.body.commentId || null
+    const milestoneId = req.params.milestoneId || req.body.milestoneId || null
+    let courseId = req.params.courseId || req.body.courseId || null
 
 
     let resource = null
@@ -100,7 +100,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
       const studentId = req.user.userId
       const studentCourse = await prisma.transactions.findFirst({
         where: {
-          courseId: courseId ?? '',
+          courseId: courseId,
           studentId: studentId
         }
       })
