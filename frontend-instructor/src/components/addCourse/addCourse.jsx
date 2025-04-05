@@ -194,7 +194,7 @@ export default function AddCourse() {
 
           {/* Modules & Quizzes List */}
           {milestone.items.map((item, itemIndex) => (
-            <div key={itemIndex} className="mt-2 p-3 bg-gray-600 text-black rounded-lg">
+            <div key={itemIndex} className="mt-2 p-3 bg-gray-400 text-black rounded-lg">
               <h3 className="font-medium">
                 {item.type === "module"
                   ? `Module ${course.milestones[milestoneIndex].items.filter(i => i.type === "module").indexOf(item) + 1}`
