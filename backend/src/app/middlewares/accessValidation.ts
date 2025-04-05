@@ -85,6 +85,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
     }
     else if (resourceType === 'course') {
       resource = await prisma.course.findUnique({ where: { id: courseId } })
+      instructorId = resource?.instructorId
     }
 
     if (!resource) {
