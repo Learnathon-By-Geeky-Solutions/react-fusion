@@ -23,7 +23,8 @@ const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
                                 title: video.title,
                                 likeCount: 0,
                                 dislikeCount: 0,
-                                url: video.url
+                                url: video.url,
+                                length: video.length,
                             }))
                         },
                         quizes: {

@@ -58,10 +58,11 @@ model Instructor {
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 
-  courses             Course[]
-  User                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  InstructorAnalytics InstructorAnalytics[]
-  InstructorFeedback  InstructorFeedback[]
+  courses               Course[]
+  User                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  //InstructorAnalytics   InstructorAnalytics?
+  InstructorFeedback    InstructorFeedback[]
+  //instructorAnalyticsId String
 
   @@map("instructors")
 }
@@ -135,7 +136,7 @@ model Course {
   milestones      Milestone[]
   students        CourseStudent[]
   transactions    Transactions[]
-  CourseAnalytics CourseAnalytics[]
+  //CourseAnalytics CourseAnalytics[]
   CourseProgress  CourseProgress[]
 }
 
@@ -335,35 +336,37 @@ model MilestoneProgress {
   @@map("milestone_progress")
 }
 
-model InstructorAnalytics {
-  id              String     @id @default(uuid())
-  instructorId    String
-  instructor      Instructor @relation(fields: [instructorId], references: [id])
-  coursesCreated  Int
-  totalStudents   Int
-  averageRating   Float // Average course rating
-  totalEarnings   Float // Total earnings from courses
-  studentFeedback Float // Average student feedback score (e.g., from course reviews)
-  lastUpdated     DateTime   @default(now())
+//TODO: drop table
+// model InstructorAnalytics {
+//   id              String     @id @default(uuid())
+//   instructorId    String @unique
+//   instructor      Instructor @relation(fields: [instructorId], references: [userId])
+//   coursesCreated  Int
+//   totalStudents   Int
+//   averageRating   Float // Average course rating
+//   totalEarnings   Float // Total earnings from courses
+//   studentFeedback Float // Average student feedback score (e.g., from course reviews)
+//   lastUpdated     DateTime   @default(now())
+//
+//   @@map("instructor_analytics")
+// }
 
-  @@map("instructor_analytics")
-}
-
-model CourseAnalytics {
-  id                String   @id @default(uuid())
-  courseId          String
-  course            Course   @relation(fields: [courseId], references: [id])
-  totalEnrollments  Int
-  totalViews        Int
-  averageRating     Float
-  totalComments     Int
-  totalLikes        Int
-  totalDislikes     Int
-  totalTransactions Int
-  lastUpdated       DateTime @default(now())
-
-  @@map("course_analytics")
-}
+//TODO: drop table
+// model CourseAnalytics {
+//   id                String   @id @default(uuid())
+//   courseId          String
+//   course            Course   @relation(fields: [courseId], references: [id])
+//   totalEnrollments  Int
+//   totalViews        Int
+//   averageRating     Float
+//   totalComments     Int
+//   totalLikes        Int
+//   totalDislikes     Int
+//   totalTransactions Int
+//   lastUpdated       DateTime @default(now())
+//
+//   @@map("course_analytics")
+// }
 
 model InstructorFeedback {
   id           String     @id @default(uuid())

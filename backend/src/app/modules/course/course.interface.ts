@@ -12,6 +12,7 @@ export interface ICreateCourse {
             videos: {
                 title: string;
                 url: string;
+                length: number;
             }[];
             quizes: {
                 questions: {
@@ -36,6 +37,7 @@ export interface IMilestones {
         videos: {
             title: string;
             url: string;
+            length: number;
         }[];
 
         quizes: {

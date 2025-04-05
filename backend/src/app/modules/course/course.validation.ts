@@ -15,6 +15,7 @@ const createCourseValidation = z.object({
                 videos: z.array(z.object({
                     title: z.string(),
                     url: z.string(),
+                    length: z.number()
                 })),
                 quizes: z.array(z.object({
                     questions: z.array(z.object({
