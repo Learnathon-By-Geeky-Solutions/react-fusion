@@ -176,7 +176,7 @@ export default function AddCourse() {
 
       {/* Milestones List */}
       {course.milestones.map((milestone, milestoneIndex) => (
-        <div key={milestoneIndex} className="mt-4 p-4 border rounded-lg">
+        <div key={milestoneIndex} className="mt-4 p-4 bg-gray-600 text-white rounded-lg">
           <h2 className="text-lg font-semibold">Milestone {milestoneIndex + 1}</h2>
           <input
             type="text"
@@ -194,7 +194,7 @@ export default function AddCourse() {
 
           {/* Modules & Quizzes List */}
           {milestone.items.map((item, itemIndex) => (
-            <div key={itemIndex} className="mt-2 p-3 border rounded-lg">
+            <div key={itemIndex} className="mt-2 p-3 bg-gray-600 text-black rounded-lg">
               <h3 className="font-medium">
                 {item.type === "module"
                   ? `Module ${course.milestones[milestoneIndex].items.filter(i => i.type === "module").indexOf(item) + 1}`
@@ -214,7 +214,7 @@ export default function AddCourse() {
                       if (content.type === "quiz") quizCount++;
 
                       return (
-                        <div key={contentIndex} className="mt-2 p-3 border rounded-lg">
+                        <div key={contentIndex} className="mt-2 p-3 bg-gray-200 text-black rounded-lg">
                           {content.type === "video" && (
                             <>
                               <h4 className="font-medium">Video {videoCount}</h4>
@@ -262,6 +262,7 @@ export default function AddCourse() {
                               <h4 className="font-medium">Quiz {quizCount}</h4>
                               {content.questions.map((question, questionIndex) => (
                                 <div key={questionIndex} className="mt-2 p-3 border rounded-lg">
+                                  <h5 className="font-medium">Question {questionIndex + 1}</h5>
                                   <input
                                     type="text"
                                     placeholder="Question"
