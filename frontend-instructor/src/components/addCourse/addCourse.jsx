@@ -28,7 +28,9 @@ export default function AddCourse() {
       type: "module",
       title: "",
       description: "",
-      items: []
+      items: [],
+      videoCount: 0,
+      quizCount: 0,
     }
     );
     setCourse({ ...course, milestones: updatedMilestones });
@@ -37,14 +39,27 @@ export default function AddCourse() {
   const addVideo = (milestoneIndex, moduleIndex) => {
     const updatedMilestones = [...course.milestones];
 
-    if (!updatedMilestones[milestoneIndex].items[moduleIndex].videos) {
-      updatedMilestones[milestoneIndex].items[moduleIndex].videos = [];
+    // Ensure that the module has a video count tracker
+    const module = updatedMilestones[milestoneIndex].items[moduleIndex];
+
+    // Add the video only if videos exist in the module
+    if (!module.videos) {
+      module.videos = [];
     }
 
-    updatedMilestones[milestoneIndex].items[moduleIndex].videos.push({
+    if (module.videoCount === undefined) {
+      module.videoCount = 0;
+    }
+
+    // Increment the video count separately for each module
+    module.videoCount += 1;
+
+    // Add the video item
+    module.items.push({
       type: "video",
       title: "",
       url: "",
+      length: "",
     });
 
     setCourse({ ...course, milestones: updatedMilestones });
@@ -53,46 +68,50 @@ export default function AddCourse() {
   const addQuiz = (milestoneIndex, moduleIndex) => {
     const updatedMilestones = [...course.milestones];
 
-    if (!updatedMilestones[milestoneIndex].items[moduleIndex].quizzes) {
-      updatedMilestones[milestoneIndex].items[moduleIndex].quizzes = [];
+    // Ensure that the module has a quiz count tracker
+    const module = updatedMilestones[milestoneIndex].items[moduleIndex];
+
+    // Add the quiz only if quizzes exist in the module
+    if (!module.quizzes) {
+      module.quizzes = [];
     }
 
-    updatedMilestones[milestoneIndex].items[moduleIndex].quizzes.push({
+    if (module.quizCount === undefined) {
+      module.quizCount = 0;
+    }
+
+    // Increment the quiz count separately for each module
+    module.quizCount += 1;
+
+    // Add the quiz item
+    module.items.push({
       type: "quiz",
-      title: `Quiz ${updatedMilestones[milestoneIndex].items[moduleIndex].quizzes.length + 1}`,
+      title: `Quiz ${module.quizCount}`,
       questions: [],
     });
 
     setCourse({ ...course, milestones: updatedMilestones });
   };
 
-
-
   const addQuestion = (milestoneIndex, moduleIndex, quizIndex) => {
     const updatedMilestones = [...course.milestones];
 
-    // Ensure quizzes array exists
-    if (!updatedMilestones[milestoneIndex].items[moduleIndex].quizzes) {
-      updatedMilestones[milestoneIndex].items[moduleIndex].quizzes = [];
+    // Ensure the quizzes array exists for the specific module
+    if (!updatedMilestones[milestoneIndex].items[moduleIndex].items[quizIndex].questions) {
+      updatedMilestones[milestoneIndex].items[moduleIndex].items[quizIndex].questions = [];
     }
 
-    // Ensure questions array exists inside the specific quiz
-    if (!updatedMilestones[milestoneIndex].items[moduleIndex].quizzes[quizIndex].questions) {
-      updatedMilestones[milestoneIndex].items[moduleIndex].quizzes[quizIndex].questions = [];
-    }
-
-    // Add new question to the quiz
-    updatedMilestones[milestoneIndex].items[moduleIndex].quizzes[quizIndex].questions.push({
+    // Add a new question to the quiz
+    updatedMilestones[milestoneIndex].items[moduleIndex].items[quizIndex].questions.push({
       question: "",
       options: ["", "", "", ""],
       answer: "",
       points: "",
     });
 
-    // Update state
+    // Update the course state
     setCourse({ ...course, milestones: updatedMilestones });
   };
-
 
   const handleInputChange = (e, path) => {
     const updatedCourse = { ...course };
@@ -188,8 +207,9 @@ export default function AddCourse() {
                 <>
                   {item.items.map((content, contentIndex) => (
                     <div key={contentIndex} className="mt-2 p-3 border rounded-lg">
-                      {content.type === "video" ? (
+                      {content.type === "video" && (
                         <>
+                          <h4 className="font-medium">Video {contentIndex + 1}</h4>
                           <input
                             type="text"
                             placeholder="Video Title"
@@ -200,11 +220,11 @@ export default function AddCourse() {
                                 `milestones.${milestoneIndex}.items.${itemIndex}.items.${contentIndex}.title`
                               )
                             }
-                            className="w-1/2 p-2 border rounded-lg"
+                            className="w-full p-2 border mt-2 rounded-lg"
                           />
                           <input
                             type="text"
-                            placeholder="YouTube URL"
+                            placeholder="Video URL"
                             value={content.url}
                             onChange={(e) =>
                               handleInputChange(
@@ -212,12 +232,26 @@ export default function AddCourse() {
                                 `milestones.${milestoneIndex}.items.${itemIndex}.items.${contentIndex}.url`
                               )
                             }
-                            className="w-1/2 p-2 border rounded-lg"
+                            className="w-full p-2 border mt-2 rounded-lg"
+                          />
+                          <input
+                            type="text"
+                            placeholder="Video Length (e.g., 5:23)"
+                            value={content.length}
+                            onChange={(e) =>
+                              handleInputChange(
+                                e,
+                                `milestones.${milestoneIndex}.items.${itemIndex}.items.${contentIndex}.length`
+                              )
+                            }
+                            className="w-full p-2 border mt-2 rounded-lg"
                           />
                         </>
-                      ) : content.type === "quiz" ? (
+                      )}
+
+                      {content.type === "quiz" && (
                         <>
-                          <h3 className="font-medium">{content.title}</h3>
+                          <h4 className="font-medium">{content.title}</h4>
                           {content.questions.map((question, questionIndex) => (
                             <div key={questionIndex} className="mt-2 p-3 border rounded-lg">
                               <input
@@ -232,80 +266,130 @@ export default function AddCourse() {
                                 }
                                 className="w-full p-2 border mt-2 rounded-lg"
                               />
+                              {question.options.map((option, optionIndex) => (
+                                <input
+                                  key={optionIndex}
+                                  type="text"
+                                  placeholder={`Option ${optionIndex + 1}`}
+                                  value={option}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e,
+                                      `milestones.${milestoneIndex}.items.${itemIndex}.items.${contentIndex}.questions.${questionIndex}.options.${optionIndex}`
+                                    )
+                                  }
+                                  className="w-full p-2 border mt-2 rounded-lg"
+                                />
+                              ))}
+                              <input
+                                type="text"
+                                placeholder="Correct Answer"
+                                value={question.answer}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    e,
+                                    `milestones.${milestoneIndex}.items.${itemIndex}.items.${contentIndex}.questions.${questionIndex}.answer`
+                                  )
+                                }
+                                className="w-full p-2 border mt-2 rounded-lg"
+                              />
                             </div>
                           ))}
                           <button
                             type="button"
-                            onClick={() => addQuestion(milestoneIndex, moduleIndex, contentIndex)}
-                            className="px-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition mt-2"
+                            onClick={() =>
+                              addQuestion(milestoneIndex, itemIndex, contentIndex)
+                            }
+                            className="px-4 bg-red-500 text-white py-1 rounded-lg hover:bg-red-600 transition mt-2"
                           >
                             Add Question
                           </button>
                         </>
-                      ) : null}
+                      )}
                     </div>
                   ))}
 
+
+                  {/* 👉 Add Video and Add Quiz buttons here */}
+                  <div className="flex gap-4 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => addVideo(milestoneIndex, itemIndex)}
+                      className="px-4 bg-purple-500 text-white py-1 rounded-lg hover:bg-purple-600 transition"
+                    >
+                      Add Video
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addQuiz(milestoneIndex, itemIndex)}
+                      className="px-4 bg-yellow-500 text-white py-1 rounded-lg hover:bg-yellow-600 transition"
+                    >
+                      Add Quiz
+                    </button>
+                  </div>
                 </>
               )}
+
 
               {/* Quiz Content */}
               {item.type === "quiz" && (
                 <div>
-                  {item.questions.map((question, questionIndex) => (
-                    <div key={questionIndex} className="mt-2 p-3 border rounded-lg">
-                      <input
-                        type="text"
-                        placeholder="Question"
-                        value={question.question}
-                        onChange={(e) =>
-                          handleInputChange(
-                            e,
-                            `milestones.${milestoneIndex}.items.${itemIndex}.questions.${questionIndex}.question`
-                          )
-                        }
-                        className="w-full p-2 border mt-2 rounded-lg"
-                      />
-                      {question.options.map((option, optionIndex) => (
-                        <input
-                          key={optionIndex}
-                          type="text"
-                          placeholder={`Option ${optionIndex + 1}`}
-                          value={option}
-                          onChange={(e) =>
-                            handleInputChange(
-                              e,
-                              `milestones.${milestoneIndex}.items.${itemIndex}.questions.${questionIndex}.options.${optionIndex}`
-                            )
-                          }
-                          className="w-full p-2 border mt-2 rounded-lg"
-                        />
+                  {item.quizzes.map((quiz, quizIndex) => (
+                    <div key={quizIndex}>
+                      <h4>{quiz.title}</h4>
+                      {quiz.questions.map((question, questionIndex) => (
+                        <div key={questionIndex}>
+                          <input
+                            type="text"
+                            placeholder="Question"
+                            value={question.question}
+                            onChange={(e) =>
+                              handleInputChange(
+                                e,
+                                `milestones.${milestoneIndex}.modules.${moduleIndex}.quizzes.${quizIndex}.questions.${questionIndex}.question`
+                              )
+                            }
+                          />
+                          {question.options.map((option, optionIndex) => (
+                            <input
+                              key={optionIndex}
+                              type="text"
+                              placeholder={`Option ${optionIndex + 1}`}
+                              value={option}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  e,
+                                  `milestones.${milestoneIndex}.modules.${moduleIndex}.quizzes.${quizIndex}.questions.${questionIndex}.options.${optionIndex}`
+                                )
+                              }
+                            />
+                          ))}
+                          <input
+                            type="text"
+                            placeholder="Correct Answer"
+                            value={question.answer}
+                            onChange={(e) =>
+                              handleInputChange(
+                                e,
+                                `milestones.${milestoneIndex}.modules.${moduleIndex}.quizzes.${quizIndex}.questions.${questionIndex}.answer`
+                              )
+                            }
+                          />
+                        </div>
                       ))}
-                      <input
-                        type="text"
-                        placeholder="Correct Answer"
-                        value={question.answer}
-                        onChange={(e) =>
-                          handleInputChange(
-                            e,
-                            `milestones.${milestoneIndex}.items.${itemIndex}.questions.${questionIndex}.answer`
-                          )
+                      <button
+                        type="button"
+                        onClick={() =>
+                          addQuestion(milestoneIndex, moduleIndex, quizIndex)
                         }
-                        className="w-full p-2 border mt-2 rounded-lg"
-                      />
+                      >
+                        Add Question
+                      </button>
                     </div>
                   ))}
-
-                  <button
-                    type="button"
-                    onClick={() => addQuestion(milestoneIndex, itemIndex)}
-                    className="px-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition mt-2"
-                  >
-                    Add Question
-                  </button>
-
                 </div>
               )}
+
             </div>
           ))}
 

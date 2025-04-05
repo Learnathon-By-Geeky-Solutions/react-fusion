@@ -13,8 +13,8 @@ export default function CourseDashboard() {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const data = await getAllCourses();
-        setCourses(data.data.slice(0, 5)); // Show only 5 courses
+        const data = await getAllCourses(instructor?.token); // pass token
+        setCourses(data.data?.slice(0, 5) || []);
       } catch (err) {
         console.error("Error fetching courses:", err);
         setError("Failed to load courses. Please try again later.");
@@ -22,9 +22,11 @@ export default function CourseDashboard() {
         setLoading(false);
       }
     }
-
-    fetchCourses();
-  }, []);
+  
+    if (instructor?.authenticated) {
+      fetchCourses();
+    }
+  }, [instructor]);
 
   const getThumbnail = (thumbnail) => {
     return thumbnail === "str" ? noimage : thumbnail;

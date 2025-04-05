@@ -1,8 +1,8 @@
 import { BACKEND } from "../constants";
 
 async function getAllCourses(token) {
-  const filters = {
-    filters: {
+  const items = {
+    items: {
       instructors: true,
       milestones: true,
       modules: true,
@@ -16,7 +16,7 @@ async function getAllCourses(token) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(filters),
+    body: JSON.stringify(items),
   });
   const data = await result.json();
   console.log(data);
