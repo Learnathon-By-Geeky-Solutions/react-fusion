@@ -28,8 +28,9 @@ export default function AddCourse() {
       type: "module",
       title: "",
       description: "",
-      videos: [],
-    });
+      items: []
+    }
+    );
     setCourse({ ...course, milestones: updatedMilestones });
   };
 
@@ -41,6 +42,7 @@ export default function AddCourse() {
     }
 
     updatedMilestones[milestoneIndex].items[moduleIndex].videos.push({
+      type: "video",
       title: "",
       url: "",
     });
@@ -66,22 +68,31 @@ export default function AddCourse() {
 
 
 
-  const addQuestion = (milestoneIndex, itemIndex) => {
+  const addQuestion = (milestoneIndex, moduleIndex, quizIndex) => {
     const updatedMilestones = [...course.milestones];
 
-    if (!updatedMilestones[milestoneIndex].items[itemIndex].questions) {
-      updatedMilestones[milestoneIndex].items[itemIndex].questions = [];
+    // Ensure quizzes array exists
+    if (!updatedMilestones[milestoneIndex].items[moduleIndex].quizzes) {
+      updatedMilestones[milestoneIndex].items[moduleIndex].quizzes = [];
     }
 
-    updatedMilestones[milestoneIndex].items[itemIndex].questions.push({
+    // Ensure questions array exists inside the specific quiz
+    if (!updatedMilestones[milestoneIndex].items[moduleIndex].quizzes[quizIndex].questions) {
+      updatedMilestones[milestoneIndex].items[moduleIndex].quizzes[quizIndex].questions = [];
+    }
+
+    // Add new question to the quiz
+    updatedMilestones[milestoneIndex].items[moduleIndex].quizzes[quizIndex].questions.push({
       question: "",
       options: ["", "", "", ""],
       answer: "",
       points: "",
     });
 
+    // Update state
     setCourse({ ...course, milestones: updatedMilestones });
   };
+
 
   const handleInputChange = (e, path) => {
     const updatedCourse = { ...course };
@@ -175,112 +186,66 @@ export default function AddCourse() {
               {/* Module Content */}
               {item.type === "module" && (
                 <>
-                  {/* Video List */}
-                  {item.videos.map((video, videoIndex) => (
-                    <div key={videoIndex} className="mt-2 flex gap-2">
-                      <input
-                        type="text"
-                        placeholder="Video Title"
-                        value={video.title}
-                        onChange={(e) =>
-                          handleInputChange(
-                            e,
-                            `milestones.${milestoneIndex}.items.${itemIndex}.videos.${videoIndex}.title`
-                          )
-                        }
-                        className="w-1/2 p-2 border rounded-lg"
-                      />
-                      <input
-                        type="text"
-                        placeholder="YouTube URL"
-                        value={video.url}
-                        onChange={(e) =>
-                          handleInputChange(
-                            e,
-                            `milestones.${milestoneIndex}.items.${itemIndex}.videos.${videoIndex}.url`
-                          )
-                        }
-                        className="w-1/2 p-2 border rounded-lg"
-                      />
-                    </div>
-                  ))}
-
-
-                  {/* Quiz List inside the module */}
-                  {item.quizzes &&
-                    item.quizzes.map((quiz, quizIndex) => (
-                      <div key={quizIndex} className="mt-2 p-3 border rounded-lg">
-                        <h3 className="font-medium">{quiz.title}</h3>
-
-                        {quiz.questions.map((question, questionIndex) => (
-                          <div key={questionIndex} className="mt-2 p-3 border rounded-lg">
-                            <input
-                              type="text"
-                              placeholder="Question"
-                              value={question.question}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  e,
-                                  `milestones.${milestoneIndex}.items.${itemIndex}.quizzes.${quizIndex}.questions.${questionIndex}.question`
-                                )
-                              }
-                              className="w-full p-2 border mt-2 rounded-lg"
-                            />
-                            {question.options.map((option, optionIndex) => (
+                  {item.items.map((content, contentIndex) => (
+                    <div key={contentIndex} className="mt-2 p-3 border rounded-lg">
+                      {content.type === "video" ? (
+                        <>
+                          <input
+                            type="text"
+                            placeholder="Video Title"
+                            value={content.title}
+                            onChange={(e) =>
+                              handleInputChange(
+                                e,
+                                `milestones.${milestoneIndex}.items.${itemIndex}.items.${contentIndex}.title`
+                              )
+                            }
+                            className="w-1/2 p-2 border rounded-lg"
+                          />
+                          <input
+                            type="text"
+                            placeholder="YouTube URL"
+                            value={content.url}
+                            onChange={(e) =>
+                              handleInputChange(
+                                e,
+                                `milestones.${milestoneIndex}.items.${itemIndex}.items.${contentIndex}.url`
+                              )
+                            }
+                            className="w-1/2 p-2 border rounded-lg"
+                          />
+                        </>
+                      ) : content.type === "quiz" ? (
+                        <>
+                          <h3 className="font-medium">{content.title}</h3>
+                          {content.questions.map((question, questionIndex) => (
+                            <div key={questionIndex} className="mt-2 p-3 border rounded-lg">
                               <input
-                                key={optionIndex}
                                 type="text"
-                                placeholder={`Option ${optionIndex + 1}`}
-                                value={option}
+                                placeholder="Question"
+                                value={question.question}
                                 onChange={(e) =>
                                   handleInputChange(
                                     e,
-                                    `milestones.${milestoneIndex}.items.${itemIndex}.quizzes.${quizIndex}.questions.${questionIndex}.options.${optionIndex}`
+                                    `milestones.${milestoneIndex}.items.${itemIndex}.items.${contentIndex}.questions.${questionIndex}.question`
                                   )
                                 }
                                 className="w-full p-2 border mt-2 rounded-lg"
                               />
-                            ))}
-                            <input
-                              type="text"
-                              placeholder="Correct Answer"
-                              value={question.answer}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  e,
-                                  `milestones.${milestoneIndex}.items.${itemIndex}.quizzes.${quizIndex}.questions.${questionIndex}.answer`
-                                )
-                              }
-                              className="w-full p-2 border mt-2 rounded-lg"
-                            />
-                          </div>
-                        ))}
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => addQuestion(milestoneIndex, moduleIndex, contentIndex)}
+                            className="px-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition mt-2"
+                          >
+                            Add Question
+                          </button>
+                        </>
+                      ) : null}
+                    </div>
+                  ))}
 
-                        <button
-                          type="button"
-                          onClick={() => addQuestion(milestoneIndex, itemIndex, quizIndex)}
-                          className="px-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition mt-2"
-                        >
-                          Add Question
-                        </button>
-                      </div>
-                    ))}
-                  <div className="flex gap-2 mt-2">
-                    <button
-                      type="button"
-                      onClick={() => addVideo(milestoneIndex, itemIndex)}
-                      className="px-4 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition mt-2"
-                    >
-                      Add Video
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => addQuiz(milestoneIndex, itemIndex)}
-                      className="px-4 bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition mt-2"
-                    >
-                      Add Quiz
-                    </button>
-                  </div>
                 </>
               )}
 
