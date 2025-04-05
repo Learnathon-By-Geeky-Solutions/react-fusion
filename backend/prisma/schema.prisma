@@ -58,8 +58,11 @@ model Instructor {
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 
-  courses Course[]
-  User    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courses               Course[]
+  User                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  //InstructorAnalytics   InstructorAnalytics?
+  InstructorFeedback    InstructorFeedback[]
+  //instructorAnalyticsId String
 
   @@map("instructors")
 }
@@ -80,9 +83,12 @@ model Student {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 
-  User         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  courses      CourseStudent[]
-  transactions Transactions[]
+  User               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courses            CourseStudent[]
+  transactions       Transactions[]
+  StudentAnalytics   StudentAnalytics?
+  CourseProgress     CourseProgress[]
+  InstructorFeedback InstructorFeedback[]
 
   @@map("students")
 }
@@ -119,43 +125,48 @@ enum QualificationLevel {
 }
 
 model Course {
-  id           String          @id @default(uuid())
-  title        String
-  description  String
-  rating       Float?
-  price        Float
-  thumbnail    String
-  instructorId String
-  instructor   Instructor      @relation(fields: [instructorId], references: [userId])
-  milestones   Milestone[]
-  students     CourseStudent[]
-  transactions Transactions[]
+  id              String            @id @default(uuid())
+  title           String
+  description     String
+  rating          Float?
+  price           Float
+  thumbnail       String
+  instructorId    String
+  instructor      Instructor        @relation(fields: [instructorId], references: [userId])
+  milestones      Milestone[]
+  students        CourseStudent[]
+  transactions    Transactions[]
+  //CourseAnalytics CourseAnalytics[]
+  CourseProgress  CourseProgress[]
 }
 
 model Milestone {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  courseId    String
-  course      Course   @relation(fields: [courseId], references: [id])
-  modules     Module[]
+  id                String              @id @default(uuid())
+  title             String
+  description       String
+  courseId          String
+  course            Course              @relation(fields: [courseId], references: [id])
+  modules           Module[]
+  MilestoneProgress MilestoneProgress[]
 }
 
 model Module {
-  id          String    @id @default(uuid())
-  title       String
-  description String
-  milestoneId String
-  milestone   Milestone @relation(fields: [milestoneId], references: [id])
-  videos      Video[]
-  quizes      Quiz[]
+  id             String           @id @default(uuid())
+  title          String
+  description    String
+  milestoneId    String
+  milestone      Milestone        @relation(fields: [milestoneId], references: [id])
+  videos         Video[]
+  quizes         Quiz[]
+  ModuleProgress ModuleProgress[]
 }
 
 model Quiz {
-  id        String     @id @default(uuid())
-  moduleId  String
-  module    Module     @relation(fields: [moduleId], references: [id])
-  questions Question[]
+  id           String         @id @default(uuid())
+  moduleId     String
+  module       Module         @relation(fields: [moduleId], references: [id])
+  questions    Question[]
+  QuizProgress QuizProgress[]
 }
 
 model Question {
@@ -169,18 +180,20 @@ model Question {
 }
 
 model Video {
-  id           String        @id @default(uuid())
-  moduleId     String
-  module       Module        @relation(fields: [moduleId], references: [id])
-  title        String
-  url          String
-  isDeleted    Boolean       @default(false)
-  comments     Comment[]
-  notes        Note[]
-  likeCount    Int
-  likes        LikeUser[]
-  dislikeCount Int
-  dislike      DislikeUser[]
+  id            String          @id @default(uuid())
+  moduleId      String
+  module        Module          @relation(fields: [moduleId], references: [id])
+  title         String
+  url           String
+  length        Float // Length in seconds
+  isDeleted     Boolean         @default(false)
+  comments      Comment[]
+  notes         Note[]
+  likeCount     Int
+  likes         LikeUser[]
+  dislikeCount  Int
+  dislike       DislikeUser[]
+  VideoProgress VideoProgress[]
 }
 
 model Comment {
@@ -226,7 +239,7 @@ model CourseStudent {
   courseId  String
   course    Course  @relation(fields: [courseId], references: [id])
   studentId String
-  student   Student @relation(fields: [studentId], references: [id])
+  student   Student @relation(fields: [studentId], references: [userId])
 
   @@id([courseId, studentId])
 }
@@ -238,4 +251,132 @@ model Transactions {
   course    Course  @relation(fields: [courseId], references: [id])
   studentId String
   student   Student @relation(fields: [studentId], references: [userId])
+}
+
+model StudentAnalytics {
+  id              String  @id @default(uuid())
+  studentId       String  @unique
+  student         Student @relation(fields: [studentId], references: [userId])
+  courseCompleted Int
+  totalTimeSpent  Float
+  progress        Float
+
+  @@map("student_analytics")
+}
+
+model CourseProgress {
+  id                String              @id @default(uuid())
+  studentId         String
+  student           Student             @relation(fields: [studentId], references: [userId])
+  courseId          String
+  course            Course              @relation(fields: [courseId], references: [id])
+  isCompleted       Boolean             @default(false)
+  progress          Float // Overall progress in the course (calculated)
+  lastUpdated       DateTime            @default(now())
+  VideoProgress     VideoProgress[]
+  QuizProgress      QuizProgress[]
+  ModuleProgress    ModuleProgress[]
+  MilestoneProgress MilestoneProgress[]
+
+  @@unique([studentId, courseId])
+  @@map("course_progress")
+}
+
+model VideoProgress {
+  id               String         @id @default(uuid())
+  courseProgressId String
+  courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
+  videoId          String
+  video            Video          @relation(fields: [videoId], references: [id])
+  isCompleted      Boolean // Whether the student has completed watching the video
+  timeWatched      Float // Time watched in seconds (if partial progress is tracked)
+  lastUpdated      DateTime       @default(now())
+
+  @@unique([courseProgressId, videoId])
+  @@map("video_progress")
+}
+
+model QuizProgress {
+  id               String         @id @default(uuid())
+  courseProgressId String
+  courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
+  quizId           String
+  quiz             Quiz           @relation(fields: [quizId], references: [id])
+  isCompleted      Boolean // Whether the student has completed the quiz
+  score            Float // Score obtained on the quiz
+  lastUpdated      DateTime       @default(now())
+
+  @@unique([courseProgressId, quizId])
+  @@map("quiz_progress")
+}
+
+model ModuleProgress {
+  id               String         @id @default(uuid())
+  courseProgressId String
+  courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
+  moduleId         String
+  module           Module         @relation(fields: [moduleId], references: [id])
+  isCompleted      Boolean // Whether the student has completed the module
+  lastUpdated      DateTime       @default(now())
+
+  @@unique([courseProgressId, moduleId])
+  @@map("module_progress")
+}
+
+model MilestoneProgress {
+  id               String         @id @default(uuid())
+  courseProgressId String
+  courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
+  milestoneId      String
+  milestone        Milestone      @relation(fields: [milestoneId], references: [id])
+  isCompleted      Boolean // Whether the student has completed the milestone
+  lastUpdated      DateTime       @default(now())
+
+  @@unique([courseProgressId, milestoneId])
+  @@map("milestone_progress")
+}
+
+//TODO: drop table
+// model InstructorAnalytics {
+//   id              String     @id @default(uuid())
+//   instructorId    String @unique
+//   instructor      Instructor @relation(fields: [instructorId], references: [userId])
+//   coursesCreated  Int
+//   totalStudents   Int
+//   averageRating   Float // Average course rating
+//   totalEarnings   Float // Total earnings from courses
+//   studentFeedback Float // Average student feedback score (e.g., from course reviews)
+//   lastUpdated     DateTime   @default(now())
+//
+//   @@map("instructor_analytics")
+// }
+
+//TODO: drop table
+// model CourseAnalytics {
+//   id                String   @id @default(uuid())
+//   courseId          String
+//   course            Course   @relation(fields: [courseId], references: [id])
+//   totalEnrollments  Int
+//   totalViews        Int
+//   averageRating     Float
+//   totalComments     Int
+//   totalLikes        Int
+//   totalDislikes     Int
+//   totalTransactions Int
+//   lastUpdated       DateTime @default(now())
+//
+//   @@map("course_analytics")
+// }
+
+model InstructorFeedback {
+  id           String     @id @default(uuid())
+  instructorId String
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
+  studentId    String
+  student      Student    @relation(fields: [studentId], references: [userId])
+  feedback     String
+  rating       Float // Rating given to the instructor
+  createdAt    DateTime   @default(now())
+
+  @@map("instructor_feedback")
 }

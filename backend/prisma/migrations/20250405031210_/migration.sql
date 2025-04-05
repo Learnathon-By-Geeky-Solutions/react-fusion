@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Video" ADD COLUMN     "length" DOUBLE PRECISION NOT NULL DEFAULT 10;
