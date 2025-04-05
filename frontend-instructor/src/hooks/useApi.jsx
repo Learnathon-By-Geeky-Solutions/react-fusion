@@ -1,6 +1,6 @@
-import useInstructorAuth from "../context/instructorAuthContext";
+import useInstructorAuth from "@/src/context/authContext";
 
-export default function useInstructorApi() {
+export default function useApi() {
   const { instructor } = useInstructorAuth();
 
   const fetchData = async (apiFunction, params) => {

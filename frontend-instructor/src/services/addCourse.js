@@ -5,6 +5,7 @@ export async function addCourse(courseData) {
     const result = await fetch(`${BACKEND}/course/add-course`, {
       method: "POST",
       headers: {
+        Authorization: courseData.token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(courseData),
