@@ -1,14 +1,15 @@
 import { BACKEND } from "../constants";
 
 export async function addCourse(courseData) {
+  console.log("Naim ", courseData);
   try {
-    const result = await fetch(`${BACKEND}/course/add-course`, {
+    const result = await fetch(`${BACKEND}/course/create`, {
       method: "POST",
       headers: {
-        Authorization: courseData.token,
+        Authorization: courseData.instructor.token,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(courseData),
+      body: JSON.stringify(courseData.data.data),
     });
 
     const data = await result.json();

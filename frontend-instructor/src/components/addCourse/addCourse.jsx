@@ -1,115 +1,67 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "@/src/context/authContext";
+import { Formik, Form, Field, FieldArray } from "formik";
+import useApi from "@/src/hooks/useApi";
 import { addCourse } from "@/src/services/addCourse";
-import { useApi } from "@/src/hooks/useApi";
 
 export default function AddCourse() {
   const navigate = useNavigate();
-  const { instructor } = useAuth();
+  const { fetchData } = useApi();
 
-  const [course, setCourse] = useState({
+  const initialValues = {
     title: "",
     description: "",
     price: "",
     thumbnail: "",
     milestones: [],
-  });
-
-  const addMilestone = () => {
-    setCourse({
-      ...course,
-      milestones: [...course.milestones, { title: "", description: "", modules: [] }],
-    });
   };
 
-  const addModule = (milestoneIndex) => {
-    const updatedMilestones = [...course.milestones];
-    updatedMilestones[milestoneIndex].modules.push({
-      title: "",
-      description: "",
-      videos: [],
-      quizes: [],
-    });
-    setCourse({ ...course, milestones: updatedMilestones });
-  };
-
-  const addVideo = (milestoneIndex, moduleIndex) => {
-    const updatedMilestones = [...course.milestones];
-    updatedMilestones[milestoneIndex].modules[moduleIndex].videos.push({
-      title: "",
-      url: "",
-      length: "", 
-    });
-    setCourse({ ...course, milestones: updatedMilestones });
-  };
-
-  const addQuestion = (milestoneIndex, moduleIndex) => {
-    const updatedMilestones = [...course.milestones];
-    updatedMilestones[milestoneIndex].modules[moduleIndex].quizes.push({
-      question: "",
-      options: ["", "", "", ""],
-      answer: "",
-      value: "", 
-    });
-    setCourse({ ...course, milestones: updatedMilestones });
-  };
-
-  const handleInputChange = (e, path) => {
-    const updatedCourse = { ...course };
-    let ref = updatedCourse;
-    const parts = path.split(".");
+  const validateForm = (values) => {
+    const errors = {};
     
-    for (let i = 0; i < parts.length - 1; i++) {
-      const part = parts[i];
-      if (part.includes("[")) {
-        // Handle array access
-        const keyName = part.substring(0, part.indexOf("["));
-        const index = parseInt(part.substring(part.indexOf("[") + 1, part.indexOf("]")));
-        ref = ref[keyName][index];
-      } else {
-        ref = ref[part];
-      }
-    }
+    if (!values.title) errors.title = "Course title is required";
+    if (!values.description) errors.description = "Course description is required";
+    if (!values.price) errors.price = "Price is required";
+    if (!values.thumbnail) errors.thumbnail = "Thumbnail URL is required";
     
-    const lastPart = parts[parts.length - 1];
-    if (lastPart.includes("[")) {
-      const keyName = lastPart.substring(0, lastPart.indexOf("["));
-      const index = parseInt(lastPart.substring(lastPart.indexOf("[") + 1, lastPart.indexOf("]")));
-      ref[keyName][index] = e.target.value;
-    } else {
-      ref[lastPart] = e.target.value;
-    }
-    
-    setCourse(updatedCourse);
+    return errors;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
     try {
-      const validatedCourse = { ...course };
+      // Convert price to number
+      const courseData = {
+        ...values,
+        price: Number(values.price)
+      };
       
-      validatedCourse.price = Number(validatedCourse.price);
+      console.log("Submitting course data:", courseData);
       
-      // Validate that modules with quizzes have questions
-      let isValid = true;
-      validatedCourse.milestones.forEach((milestone) => {
-        milestone.modules.forEach((module) => {
-          if (module.quizes.length > 0 && module.quizes.some(q => !q.question || !q.answer)) {
-            alert("Please complete all quiz questions and answers.");
-            isValid = false;
-          }
-        });
-      });
+      // Structure the data correctly according to the error you showed
+      const payload = { 
+        data: courseData,  // Put course data directly in data property
+        instructor: { 
+          token: localStorage.getItem('token'),
+          authenticated: true
+        }
+      };
       
-      if (!isValid) return;
-
-      const token = instructor.token;
-      await addCourse(validatedCourse, token);
-      alert("Course added successfully!");
-      navigate("/courses");
+      // Use the addCourse service
+      const result = await fetchData(addCourse, payload);
+      
+      if (result.success) {
+        alert("Course added successfully!");
+        navigate("/my-courses");
+      } else {
+        setStatus({ error: `Failed: ${result.message || "Unknown error"}` });
+        alert(`Failed to add course: ${result.message || "Unknown error"}`);
+      }
     } catch (error) {
       console.error("Error adding course:", error);
-      alert("Failed to add course.");
+      setStatus({ error: "Failed to add course" });
+      alert("Failed to add course: " + (error.message || "Unknown error"));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -117,187 +69,280 @@ export default function AddCourse() {
     <div className="p-6 max-w-[800px] mx-auto">
       <h1 className="text-3xl font-bold text-center">Add New Course</h1>
 
-      {/* Course Details */}
-      <input
-        type="text"
-        placeholder="Course Title"
-        value={course.title}
-        onChange={(e) => handleInputChange(e, "title")}
-        className="w-full p-2 border mt-4 rounded-lg"
-      />
-      <textarea
-        placeholder="Course Description"
-        value={course.description}
-        onChange={(e) => handleInputChange(e, "description")}
-        className="w-full p-2 border mt-2 rounded-lg"
-      />
-      <input
-        type="number"
-        placeholder="Course Price"
-        value={course.price}
-        onChange={(e) => handleInputChange(e, "price")}
-        className="w-full p-2 border mt-2 rounded-lg"
-      />
-      <input
-        type="text"
-        placeholder="Thumbnail URL"
-        value={course.thumbnail}
-        onChange={(e) => handleInputChange(e, "thumbnail")}
-        className="w-full p-2 border mt-2 rounded-lg"
-      />
-
-      {/* Milestones List */}
-      {course.milestones.map((milestone, milestoneIndex) => (
-        <div key={milestoneIndex} className="mt-4 p-4 bg-gray-600 text-white rounded-lg">
-          <h2 className="text-lg font-semibold">Milestone {milestoneIndex + 1}</h2>
-          <input
-            type="text"
-            placeholder="Milestone Title"
-            value={milestone.title}
-            onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].title`)}
-            className="w-full p-2 border mt-2 rounded-lg"
-          />
-          <textarea
-            placeholder="Milestone Description"
-            value={milestone.description}
-            onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].description`)}
-            className="w-full p-2 border mt-2 rounded-lg"
-          />
-
-          {/* Modules List */}
-          {milestone.modules && milestone.modules.map((module, moduleIndex) => (
-            <div key={moduleIndex} className="mt-2 p-3 bg-gray-400 text-black rounded-lg">
-              <h3 className="font-medium">Module {moduleIndex + 1}</h3>
-              <input
-                type="text"
-                placeholder="Module Title"
-                value={module.title}
-                onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].title`)}
-                className="w-full p-2 border mt-2 rounded-lg"
-              />
-              <textarea
-                placeholder="Module Description"
-                value={module.description}
-                onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].description`)}
-                className="w-full p-2 border mt-2 rounded-lg"
-              />
-
-              {/* Videos Section */}
-              <div className="mt-3">
-                <h4 className="font-medium">Videos</h4>
-                {module.videos && module.videos.map((video, videoIndex) => (
-                  <div key={videoIndex} className="mt-2 p-3 bg-gray-200 text-black rounded-lg">
-                    <h5 className="font-medium">Video {videoIndex + 1}</h5>
-                    <input
-                      type="text"
-                      placeholder="Video Title"
-                      value={video.title}
-                      onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].videos[${videoIndex}].title`)}
-                      className="w-full p-2 border mt-2 rounded-lg"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Video URL"
-                      value={video.url}
-                      onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].videos[${videoIndex}].url`)}
-                      className="w-full p-2 border mt-2 rounded-lg"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Video Length (e.g., 10:30)"
-                      value={video.length}
-                      onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].videos[${videoIndex}].length`)}
-                      className="w-full p-2 border mt-2 rounded-lg"
-                    />
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addVideo(milestoneIndex, moduleIndex)}
-                  className="mt-2 px-4 bg-purple-500 text-white py-1 rounded-lg hover:bg-purple-600 transition"
-                >
-                  Add Video
-                </button>
+      <Formik
+        initialValues={initialValues}
+        validate={validateForm}
+        onSubmit={handleSubmit}
+      >
+        {({ values, errors, touched, isSubmitting, status }) => (
+          <Form>
+            {/* Error message if API call fails */}
+            {status && status.error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4 mb-4">
+                {status.error}
               </div>
+            )}
+            
+            {/* Course Details */}
+            <Field
+              type="text"
+              name="title"
+              placeholder="Course Title"
+              className="w-full p-2 border mt-4 rounded-lg"
+            />
+            {errors.title && touched.title && (
+              <div className="text-red-500 text-sm">{errors.title}</div>
+            )}
 
-              {/* Quiz Section */}
-              <div className="mt-3">
-                <h4 className="font-medium">Quiz</h4>
-                {module.quizes && module.quizes.map((quiz, quizIndex) => (
-                  <div key={quizIndex} className="mt-2 p-3 bg-gray-200 text-black rounded-lg">
-                    <h5 className="font-medium">Question {quizIndex + 1}</h5>
-                    <input
-                      type="text"
-                      placeholder="Question"
-                      value={quiz.question}
-                      onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].question`)}
-                      className="w-full p-2 border mt-2 rounded-lg"
-                    />
-                    {quiz.options.map((option, optionIndex) => (
-                      <input
-                        key={optionIndex}
+            <Field
+              as="textarea"
+              name="description"
+              placeholder="Course Description"
+              className="w-full p-2 border mt-2 rounded-lg"
+            />
+            {errors.description && touched.description && (
+              <div className="text-red-500 text-sm">{errors.description}</div>
+            )}
+
+            <Field
+              type="number"
+              name="price"
+              placeholder="Course Price"
+              className="w-full p-2 border mt-2 rounded-lg"
+            />
+            {errors.price && touched.price && (
+              <div className="text-red-500 text-sm">{errors.price}</div>
+            )}
+
+            <Field
+              type="text"
+              name="thumbnail"
+              placeholder="Thumbnail URL"
+              className="w-full p-2 border mt-2 rounded-lg"
+            />
+            {errors.thumbnail && touched.thumbnail && (
+              <div className="text-red-500 text-sm">{errors.thumbnail}</div>
+            )}
+
+            {/* Milestones */}
+            <FieldArray name="milestones">
+              {({ push: pushMilestone, remove: removeMilestone }) => (
+                <div>
+                  {values.milestones.map((milestone, milestoneIndex) => (
+                    <div key={milestoneIndex} className="mt-4 p-4 bg-gray-600 text-white rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <h2 className="text-lg font-semibold">Milestone {milestoneIndex + 1}</h2>
+                        <button
+                          type="button"
+                          onClick={() => removeMilestone(milestoneIndex)}
+                          className="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 transition"
+                        >
+                          Remove
+                        </button>
+                      </div>
+
+                      <Field
                         type="text"
-                        placeholder={`Option ${optionIndex + 1}`}
-                        value={option}
-                        onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].options[${optionIndex}]`)}
+                        name={`milestones[${milestoneIndex}].title`}
+                        placeholder="Milestone Title"
                         className="w-full p-2 border mt-2 rounded-lg"
                       />
-                    ))}
-                    <input
-                      type="text"
-                      placeholder="Correct Answer"
-                      value={quiz.answer}
-                      onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].answer`)}
-                      className="w-full p-2 border mt-2 rounded-lg"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Points"
-                      value={quiz.value}
-                      onChange={(e) => handleInputChange(e, `milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].value`)}
-                      className="w-full p-2 border mt-2 rounded-lg"
-                    />
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addQuestion(milestoneIndex, moduleIndex)}
-                  className="mt-2 px-4 bg-red-500 text-white py-1 rounded-lg hover:bg-red-600 transition"
-                >
-                  Add Question
-                </button>
-              </div>
-            </div>
-          ))}
 
-          {/* Add Module Button */}
-          <button
-            type="button"
-            onClick={() => addModule(milestoneIndex)}
-            className="mt-3 px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
-          >
-            Add Module
-          </button>
-        </div>
-      ))}
+                      <Field
+                        as="textarea"
+                        name={`milestones[${milestoneIndex}].description`}
+                        placeholder="Milestone Description"
+                        className="w-full p-2 border mt-2 rounded-lg"
+                      />
 
-      {/* Add Milestone Button */}
-      <button
-        type="button"
-        onClick={addMilestone}
-        className="mt-4 px-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
-      >
-        Add Milestone
-      </button>
+                      {/* Modules */}
+                      <FieldArray name={`milestones[${milestoneIndex}].modules`}>
+                        {({ push: pushModule, remove: removeModule }) => (
+                          <div>
+                            {milestone.modules && milestone.modules.map((module, moduleIndex) => (
+                              <div key={moduleIndex} className="mt-2 p-3 bg-gray-400 text-black rounded-lg">
+                                <div className="flex justify-between items-center">
+                                  <h3 className="font-medium">Module {moduleIndex + 1}</h3>
+                                  <button
+                                    type="button"
+                                    onClick={() => removeModule(moduleIndex)}
+                                    className="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 transition"
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
 
-      {/* Submit Course Button */}
-      <button
-        type="button"
-        onClick={handleSubmit}
-        className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-      >
-        Submit Course
-      </button>
+                                <Field
+                                  type="text"
+                                  name={`milestones[${milestoneIndex}].modules[${moduleIndex}].title`}
+                                  placeholder="Module Title"
+                                  className="w-full p-2 border mt-2 rounded-lg"
+                                />
+
+                                <Field
+                                  as="textarea"
+                                  name={`milestones[${milestoneIndex}].modules[${moduleIndex}].description`}
+                                  placeholder="Module Description"
+                                  className="w-full p-2 border mt-2 rounded-lg"
+                                />
+
+                                {/* Videos Section */}
+                                <div className="mt-3">
+                                  <h4 className="font-medium">Videos</h4>
+                                  <FieldArray name={`milestones[${milestoneIndex}].modules[${moduleIndex}].videos`}>
+                                    {({ push: pushVideo, remove: removeVideo }) => (
+                                      <div>
+                                        {module.videos && module.videos.map((video, videoIndex) => (
+                                          <div key={videoIndex} className="mt-2 p-3 bg-gray-200 text-black rounded-lg">
+                                            <div className="flex justify-between items-center">
+                                              <h5 className="font-medium">Video {videoIndex + 1}</h5>
+                                              <button
+                                                type="button"
+                                                onClick={() => removeVideo(videoIndex)}
+                                                className="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 transition"
+                                              >
+                                                Remove
+                                              </button>
+                                            </div>
+
+                                            <Field
+                                              type="text"
+                                              name={`milestones[${milestoneIndex}].modules[${moduleIndex}].videos[${videoIndex}].title`}
+                                              placeholder="Video Title"
+                                              className="w-full p-2 border mt-2 rounded-lg"
+                                            />
+
+                                            <Field
+                                              type="text"
+                                              name={`milestones[${milestoneIndex}].modules[${moduleIndex}].videos[${videoIndex}].url`}
+                                              placeholder="Video URL"
+                                              className="w-full p-2 border mt-2 rounded-lg"
+                                            />
+
+                                            <Field
+                                              type="text"
+                                              name={`milestones[${milestoneIndex}].modules[${moduleIndex}].videos[${videoIndex}].length`}
+                                              placeholder="Video Length (e.g., 10:30)"
+                                              className="w-full p-2 border mt-2 rounded-lg"
+                                            />
+                                          </div>
+                                        ))}
+                                        <button
+                                          type="button"
+                                          onClick={() => pushVideo({ title: "", url: "", length: "" })}
+                                          className="mt-2 px-4 bg-purple-500 text-white py-1 rounded-lg hover:bg-purple-600 transition"
+                                        >
+                                          Add Video
+                                        </button>
+                                      </div>
+                                    )}
+                                  </FieldArray>
+                                </div>
+
+                                {/* Quiz Section */}
+                                <div className="mt-3">
+                                  <h4 className="font-medium">Quiz</h4>
+                                  <FieldArray name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes`}>
+                                    {({ push: pushQuiz, remove: removeQuiz }) => (
+                                      <div>
+                                        {module.quizes && module.quizes.map((quiz, quizIndex) => (
+                                          <div key={quizIndex} className="mt-2 p-3 bg-gray-200 text-black rounded-lg">
+                                            <div className="flex justify-between items-center">
+                                              <h5 className="font-medium">Question {quizIndex + 1}</h5>
+                                              <button
+                                                type="button"
+                                                onClick={() => removeQuiz(quizIndex)}
+                                                className="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 transition"
+                                              >
+                                                Remove
+                                              </button>
+                                            </div>
+
+                                            <Field
+                                              type="text"
+                                              name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].question`}
+                                              placeholder="Question"
+                                              className="w-full p-2 border mt-2 rounded-lg"
+                                            />
+
+                                            <FieldArray name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].options`}>
+                                              {({ replace }) => (
+                                                <>
+                                                  {quiz.options.map((option, optionIndex) => (
+                                                    <Field
+                                                      key={optionIndex}
+                                                      type="text"
+                                                      name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].options[${optionIndex}]`}
+                                                      placeholder={`Option ${optionIndex + 1}`}
+                                                      className="w-full p-2 border mt-2 rounded-lg"
+                                                    />
+                                                  ))}
+                                                </>
+                                              )}
+                                            </FieldArray>
+
+                                            <Field
+                                              type="text"
+                                              name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].answer`}
+                                              placeholder="Correct Answer"
+                                              className="w-full p-2 border mt-2 rounded-lg"
+                                            />
+
+                                            <Field
+                                              type="number"
+                                              name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].value`}
+                                              placeholder="Points"
+                                              className="w-full p-2 border mt-2 rounded-lg"
+                                            />
+                                          </div>
+                                        ))}
+                                        <button
+                                          type="button"
+                                          onClick={() => pushQuiz({ question: "", options: ["", "", "", ""], answer: "", value: "" })}
+                                          className="mt-2 px-4 bg-red-500 text-white py-1 rounded-lg hover:bg-red-600 transition"
+                                        >
+                                          Add Question
+                                        </button>
+                                      </div>
+                                    )}
+                                  </FieldArray>
+                                </div>
+                              </div>
+                            ))}
+                            <button
+                              type="button"
+                              onClick={() => pushModule({ title: "", description: "", videos: [], quizes: [] })}
+                              className="mt-3 px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+                            >
+                              Add Module
+                            </button>
+                          </div>
+                        )}
+                      </FieldArray>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => pushMilestone({ title: "", description: "", modules: [] })}
+                    className="mt-4 px-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
+                  >
+                    Add Milestone
+                  </button>
+                </div>
+              )}
+            </FieldArray>
+
+            {/* Submit Course Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-70"
+            >
+              {isSubmitting ? "Submitting..." : "Submit Course"}
+            </button>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 }
