@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import getSingleCourse from "@/src/services/singleCourse";
+import { buyCourse } from "@/src/services/buyCourse"; 
 import { noimage } from "../../assets";
 
 export default function CourseDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [purchasing, setPurchasing] = useState(false);
 
   useEffect(() => {
     async function fetchCourse() {
@@ -24,6 +27,46 @@ export default function CourseDetails() {
 
     fetchCourse();
   }, [id]);
+
+  const handleBuyCourse = async () => {
+    setPurchasing(true);
+    
+    try {
+      // Generate random transaction ID
+      const txnId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      
+      // Get token from localStorage or wherever you store it
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        alert("Please login to purchase this course");
+        navigate("/login");
+        setPurchasing(false);
+        return;
+      }
+      
+      const purchaseData = {
+        token,
+        data: {
+          courseId: id,
+          txnId
+        }
+      };
+      
+      const response = await buyCourse(purchaseData);
+      
+      if (response.success) {
+        navigate(`/enrolled/${id}`);
+      } else {
+        alert(response.message || "Failed to purchase course. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error purchasing course:", error);
+      alert("An error occurred while purchasing the course. Please try again.");
+    } finally {
+      setPurchasing(false);
+    }
+  };
 
   if (loading) return <p className="text-center text-lg">Loading course details...</p>;
   if (!course) return <p className="text-center text-red-500">Course not found.</p>;
@@ -86,8 +129,12 @@ export default function CourseDetails() {
             <p className="text-sm text-gray-500">Contact: {course.instructor.contactNumber}</p>
           </div>
 
-          <button className="w-full mt-6 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition">
-            Buy This Course
+          <button
+            className="w-full mt-6 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition disabled:bg-blue-300"
+            onClick={handleBuyCourse}
+            disabled={purchasing}
+          >
+            {purchasing ? "Processing..." : "Buy This Course"}
           </button>
         </div>
       </div>
