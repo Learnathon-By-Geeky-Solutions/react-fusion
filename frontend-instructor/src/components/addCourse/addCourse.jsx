@@ -29,25 +29,24 @@ export default function AddCourse() {
 
   const handleSubmit = async (values, { setSubmitting, setStatus }) => {
     try {
-      // Convert price to number
       const courseData = {
         ...values,
         price: Number(values.price)
+
       };
       
       console.log("Submitting course data:", courseData);
       
-      // Structure the data correctly according to the error you showed
-      const payload = { 
-        data: courseData,  // Put course data directly in data property
-        instructor: { 
-          token: localStorage.getItem('token'),
-          authenticated: true
-        }
-      };
-      
-      // Use the addCourse service
-      const result = await fetchData(addCourse, payload);
+      // // Structure the data correctly according to the error you showed
+      // const payload = { 
+      //   data: courseData, 
+      //   // instructor: { 
+      //   //   token: localStorage.getItem('token'),
+      //   //   authenticated: true
+      //   // }
+      // };
+
+      const result = await fetchData(addCourse, courseData);
       
       if (result.success) {
         alert("Course added successfully!");
@@ -220,7 +219,7 @@ export default function AddCourse() {
                                             />
 
                                             <Field
-                                              type="text"
+                                              type="number"
                                               name={`milestones[${milestoneIndex}].modules[${moduleIndex}].videos[${videoIndex}].length`}
                                               placeholder="Video Length (e.g., 10:30)"
                                               className="w-full p-2 border mt-2 rounded-lg"
