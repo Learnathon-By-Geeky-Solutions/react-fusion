@@ -6,12 +6,12 @@ import prisma from '../../shared/prisma';
 
 const accessValidation = (resourceType: string) => async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const quizId = req.params.quizId || req.body.quizId || null;
-    const videoId = req.params.videoId || req.body.videoId || null;
-    const moduleId = req.params.moduleId || req.body.moduleId || null;
-    const commentId = req.params.commentId || req.body.commentId || null
-    const milestoneId = req.params.milestoneId || req.body.milestoneId || null
-    let courseId = req.params.courseId || req.body.courseId || null
+    const quizId = req.params.quizId ?? req.body.quizId ?? null;
+    const videoId = req.params.videoId ?? req.body.videoId ?? null;
+    const moduleId = req.params.moduleId ?? req.body.moduleId ?? null;
+    const commentId = req.params.commentId ?? req.body.commentId ?? null
+    const milestoneId = req.params.milestoneId ?? req.body.milestoneId ?? null
+    let courseId = req.params.courseId ?? req.body.courseId ?? null
 
 
     let resource = null
@@ -35,7 +35,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
       })
 
       instructorId = resource?.module?.milestone?.course?.instructorId
-      courseId = resource?.module?.milestone?.courseId
+      courseId = resource?.module.milestone.courseId ?? ""
     }
 
     else if (resourceType === 'video') {
@@ -54,7 +54,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
         }
       })
       instructorId = resource?.module?.milestone?.course?.instructorId
-      courseId = resource?.module?.milestone?.courseId
+      courseId = resource?.module?.milestone?.courseId ?? ""
     }
     else if (resourceType === 'module') {
       resource = await prisma.module.findUnique({
@@ -68,7 +68,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
         }
       })
       instructorId = resource?.milestone?.course?.instructorId
-      courseId = resource?.milestone?.courseId
+      courseId = resource?.milestone?.courseId ?? ""
     }
     else if (resourceType === 'comment') {
       const comment = await prisma.comment.findUnique({ where: { id: commentId } })
@@ -80,7 +80,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
     else if (resourceType === 'milestone') {
       resource = await prisma.milestone.findUnique({ where: { id: milestoneId }, include: { course: true } })
       instructorId = resource?.course?.instructorId
-      courseId = resource?.courseId
+      courseId = resource?.courseId ?? ""
 
     }
     else if (resourceType === 'course') {
