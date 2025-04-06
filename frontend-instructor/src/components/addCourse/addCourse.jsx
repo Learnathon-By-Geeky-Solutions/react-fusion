@@ -36,15 +36,6 @@ export default function AddCourse() {
       };
       
       console.log("Submitting course data:", courseData);
-      
-      // // Structure the data correctly according to the error you showed
-      // const payload = { 
-      //   data: courseData, 
-      //   // instructor: { 
-      //   //   token: localStorage.getItem('token'),
-      //   //   authenticated: true
-      //   // }
-      // };
 
       const result = await fetchData(addCourse, courseData);
       
