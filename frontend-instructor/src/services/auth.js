@@ -1,12 +1,12 @@
-import { BACKEND } from "../constants";
+import { BACKEND } from '../constants';
 
 async function logInInstructor(data) {
   const res = await fetch(`${BACKEND}/auth/login`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   });
   const resJson = await res.json();
   return resJson;
@@ -23,16 +23,16 @@ async function signUpInstructor(data) {
       gender: data.gender,
       qualification: data.qualification,
       currentWorkingPlace: data.currentWorkingPlace,
-      designation: data.designation,
-    },
+      designation: data.designation
+    }
   };
 
   const formData = new FormData();
-  formData.append("data", JSON.stringify(formattedData));
+  formData.append('data', JSON.stringify(formattedData));
 
   const res = await fetch(`${BACKEND}/user/create-instructor`, {
-    method: "POST",
-    body: formData,
+    method: 'POST',
+    body: formData
   });
 
   const resJson = await res.json();
@@ -43,14 +43,14 @@ async function signUpInstructor(data) {
 
   // WARN: For development only - Automatically verifying OTP
   const verifyRes = await fetch(`${BACKEND}/user/verify-user`, {
-    method: "POST",
+    method: 'POST',
     headers: {
       Authorization: resJson.data.token,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      otp: resJson.data.otp,
-    }),
+      otp: resJson.data.otp
+    })
   });
 
   const verifyResJson = await verifyRes.json();

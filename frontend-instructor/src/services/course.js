@@ -1,4 +1,4 @@
-import { BACKEND } from "../constants";
+import { BACKEND } from '../constants';
 
 async function getAllCourses(token) {
   const items = {
@@ -7,16 +7,16 @@ async function getAllCourses(token) {
       milestones: true,
       modules: true,
       quizes: true,
-      videos: true,
-    },
+      videos: true
+    }
   };
 
   const result = await fetch(`${BACKEND}/course/get-courses`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(items),
+    body: JSON.stringify(items)
   });
   const data = await result.json();
   console.log(data);
