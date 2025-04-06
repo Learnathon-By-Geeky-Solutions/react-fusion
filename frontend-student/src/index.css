@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "daisyui";
 
 html, body, #root {
   margin: 0 !important;
