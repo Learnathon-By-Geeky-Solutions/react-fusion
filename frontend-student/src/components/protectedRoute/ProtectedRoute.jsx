@@ -1,5 +1,5 @@
-import useAuth from "@/src/context/authContext";
-import PropTypes from "prop-types";
+import useAuth from '@/src/context/authContext';
+import PropTypes from 'prop-types';
 
 export default function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -12,5 +12,5 @@ export default function ProtectedRoute({ children }) {
 }
 
 ProtectedRoute.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };

@@ -1,5 +1,5 @@
-import { createContext, useState, useContext, useEffect, useMemo } from "react";
-import PropTypes from "prop-types";
+import { createContext, useState, useContext, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 
 const AuthContext = createContext(null);
 
@@ -11,7 +11,7 @@ const LoadingSpinner = () => {
   return (
     <div>
       Loading...
-      <div className="animate-spin h-8 w-8 border-4 border-t-4 border-blue-500 rounded-full"></div>
+      <div className='animate-spin h-8 w-8 border-4 border-t-4 border-blue-500 rounded-full'></div>
     </div>
   );
 };
@@ -20,16 +20,16 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState({
     authenticated: false,
-    token: null,
+    token: null
   });
 
   const loadToken = async () => {
     try {
-      const storedToken = localStorage.getItem("token");
+      const storedToken = localStorage.getItem('token');
       if (storedToken) {
         setUser({
           authenticated: true,
-          token: storedToken,
+          token: storedToken
         });
       }
     } catch (err) {
@@ -40,18 +40,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const storeToken = async (token) => {
-    localStorage.setItem("token", token);
+    localStorage.setItem('token', token);
     setUser({
       authenticated: true,
-      token: token,
+      token: token
     });
   };
 
   const logOutUser = async () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     setUser({
       authenticated: false,
-      token: null,
+      token: null
     });
   };
 
@@ -59,13 +59,16 @@ export const AuthProvider = ({ children }) => {
     loadToken();
   }, []);
 
-  const values = useMemo(() => ({
-    user,
-    setUser,
-    storeToken,
-    isLoading,
-    logOutUser,
-  }), [user, isLoading]);
+  const values = useMemo(
+    () => ({
+      user,
+      setUser,
+      storeToken,
+      isLoading,
+      logOutUser
+    }),
+    [user, isLoading]
+  );
 
   return (
     <AuthContext.Provider value={values}>
@@ -75,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default useAuth;
