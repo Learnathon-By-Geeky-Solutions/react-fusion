@@ -1,5 +1,6 @@
 import { image1, image2, image3 } from "../../assets";
 import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const carouselRef = useRef(null);
@@ -17,9 +18,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative w-full bg-base-100">
-      {/* Carousel Background */}
-      <div className="relative w-full h-[80vh] ">
+    <div className="relative w-full bg-background">
+      {/* Carousel */}
+      <div className="relative w-full h-screen">
         <div
           ref={carouselRef}
           className="flex w-full h-full transition-transform duration-1000 ease-in-out"
@@ -36,17 +37,21 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Overlay with Hero Section */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 text-white flex items-center justify-center z-10">
-        <div className="text-center px-6">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">EduNexus</h1>
-          <h4 className="text-xl md:text-2xl font-medium mb-2">
+      {/* Overlay Content */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 flex items-center justify-center text-white z-10">
+        <div className="text-center px-6 space-y-4">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+            EduNexus
+          </h1>
+          <h4 className="text-xl md:text-2xl font-medium">
             Connecting Minds, Empowering Futures.
           </h4>
-          <p className="text-md md:text-lg mb-6">A Project by Team React Fusion</p>
-          <button className="btn btn-primary btn-lg normal-case text-white">
+          <p className="text-md md:text-lg">
+            A Project by Team React Fusion
+          </p>
+          <Button className="text-white text-base md:text-lg px-6 py-4 rounded-xl">
             Learn More
-          </button>
+          </Button>
         </div>
       </div>
     </div>
