@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/authContext";
 import App from "./App.jsx"; 
 import SignUp from "./components/signup/SignUp";
 import MyCourses from "./components/mycourses/MyCourses";
+import AddCourse from "./components/addCourse/addCourse";
 
 const routes = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const routes = createBrowserRouter([
       {
         path: "/my-courses",
         element: <MyCourses />, 
+      },
+      {
+        path: "/add-courses",
+        element: <AddCourse />, 
       },
     ],
   },
