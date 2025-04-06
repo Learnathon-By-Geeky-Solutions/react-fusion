@@ -5,7 +5,6 @@ import { AuthUtils } from '../../../helpers/bcryptHelpers';
 import { UserRole, UserStatus } from '@prisma/client';
 import prisma from '../../../shared/prisma';
 import { generateOTP } from '../../../helpers/generateDigit';
-//import { sendEmail } from '../../../helpers/sendEmail';
 import config from '../../../config';
 import { Secret } from 'jsonwebtoken';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
