@@ -87,6 +87,11 @@ export default function CourseDashboard() {
                     <button className='px-4 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition'>
                       Edit
                     </button>
+                    <Link to={`/analytics/${course.id}`}>
+                      <button className='px-4 bg-red-500 text-white py-2 rounded-lg hover:bg-blue-600 transition'>
+                        Analytics
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>

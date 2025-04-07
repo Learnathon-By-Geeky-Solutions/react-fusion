@@ -66,14 +66,27 @@ export default function CourseDashboard() {
             </div>
           </div>
           <div>
-            <div className='flex justify-between text-xl mt-12 mb-4'>
-              <div className='w-2/3'>Title</div>
-              <div className='w-1/3'>Rating ⭐</div>
+            <h1 className='mt-8 text-3xl font-bold'>Analytics</h1>
+            <div className='flex justify-between text-xl my-4 items-center'>
+              <div className='w-2/4'>Title</div>
+              <div className='w-1/4'>Rating ⭐</div>
+              <div className='w-1/4 pl-4'>Action</div>
             </div>
             {profile?.courses.map((item, idx) => (
-              <div key={idx} className='flex justify-between text-xl mb-2'>
-                <div className='w-2/3'>{item.title}</div>
-                <div className='w-1/3'>{item.rating | '0'} </div>
+              <div
+                key={idx}
+                className='flex justify-between text-xl mb-2 items-center'
+              >
+                <div className='w-2/4'>{item.title}</div>
+                <div className='w-1/4'>{item.rating | '0'} </div>
+                <div className='w-1/4'>
+                  <Link
+                    to={`/analytics/${item.id}`}
+                    className='border-2 border-gray-300 px-4 py-2 rounded'
+                  >
+                    Details
+                  </Link>
+                </div>
               </div>
             ))}
           </div>

@@ -9,6 +9,7 @@ import App from './App.jsx';
 import SignUp from './components/signup/SignUp';
 import MyCourses from './components/mycourses/MyCourses';
 import AddCourse from './components/addCourse/addCourse';
+import CourseAnalytics from './components/analytics/Analytics';
 
 const routes = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const routes = createBrowserRouter([
       {
         path: '/add-courses',
         element: <AddCourse />
+      },
+      {
+        path: '/analytics/:courseId',
+        element: <CourseAnalytics></CourseAnalytics>
       }
     ]
   }
