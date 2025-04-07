@@ -2,7 +2,6 @@ import { BACKEND } from '../constants';
 
 // Create Note
 export async function createNote(payload) {
-  console.log('Creating note:', payload);
   try {
     const result = await fetch(`${BACKEND}/note/create`, {
       method: 'POST',
@@ -14,7 +13,6 @@ export async function createNote(payload) {
     });
 
     const data = await result.json();
-    console.log('Created note:', data);
     return data;
   } catch (error) {
     console.error('Error creating note:', error);
@@ -24,7 +22,6 @@ export async function createNote(payload) {
 
 // Get Notes
 export async function getNote(payload) {
-  console.log('Getting note:', payload);
   try {
     const result = await fetch(`${BACKEND}/note/get`, {
       method: 'POST',
@@ -36,7 +33,6 @@ export async function getNote(payload) {
     });
 
     const data = await result.json();
-    console.log('Fetched note:', data);
     return data;
   } catch (error) {
     console.error('Error getting note:', error);
@@ -46,7 +42,6 @@ export async function getNote(payload) {
 
 // Update Note
 export async function updateNote(payload) {
-  console.log('Updating note:', payload);
   try {
     const result = await fetch(`${BACKEND}/note/update`, {
       method: 'POST',
@@ -58,7 +53,6 @@ export async function updateNote(payload) {
     });
 
     const data = await result.json();
-    console.log('Updated note:', data);
     return data;
   } catch (error) {
     console.error('Error updating note:', error);
@@ -68,7 +62,6 @@ export async function updateNote(payload) {
 
 // Delete Note
 export async function deleteNote(payload) {
-  console.log('Deleting note:', payload);
   try {
     const result = await fetch(`${BACKEND}/note/delete`, {
       method: 'DELETE',
@@ -80,7 +73,6 @@ export async function deleteNote(payload) {
     });
 
     const data = await result.json();
-    console.log('Deleted note:', data);
     return data;
   } catch (error) {
     console.error('Error deleting note:', error);

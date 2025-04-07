@@ -71,6 +71,7 @@ export default function NotesSection({ videoId }) {
       if (response.success) {
         setSavedNote(response.data);
         setIsEditing(false);
+        fetchNoteData();
       } else {
         console.error('Failed to save note:', response.message);
       }
@@ -178,7 +179,7 @@ export default function NotesSection({ videoId }) {
         </>
       ) : (
         !isLoading && (
-          <div className="mt-2 p-3 bg-white rounded-lg min-h-[100px] whitespace-pre-wrap">
+          <div className="mt-2 p-3 bg-white rounded-lg min-h-[100px] whitespace-pre-wrap text-left">
             {savedNote?.note || 'No notes yet.'}
           </div>
         )
