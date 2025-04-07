@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getVideo } from '@/src/services/getVideo';
+import useApi from '@/src/hooks/useApi';
 
 export default function VideoSection({ videoId, title }) {
   const [videoData, setVideoData] = useState(null);

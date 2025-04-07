@@ -5,6 +5,7 @@ import VideoSection from './VideoSection';
 import NotesSection from './NotesSection';
 import CommentsSection from './CommentsSection';
 import CourseSidebar from './CourseSidebar';
+import useAuth from '@/src/context/authContext';
 
 export default function CoursePage() {
   const { id } = useParams();
@@ -13,6 +14,9 @@ export default function CoursePage() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [openMilestones, setOpenMilestones] = useState({});
   const [openModules, setOpenModules] = useState({});
+
+  const { user } = useAuth();
+  console.log('User:', user);
 
   useEffect(() => {
     async function fetchCourse() {

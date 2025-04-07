@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default function ProtectedRoute({ children }) {
   const { user } = useAuth();
 
-  if (user === null) {
+  if (!user.authenticated) {
     return <>NO USER</>;
   }
 
