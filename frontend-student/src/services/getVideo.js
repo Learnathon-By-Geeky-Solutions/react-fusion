@@ -11,7 +11,6 @@ export async function getVideo(videoData) {
     });
 
     const data = await result.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error('Error fetching video:', error);

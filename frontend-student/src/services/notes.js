@@ -1,18 +1,20 @@
 import { BACKEND } from '../constants';
 
 // Create Note
-export async function createNote(noteData) {
+export async function createNote(payload) {
+  console.log('Creating note:', payload);
   try {
     const result = await fetch(`${BACKEND}/note/create`, {
       method: 'POST',
       headers: {
-        Authorization: noteData.token,
+        Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(noteData.data)
+      body: JSON.stringify(JSON.parse(payload.data))
     });
 
     const data = await result.json();
+    console.log('Created note:', data);
     return data;
   } catch (error) {
     console.error('Error creating note:', error);
@@ -21,18 +23,20 @@ export async function createNote(noteData) {
 }
 
 // Get Notes
-export async function getNote(noteData) {
+export async function getNote(payload) {
+  console.log('Getting note:', payload);
   try {
     const result = await fetch(`${BACKEND}/note/get`, {
       method: 'POST',
       headers: {
-        Authorization: noteData.token,
+        Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ videoId: noteData.videoId })
+      body: JSON.stringify(JSON.parse(payload.data))
     });
 
     const data = await result.json();
+    console.log('Fetched note:', data);
     return data;
   } catch (error) {
     console.error('Error getting note:', error);
@@ -41,18 +45,20 @@ export async function getNote(noteData) {
 }
 
 // Update Note
-export async function updateNote(noteData) {
+export async function updateNote(payload) {
+  console.log('Updating note:', payload);
   try {
     const result = await fetch(`${BACKEND}/note/update`, {
       method: 'POST',
       headers: {
-        Authorization: noteData.token,
+        Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(noteData.data)
+      body: JSON.stringify(JSON.parse(payload.data))
     });
 
     const data = await result.json();
+    console.log('Updated note:', data);
     return data;
   } catch (error) {
     console.error('Error updating note:', error);
@@ -61,18 +67,20 @@ export async function updateNote(noteData) {
 }
 
 // Delete Note
-export async function deleteNote(noteData) {
+export async function deleteNote(payload) {
+  console.log('Deleting note:', payload);
   try {
     const result = await fetch(`${BACKEND}/note/delete`, {
       method: 'DELETE',
       headers: {
-        Authorization: noteData.token,
+        Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ videoId: noteData.videoId })
+      body: JSON.stringify(JSON.parse(payload.data))
     });
 
     const data = await result.json();
+    console.log('Deleted note:', data);
     return data;
   } catch (error) {
     console.error('Error deleting note:', error);

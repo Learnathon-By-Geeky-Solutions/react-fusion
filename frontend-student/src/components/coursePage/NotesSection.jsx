@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useApi from '@/src/hooks/useApi';
 import {
   getNote,
   createNote,
@@ -10,64 +11,61 @@ export default function NotesSection({ videoId }) {
   const [note, setNote] = useState('');
   const [savedNote, setSavedNote] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { fetchData } = useApi();
 
   useEffect(() => {
     if (videoId) {
-      fetchNoteData(videoId);
+      fetchNoteData();
       setIsEditing(false);
     }
   }, [videoId]);
 
-  const fetchNoteData = async (videoId) => {
+  const fetchNoteData = async () => {
+    setIsLoading(true);
     try {
-      const token = localStorage.getItem('token');
-
-      const response = await getNote({
-        videoId,
-        token
-      });
+      // Convert data to JSON string for API consumption
+      const payload = JSON.stringify({ videoId });
+      const response = await fetchData(getNote, payload);
 
       if (response.success && response.data) {
         setSavedNote(response.data);
-        setNote(response.data.content || '');
+        setNote(response.data.note || '');
       } else {
         setSavedNote(null);
         setNote('');
+        console.error('Failed to fetch note:', response.message);
       }
     } catch (error) {
       console.error('Error fetching note:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Function to save note
   const handleSaveNote = async () => {
+    if (!videoId || !note.trim()) return;
+    
+    setIsLoading(true);
     try {
-      const token = localStorage.getItem('token');
-
-      if (!videoId) return;
-
-      const noteData = {
-        videoId: videoId,
-        content: note
+      let noteData = {
+        videoId,
+        note: note
       };
 
-      let response;
+      if (savedNote && savedNote.id) {
+        // Include the ID for updates
+        noteData.id = savedNote.id;
+      }
 
-      if (savedNote) {
-        // Update existing note
-        response = await updateNote({
-          token,
-          data: {
-            id: savedNote.id,
-            ...noteData
-          }
-        });
+      // Convert data to JSON string for API consumption
+      const payload = JSON.stringify(noteData);
+      
+      let response;
+      if (savedNote && savedNote.id) {
+        response = await fetchData(updateNote, payload);
       } else {
-        // Create new note
-        response = await createNote({
-          token,
-          data: noteData
-        });
+        response = await fetchData(createNote, payload);
       }
 
       if (response.success) {
@@ -78,20 +76,20 @@ export default function NotesSection({ videoId }) {
       }
     } catch (error) {
       console.error('Error saving note:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Function to delete note
   const handleDeleteNote = async () => {
+    if (!videoId || !savedNote) return;
+    
+    setIsLoading(true);
     try {
-      if (!videoId || !savedNote) return;
-
-      const token = localStorage.getItem('token');
-
-      const response = await deleteNote({
-        videoId: videoId,
-        token
-      });
+      // Convert data to JSON string for API consumption
+      const payload = JSON.stringify({ videoId });
+      
+      const response = await fetchData(deleteNote, payload);
 
       if (response.success) {
         setSavedNote(null);
@@ -102,67 +100,88 @@ export default function NotesSection({ videoId }) {
       }
     } catch (error) {
       console.error('Error deleting note:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (savedNote) {
+      setIsEditing(false);
+      setNote(savedNote.note || '');
+    } else {
+      setNote('');
     }
   };
 
   return (
-    <div className='mt-6 p-4 bg-gray-100 rounded-lg'>
-      <div className='flex justify-between items-center'>
-        <h2 className='text-lg font-semibold'>Notes</h2>
-        <div className='flex gap-2'>
-          {!isEditing && savedNote && (
-            <>
-              <button
-                onClick={() => setIsEditing(true)}
-                className='text-blue-500 hover:text-blue-700 transition'
-                title='Edit Note'
-              >
-                ✏️
-              </button>
-              <button
-                onClick={handleDeleteNote}
-                className='text-red-500 hover:text-red-700 transition'
-                title='Delete Note'
-              >
-                ❌
-              </button>
-            </>
-          )}
-        </div>
+    <div className="mt-6 p-4 bg-gray-100 rounded-lg">
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-semibold">Notes</h2>
+        {savedNote && !isEditing && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-blue-500 hover:text-blue-700 transition"
+              title="Edit Note"
+              disabled={isLoading}
+            >
+              ✏️ Edit
+            </button>
+            <button
+              onClick={handleDeleteNote}
+              className="text-red-500 hover:text-red-700 transition"
+              title="Delete Note"
+              disabled={isLoading}
+            >
+              🗑️ Remove
+            </button>
+          </div>
+        )}
       </div>
 
-      {isEditing || !savedNote ? (
+      {isLoading && (
+        <div className="flex justify-center my-4">
+          <div className="animate-pulse text-gray-400">Loading...</div>
+        </div>
+      )}
+
+      {!isLoading && (isEditing || !savedNote) ? (
         <>
           <textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className='w-full mt-2 p-2 border rounded-lg min-h-[100px]'
-            placeholder='Take notes here...'
+            className="w-full mt-2 p-2 border rounded-lg min-h-[100px]"
+            placeholder="Take notes here..."
           />
-          <div className='flex justify-end gap-2 mt-2'>
+          <div className="flex justify-end gap-2 mt-2">
             {isEditing && (
               <button
-                onClick={() => {
-                  setIsEditing(false);
-                  setNote(savedNote?.content || '');
-                }}
-                className='bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition'
+                onClick={handleCancel}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
               >
                 Cancel
               </button>
             )}
             <button
               onClick={handleSaveNote}
-              className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition'
+              disabled={!note.trim() || isLoading}
+              className={`${
+                note.trim() && !isLoading
+                  ? 'bg-blue-500 hover:bg-blue-600'
+                  : 'bg-blue-300 cursor-not-allowed'
+              } text-white px-4 py-2 rounded-lg transition`}
             >
-              Save Note
+              {isLoading ? 'Saving...' : savedNote ? 'Save Changes' : 'Create Note'}
             </button>
           </div>
         </>
       ) : (
-        <div className='mt-2 p-3 bg-white rounded-lg min-h-[100px] whitespace-pre-wrap'>
-          {savedNote?.content || 'No notes yet.'}
-        </div>
+        !isLoading && (
+          <div className="mt-2 p-3 bg-white rounded-lg min-h-[100px] whitespace-pre-wrap">
+            {savedNote?.note || 'No notes yet.'}
+          </div>
+        )
       )}
     </div>
   );

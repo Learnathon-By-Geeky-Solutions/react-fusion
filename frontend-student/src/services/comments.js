@@ -2,7 +2,6 @@ import { BACKEND } from '../constants';
 
 // Get Comments
 export async function getComments(commentData) {
-  console.log('Fetching comments:', commentData);
   try {
     const result = await fetch(`${BACKEND}/comment/get-comments`, {
       method: 'POST',
@@ -14,7 +13,6 @@ export async function getComments(commentData) {
     });
 
     const data = await result.json();
-    console.log('Fetched comments:', data);
     return data;
   } catch (error) {
     console.error('Error fetching comments:', error);
@@ -40,7 +38,6 @@ export async function createComment(commentData) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error creating comment:', error);
     return { success: false };
   }
 }
