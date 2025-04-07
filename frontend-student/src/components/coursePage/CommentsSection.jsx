@@ -14,7 +14,15 @@ export default function CommentsSection({ videoId }) {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editCommentText, setEditCommentText] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      setCurrentUserId(userId);
+    }
+  }, []);
 
   useEffect(() => {
     if (videoId) {
@@ -146,6 +154,10 @@ export default function CommentsSection({ videoId }) {
     setIsCollapsed(!isCollapsed);
   };
 
+  const isCommentOwner = (comment) => {
+    return comment.isOwner || (comment.userId && comment.userId === currentUserId);
+  };
+
   return (
     <div className='mt-6 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200'>
       {/* Header with toggle */}
@@ -257,10 +269,7 @@ export default function CommentsSection({ videoId }) {
                             <p className='text-gray-700'>{comment.comment}</p>
                           </div>
                         </div>
-                        {(comment.isOwner ||
-                          (comment.userId &&
-                            comment.userId ===
-                              localStorage.getItem('userId'))) && (
+                        {isCommentOwner(comment) && (
                           <div className='flex gap-2 ml-3'>
                             <button
                               onClick={() => handleEditComment(comment)}

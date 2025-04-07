@@ -20,7 +20,7 @@ export default function CoursePage() {
         const response = await getSingleCourse(id);
         if (response.success) {
           setCourse(response.data);
-          // First video
+          
           const firstMilestone = response.data.milestones?.[0];
           const firstModule = firstMilestone?.modules?.[0];
           const firstVideo = firstModule?.videos?.[0];

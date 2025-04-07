@@ -41,6 +41,16 @@ export const AuthProvider = ({ children }) => {
 
   const storeToken = async (token) => {
     localStorage.setItem('token', token);
+    
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      throw new Error("Invalid token format");
+    }
+    const dataPart = parts[1];
+    const decodedData = atob(dataPart);
+    const parsedData = JSON.parse(decodedData);
+    localStorage.setItem('userId', parsedData.userId);
+    
     setUser({
       authenticated: true,
       token: token
@@ -49,6 +59,7 @@ export const AuthProvider = ({ children }) => {
 
   const logOutUser = async () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     setUser({
       authenticated: false,
       token: null
