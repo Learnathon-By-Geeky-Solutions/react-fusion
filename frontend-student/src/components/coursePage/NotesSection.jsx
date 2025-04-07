@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getNote, createNote, updateNote, deleteNote } from '@/src/services/notes';
+import {
+  getNote,
+  createNote,
+  updateNote,
+  deleteNote
+} from '@/src/services/notes';
 
 export default function NotesSection({ videoId }) {
   const [note, setNote] = useState('');

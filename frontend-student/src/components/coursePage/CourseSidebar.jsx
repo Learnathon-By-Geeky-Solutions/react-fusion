@@ -11,9 +11,7 @@ export default function CourseSidebar({
 }) {
   return (
     <div className='md:col-span-1 bg-gray-100 p-4 rounded-lg shadow-md'>
-      <h2 className='text-lg font-semibold mb-3 text-black'>
-        Course Content
-      </h2>
+      <h2 className='text-lg font-semibold mb-3 text-black'>Course Content</h2>
       <div className='space-y-2'>
         {course.milestones.map((milestone, mIndex) => (
           <div key={milestone.id} className='mb-2'>
@@ -88,8 +86,7 @@ export default function CourseSidebar({
                             : 'bg-gray-50 hover:bg-blue-100'
                         }`}
                       >
-                        {mIndex + 1}.{modIndex + 1}.{vIndex + 1} -{' '}
-                        {video.title}
+                        {mIndex + 1}.{modIndex + 1}.{vIndex + 1} - {video.title}
                       </button>
                     ))}
                   </div>

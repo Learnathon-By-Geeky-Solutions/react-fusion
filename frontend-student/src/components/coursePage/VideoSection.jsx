@@ -46,9 +46,7 @@ export default function VideoSection({ videoId, title }) {
     <div>
       {/* YouTube Video Player */}
       <div className='w-full aspect-video bg-black rounded-lg overflow-hidden'>
-        {videoData &&
-        videoData.url &&
-        getYouTubeEmbedUrl(videoData.url) ? (
+        {videoData && videoData.url && getYouTubeEmbedUrl(videoData.url) ? (
           <iframe
             className='w-full h-full'
             src={getYouTubeEmbedUrl(videoData.url)}

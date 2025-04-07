@@ -132,9 +132,7 @@ export default function CommentsSection({ videoId }) {
 
   return (
     <div className='mt-6 p-4 bg-gray-100 rounded-lg shadow-md'>
-      <h2 className='text-lg font-semibold text-gray-800 mb-3'>
-        Comments
-      </h2>
+      <h2 className='text-lg font-semibold text-gray-800 mb-3'>Comments</h2>
 
       {/* Add Comment Form */}
       <form onSubmit={handleAddComment} className='mb-4'>
@@ -164,10 +162,7 @@ export default function CommentsSection({ videoId }) {
           </div>
         ) : comments && comments.length > 0 ? (
           comments.map((comment) => (
-            <div
-              key={comment.id}
-              className='bg-white p-4 rounded-lg shadow'
-            >
+            <div key={comment.id} className='bg-white p-4 rounded-lg shadow'>
               {editingCommentId === comment.id ? (
                 <div className='space-y-2'>
                   <textarea
@@ -200,9 +195,7 @@ export default function CommentsSection({ videoId }) {
                         {comment.user?.name || 'Anonymous'}
                       </span>
                       <span className='text-xs text-gray-500 ml-2'>
-                        {new Date(
-                          comment.createdAt
-                        ).toLocaleDateString()}
+                        {new Date(comment.createdAt).toLocaleDateString()}
                       </span>
                     </div>
                     {comment.isOwner && (
@@ -215,9 +208,7 @@ export default function CommentsSection({ videoId }) {
                           ✏️
                         </button>
                         <button
-                          onClick={() =>
-                            handleDeleteComment(comment.id)
-                          }
+                          onClick={() => handleDeleteComment(comment.id)}
                           className='text-red-500 hover:text-red-700 transition'
                           title='Delete Comment'
                         >

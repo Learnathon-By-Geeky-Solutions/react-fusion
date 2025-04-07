@@ -101,7 +101,10 @@ export default function CoursePage() {
             </h1>
 
             {/* Video Player Component */}
-            <VideoSection videoId={selectedVideo.id} title={selectedVideo.title} />
+            <VideoSection
+              videoId={selectedVideo.id}
+              title={selectedVideo.title}
+            />
 
             {/* Notes Component */}
             <NotesSection videoId={selectedVideo.id} />
