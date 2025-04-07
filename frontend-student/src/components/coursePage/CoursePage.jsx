@@ -20,7 +20,7 @@ export default function CoursePage() {
         const response = await getSingleCourse(id);
         if (response.success) {
           setCourse(response.data);
-          // Default first video selection
+          // First video
           const firstMilestone = response.data.milestones?.[0];
           const firstModule = firstMilestone?.modules?.[0];
           const firstVideo = firstModule?.videos?.[0];
@@ -90,32 +90,26 @@ export default function CoursePage() {
 
   return (
     <div className='max-w-[1280px] mx-auto py-8 grid grid-cols-1 md:grid-cols-3 gap-12'>
-      {/* Left Side - Video & Notes */}
       <div className='md:col-span-2'>
         {selectedVideo && (
           <>
-            {/* Video Title */}
             <h1 className='text-2xl font-bold mb-4'>
               {selectedVideo.milestoneNumber}.{selectedVideo.moduleNumber}.
               {selectedVideo.videoNumber} - {selectedVideo.title}
             </h1>
 
-            {/* Video Player Component */}
             <VideoSection
               videoId={selectedVideo.id}
               title={selectedVideo.title}
             />
 
-            {/* Notes Component */}
             <NotesSection videoId={selectedVideo.id} />
 
-            {/* Comments Component */}
             <CommentsSection videoId={selectedVideo.id} />
           </>
         )}
       </div>
 
-      {/* Right Sidebar - Course Navigation */}
       <CourseSidebar
         course={course}
         selectedVideo={selectedVideo}

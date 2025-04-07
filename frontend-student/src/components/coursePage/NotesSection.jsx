@@ -18,7 +18,6 @@ export default function NotesSection({ videoId }) {
     }
   }, [videoId]);
 
-  // Function to fetch note data
   const fetchNoteData = async (videoId) => {
     try {
       const token = localStorage.getItem('token');

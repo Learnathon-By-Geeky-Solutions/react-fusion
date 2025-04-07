@@ -1,18 +1,20 @@
 import { BACKEND } from '../constants';
 
 // Get Comments
-export async function getComments({ token, videoId }) {
+export async function getComments(commentData) {
+  console.log('Fetching comments:', commentData);
   try {
-    const response = await fetch(`${BACKEND}/comment/get-comments`, {
+    const result = await fetch(`${BACKEND}/comment/get-comments`, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: commentData.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ videoId })
+      body: JSON.stringify({ videoId: commentData.videoId })
     });
 
-    const data = await response.json();
+    const data = await result.json();
+    console.log('Fetched comments:', data);
     return data;
   } catch (error) {
     console.error('Error fetching comments:', error);
@@ -21,18 +23,21 @@ export async function getComments({ token, videoId }) {
 }
 
 // Create Comment
-export async function createComment({ token, videoId, comment }) {
+export async function createComment(commentData) {
   try {
-    const response = await fetch(`${BACKEND}/comment/create-comment`, {
+    const result = await fetch(`${BACKEND}/comment/create-comment`, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: commentData.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ videoId, comment })
+      body: JSON.stringify({
+        videoId: commentData.videoId,
+        comment: commentData.comment
+      })
     });
 
-    const data = await response.json();
+    const data = await result.json();
     return data;
   } catch (error) {
     console.error('Error creating comment:', error);
@@ -41,18 +46,21 @@ export async function createComment({ token, videoId, comment }) {
 }
 
 // Update Comment
-export async function updateComment({ token, commentId, comment }) {
+export async function updateComment(commentData) {
   try {
-    const response = await fetch(`${BACKEND}/comment/update-comment`, {
+    const result = await fetch(`${BACKEND}/comment/update-comment`, {
       method: 'PUT',
       headers: {
-        Authorization: token,
+        Authorization: commentData.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ commentId, comment })
+      body: JSON.stringify({
+        commentId: commentData.commentId,
+        comment: commentData.comment
+      })
     });
 
-    const data = await response.json();
+    const data = await result.json();
     return data;
   } catch (error) {
     console.error('Error updating comment:', error);
@@ -61,19 +69,19 @@ export async function updateComment({ token, commentId, comment }) {
 }
 
 // Delete Comment
-export async function deleteComment({ token, commentId }) {
+export async function deleteComment(commentData) {
   try {
-    const response = await fetch(
-      `${BACKEND}/comment/delete-comment/${commentId}`,
+    const result = await fetch(
+      `${BACKEND}/comment/delete-comment/${commentData.commentId}`,
       {
         method: 'DELETE',
         headers: {
-          Authorization: token
+          Authorization: commentData.token
         }
       }
     );
 
-    const data = await response.json();
+    const data = await result.json();
     return data;
   } catch (error) {
     console.error('Error deleting comment:', error);

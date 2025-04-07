@@ -19,7 +19,6 @@ export default function CommentsSection({ videoId }) {
     }
   }, [videoId]);
 
-  // Function to fetch comments
   const fetchComments = async (videoId) => {
     if (!videoId) return;
 
@@ -46,7 +45,6 @@ export default function CommentsSection({ videoId }) {
     }
   };
 
-  // Function to add comment
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim() || !videoId) return;
@@ -56,12 +54,11 @@ export default function CommentsSection({ videoId }) {
 
       const response = await createComment({
         token,
-        videoId: videoId,
+        videoId,
         comment: newComment
       });
 
       if (response.success) {
-        // Refresh comments to get the newly added comment with all its properties
         fetchComments(videoId);
         setNewComment('');
       } else {
@@ -72,13 +69,11 @@ export default function CommentsSection({ videoId }) {
     }
   };
 
-  // Function to start editing comment
   const handleEditComment = (comment) => {
     setEditingCommentId(comment.id);
     setEditCommentText(comment.comment);
   };
 
-  // Function to save edited comment
   const handleSaveEditedComment = async () => {
     if (!editCommentText.trim()) return;
 
@@ -103,13 +98,11 @@ export default function CommentsSection({ videoId }) {
     }
   };
 
-  // Function to cancel comment editing
   const cancelEditComment = () => {
     setEditingCommentId(null);
     setEditCommentText('');
   };
 
-  // Function to delete comment
   const handleDeleteComment = async (commentId) => {
     try {
       const token = localStorage.getItem('token');
@@ -120,7 +113,6 @@ export default function CommentsSection({ videoId }) {
       });
 
       if (response.success) {
-        // Remove the deleted comment from the state
         setComments(comments.filter((comment) => comment.id !== commentId));
       } else {
         console.error('Failed to delete comment:', response.message);
@@ -130,11 +122,16 @@ export default function CommentsSection({ videoId }) {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? 'Invalid date' : date.toLocaleDateString();
+  };
+
   return (
     <div className='mt-6 p-4 bg-gray-100 rounded-lg shadow-md'>
       <h2 className='text-lg font-semibold text-gray-800 mb-3'>Comments</h2>
 
-      {/* Add Comment Form */}
       <form onSubmit={handleAddComment} className='mb-4'>
         <div className='flex'>
           <textarea
@@ -195,7 +192,7 @@ export default function CommentsSection({ videoId }) {
                         {comment.user?.name || 'Anonymous'}
                       </span>
                       <span className='text-xs text-gray-500 ml-2'>
-                        {new Date(comment.createdAt).toLocaleDateString()}
+                        {formatDate(comment.createdAt)}
                       </span>
                     </div>
                     {comment.isOwner && (
