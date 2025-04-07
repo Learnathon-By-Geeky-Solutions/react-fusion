@@ -252,7 +252,7 @@ export default function CommentsSection({ videoId }) {
                     <div>
                       <div className='flex justify-between items-start'>
                         <div className='flex items-start'>
-                          <div className='flex-shrink-0 mr-3'>
+                          <div className='flex-shrink-0 mr-3 mt-2'>
                             <img
                               src={comment.user?.image || avatar}
                               alt={`${comment.user?.name || 'Anonymous'}'s avatar`}
@@ -260,13 +260,13 @@ export default function CommentsSection({ videoId }) {
                             />
                           </div>
                           <div className='flex-1'>
-                            <div className='font-medium text-gray-900'>
+                            <div className='text-left font-medium text-gray-900'>
                               {comment.user?.name || 'Anonymous'}
                             </div>
-                            <div className='text-xs text-gray-500 mb-2'>
+                            <div className='text-left text-xs text-gray-500 mb-2'>
                               {formatDate(comment.createdAt)}
                             </div>
-                            <p className='text-gray-700'>{comment.comment}</p>
+                            <p className='text-gray-700 text-justify'>{comment.comment}</p>
                           </div>
                         </div>
                         {isCommentOwner(comment) && (

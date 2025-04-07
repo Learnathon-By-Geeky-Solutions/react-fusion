@@ -123,7 +123,7 @@ export default function CourseSidebar({
                             vIndex + 1
                           )
                         }
-                        className={`block w-full text-left text-sm px-4 py-2 mx-2 my-1 rounded-md transition-colors ${
+                        className={`block w-95/100 text-left text-sm px-4 py-2 mx-2 my-1 rounded-md transition-colors ${
                           selectedVideo?.id === video.id
                             ? 'bg-blue-500 text-white shadow-sm'
                             : 'bg-gray-50 text-gray-700 hover:bg-blue-100 hover:text-blue-700'
