@@ -7,9 +7,28 @@ const getCommentsByVideoId = async (payload: ICommentsByVideoId) => {
     const result = await prisma.comment.findMany({
         where: {
             ...payload,
-        }
+        },
+        include: {
+            user: {
+                select: {
+                    Student: {
+                        select: {
+                            name: true,
+                            userId: true,
+                            image: true,
+                        }
+                    }
+
+                },
+            },
+        },
     })
-    return result
+
+    const flattenedResult = result.map(comment => ({
+        ...comment,
+        user: comment.user.Student,
+    }));
+    return flattenedResult
 }
 
 const createComment = async (user: JwtPayload, payload: ICreateComment) => {

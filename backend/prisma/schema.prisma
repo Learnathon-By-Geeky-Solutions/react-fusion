@@ -58,10 +58,10 @@ model Instructor {
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 
-  courses               Course[]
-  User                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courses            Course[]
+  User               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   //InstructorAnalytics   InstructorAnalytics?
-  InstructorFeedback    InstructorFeedback[]
+  InstructorFeedback InstructorFeedback[]
   //instructorAnalyticsId String
 
   @@map("instructors")
@@ -125,19 +125,19 @@ enum QualificationLevel {
 }
 
 model Course {
-  id              String            @id @default(uuid())
-  title           String
-  description     String
-  rating          Float?
-  price           Float
-  thumbnail       String
-  instructorId    String
-  instructor      Instructor        @relation(fields: [instructorId], references: [userId])
-  milestones      Milestone[]
-  students        CourseStudent[]
-  transactions    Transactions[]
+  id             String           @id @default(uuid())
+  title          String
+  description    String
+  rating         Float?
+  price          Float
+  thumbnail      String
+  instructorId   String
+  instructor     Instructor       @relation(fields: [instructorId], references: [userId])
+  milestones     Milestone[]
+  students       CourseStudent[]
+  transactions   Transactions[]
   //CourseAnalytics CourseAnalytics[]
-  CourseProgress  CourseProgress[]
+  CourseProgress CourseProgress[]
 }
 
 model Milestone {
@@ -197,12 +197,13 @@ model Video {
 }
 
 model Comment {
-  id      String @id @default(uuid())
-  videoId String
-  video   Video  @relation(fields: [videoId], references: [id])
-  userId  String
-  user    User   @relation(fields: [userId], references: [id])
-  comment String
+  id        String   @id @default(uuid())
+  videoId   String
+  video     Video    @relation(fields: [videoId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  comment   String
+  createdAt DateTime @default(now())
   //TODO: DESIGN REPLY RELATION
 }
 
