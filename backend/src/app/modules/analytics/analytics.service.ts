@@ -216,7 +216,9 @@ const getInstructorAll = async (user: JwtPayload) => {
 	const allCourses = await prisma.course.findMany({
 		where: { instructorId: user.userId },
 		select: {
-			id: true
+			id: true,
+			title: true,
+			rating: true
 		}
 	})
 	const totalStudents = await prisma.transactions.count({
@@ -246,6 +248,7 @@ const getInstructorAll = async (user: JwtPayload) => {
 		totalStudents,
 		avgRating: avgRating._avg.rating ?? 0,
 		indtructorFeedback: instructorFeedback,
+		courses: allCourses
 	}
 
 	return result
