@@ -3,17 +3,19 @@ import { Link, Navigate } from 'react-router-dom';
 import useAuth from '@/src/context/authContext';
 import getAllCourses from '@/src/services/course';
 import { noimage } from '../../assets';
+import useApi from '@/src/hooks/useApi';
 
 export default function CourseDashboard() {
   const { instructor, isLoading } = useAuth(); // Authentication check
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { fetchData } = useApi();
 
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const data = await getAllCourses();
+        const data = await fetchData(getAllCourses, {});
         setCourses(data.data);
       } catch (err) {
         console.error('Error fetching courses:', err);

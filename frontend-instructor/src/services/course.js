@@ -1,6 +1,6 @@
 import { BACKEND } from '../constants';
 
-async function getAllCourses(token) {
+async function getAllCourses(params) {
   const items = {
     items: {
       instructors: true,
