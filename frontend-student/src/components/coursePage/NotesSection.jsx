@@ -117,6 +117,27 @@ export default function NotesSection({ videoId }) {
     }
   };
 
+  // Extract the nested ternary for the save button className into a function
+  const getSaveButtonClassName = () => {
+    const isButtonEnabled = note.trim() && !isLoading;
+    if (isButtonEnabled) {
+      return 'bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition';
+    } else {
+      return 'bg-blue-300 cursor-not-allowed text-white px-4 py-2 rounded-lg transition';
+    }
+  };
+
+  // Determine button text based on state
+  const getSaveButtonText = () => {
+    if (isLoading) {
+      return 'Saving...';
+    } else if (savedNote) {
+      return 'Save Changes';
+    } else {
+      return 'Create Note';
+    }
+  };
+
   return (
     <div className="mt-6 p-4 bg-gray-100 rounded-lg">
       <div className="flex justify-between items-center">
@@ -169,13 +190,9 @@ export default function NotesSection({ videoId }) {
             <button
               onClick={handleSaveNote}
               disabled={!note.trim() || isLoading}
-              className={`${
-                note.trim() && !isLoading
-                  ? 'bg-blue-500 hover:bg-blue-600'
-                  : 'bg-blue-300 cursor-not-allowed'
-              } text-white px-4 py-2 rounded-lg transition`}
+              className={getSaveButtonClassName()}
             >
-              {isLoading ? 'Saving...' : savedNote ? 'Save Changes' : 'Create Note'}
+              {getSaveButtonText()}
             </button>
           </div>
         </>

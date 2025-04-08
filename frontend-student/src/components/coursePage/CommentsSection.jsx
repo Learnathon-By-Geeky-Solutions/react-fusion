@@ -135,16 +135,103 @@ export default function CommentsSection({ videoId }) {
     setIsCollapsed(!isCollapsed);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleCollapse();
+    }
+  };
+
   const isCommentOwner = (comment) => {
     return comment.isOwner || (comment.userId && comment.userId === currentUserId);
   };
 
+  // Extract this component instead of using a nested ternary
+  const renderCommentContent = (comment) => {
+    if (editingCommentId === comment.id) {
+      return (
+        <div className='space-y-3'>
+          <textarea
+            value={editCommentText}
+            onChange={(e) => setEditCommentText(e.target.value)}
+            className='w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+            rows={3}
+          />
+          <div className='flex justify-end gap-2'>
+            <button
+              onClick={cancelEditComment}
+              className='flex items-center gap-1 px-3 py-1 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 transition-colors text-sm'
+            >
+              <X className='h-4 w-4' /> Cancel
+            </button>
+            <button
+              onClick={handleSaveEditedComment}
+              className='flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm'
+              disabled={!editCommentText.trim()}
+            >
+              <Send className='h-4 w-4' /> Save
+            </button>
+          </div>
+        </div>
+      );
+    }
+    
+    return (
+      <div>
+        <div className='flex justify-between items-start'>
+          <div className='flex items-start'>
+            <div className='flex-shrink-0 mr-3 mt-2'>
+              <img
+                src={comment.user?.image || avatar}
+                alt={`${comment.user?.name || 'Anonymous'}'s avatar`}
+                className='w-10 h-10 rounded-full border border-gray-200'
+              />
+            </div>
+            <div className='flex-1'>
+              <div className='text-left font-medium text-gray-900'>
+                {comment.user?.name || 'Anonymous'}
+              </div>
+              <div className='text-left text-xs text-gray-500 mb-2'>
+                {formatDate(comment.createdAt)}
+              </div>
+              <p className='text-gray-700 text-justify'>{comment.comment}</p>
+            </div>
+          </div>
+          {isCommentOwner(comment) && (
+            <div className='flex gap-2 ml-3'>
+              <button
+                onClick={() => handleEditComment(comment)}
+                className='p-1 text-gray-500 hover:text-blue-500 rounded-full hover:bg-gray-100 transition-colors'
+                title='Edit Comment'
+              >
+                <Edit2 className='h-4 w-4' />
+                <span className='sr-only'>Edit Comment</span>
+              </button>
+              <button
+                onClick={() => handleDeleteComment(comment.id)}
+                className='p-1 text-gray-500 hover:text-red-500 rounded-full hover:bg-gray-100 transition-colors'
+                title='Delete Comment'
+              >
+                <Trash2 className='h-4 w-4' />
+                <span className='sr-only'>Delete Comment</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className='mt-6 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200'>
-      {/* Header with toggle */}
-      <div
-        className='flex justify-between items-center p-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white cursor-pointer'
+      {/* Header with toggle - now accessible with keyboard interactions */}
+      <button
+        className='w-full flex justify-between items-center p-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50'
         onClick={toggleCollapse}
+        onKeyDown={handleKeyDown}
+        aria-expanded={!isCollapsed}
+        aria-controls="comments-section-content"
+        type="button"
       >
         <div className='flex items-center space-x-2'>
           <h2 className='text-lg font-semibold'>
@@ -153,16 +240,16 @@ export default function CommentsSection({ videoId }) {
         </div>
         <div className='flex items-center'>
           {isCollapsed ? (
-            <ChevronDown className='h-5 w-5' />
+            <ChevronDown className='h-5 w-5' aria-hidden="true" />
           ) : (
-            <ChevronUp className='h-5 w-5' />
+            <ChevronUp className='h-5 w-5' aria-hidden="true" />
           )}
         </div>
-      </div>
+      </button>
 
       {/* Collapsible content */}
       {!isCollapsed && (
-        <div className='p-4'>
+        <div id="comments-section-content" className='p-4'>
           {/* Add comment form */}
           <form onSubmit={handleAddComment} className='mb-6'>
             <div className='flex items-start space-x-2'>
@@ -188,6 +275,7 @@ export default function CommentsSection({ videoId }) {
                   title='Post comment'
                 >
                   <Send className='h-4 w-4' />
+                  <span className="sr-only">Post comment</span>
                 </button>
               </div>
             </div>
@@ -197,7 +285,7 @@ export default function CommentsSection({ videoId }) {
           <div className='space-y-4'>
             {loadingComments ? (
               <div className='flex justify-center items-center p-6'>
-                <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500'></div>
+                <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500' aria-label="Loading comments"></div>
               </div>
             ) : comments && comments.length > 0 ? (
               comments.map((comment) => (
@@ -205,72 +293,7 @@ export default function CommentsSection({ videoId }) {
                   key={comment.id}
                   className='p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow'
                 >
-                  {editingCommentId === comment.id ? (
-                    <div className='space-y-3'>
-                      <textarea
-                        value={editCommentText}
-                        onChange={(e) => setEditCommentText(e.target.value)}
-                        className='w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                        rows={3}
-                      />
-                      <div className='flex justify-end gap-2'>
-                        <button
-                          onClick={cancelEditComment}
-                          className='flex items-center gap-1 px-3 py-1 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 transition-colors text-sm'
-                        >
-                          <X className='h-4 w-4' /> Cancel
-                        </button>
-                        <button
-                          onClick={handleSaveEditedComment}
-                          className='flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm'
-                          disabled={!editCommentText.trim()}
-                        >
-                          <Send className='h-4 w-4' /> Save
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className='flex justify-between items-start'>
-                        <div className='flex items-start'>
-                          <div className='flex-shrink-0 mr-3 mt-2'>
-                            <img
-                              src={comment.user?.image || avatar}
-                              alt={`${comment.user?.name || 'Anonymous'}'s avatar`}
-                              className='w-10 h-10 rounded-full border border-gray-200'
-                            />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='text-left font-medium text-gray-900'>
-                              {comment.user?.name || 'Anonymous'}
-                            </div>
-                            <div className='text-left text-xs text-gray-500 mb-2'>
-                              {formatDate(comment.createdAt)}
-                            </div>
-                            <p className='text-gray-700 text-justify'>{comment.comment}</p>
-                          </div>
-                        </div>
-                        {isCommentOwner(comment) && (
-                          <div className='flex gap-2 ml-3'>
-                            <button
-                              onClick={() => handleEditComment(comment)}
-                              className='p-1 text-gray-500 hover:text-blue-500 rounded-full hover:bg-gray-100 transition-colors'
-                              title='Edit Comment'
-                            >
-                              <Edit2 className='h-4 w-4' />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteComment(comment.id)}
-                              className='p-1 text-gray-500 hover:text-red-500 rounded-full hover:bg-gray-100 transition-colors'
-                              title='Delete Comment'
-                            >
-                              <Trash2 className='h-4 w-4' />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  {renderCommentContent(comment)}
                 </div>
               ))
             ) : (
