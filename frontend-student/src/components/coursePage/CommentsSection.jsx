@@ -222,6 +222,36 @@ export default function CommentsSection({ videoId }) {
     );
   };
 
+  // Extracted function to render the comments list content
+  const renderCommentsListContent = () => {
+    if (loadingComments) {
+      return (
+        <div className='flex justify-center items-center p-6'>
+          <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500' aria-label="Loading comments"></div>
+        </div>
+      );
+    }
+    
+    if (comments && comments.length > 0) {
+      return comments.map((comment) => (
+        <div
+          key={comment.id}
+          className='p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow'
+        >
+          {renderCommentContent(comment)}
+        </div>
+      ));
+    }
+    
+    return (
+      <div className='text-center p-8 bg-gray-50 rounded-lg border border-dashed border-gray-300'>
+        <p className='text-gray-500 italic'>
+          No comments yet. Be the first to start the conversation!
+        </p>
+      </div>
+    );
+  };
+
   return (
     <div className='mt-6 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200'>
       {/* Header with toggle - now accessible with keyboard interactions */}
@@ -283,26 +313,7 @@ export default function CommentsSection({ videoId }) {
 
           {/* Comments List */}
           <div className='space-y-4'>
-            {loadingComments ? (
-              <div className='flex justify-center items-center p-6'>
-                <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500' aria-label="Loading comments"></div>
-              </div>
-            ) : comments && comments.length > 0 ? (
-              comments.map((comment) => (
-                <div
-                  key={comment.id}
-                  className='p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow'
-                >
-                  {renderCommentContent(comment)}
-                </div>
-              ))
-            ) : (
-              <div className='text-center p-8 bg-gray-50 rounded-lg border border-dashed border-gray-300'>
-                <p className='text-gray-500 italic'>
-                  No comments yet. Be the first to start the conversation!
-                </p>
-              </div>
-            )}
+            {renderCommentsListContent()}
           </div>
         </div>
       )}
