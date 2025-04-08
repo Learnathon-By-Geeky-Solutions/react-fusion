@@ -7,6 +7,7 @@ import {
   deleteComment
 } from '@/src/services/comments';
 import { ChevronDown, ChevronUp, Edit2, Trash2, Send, X } from 'lucide-react';
+import useApi from '@/src/hooks/useApi';
 
 export default function CommentsSection({ videoId }) {
   const [comments, setComments] = useState([]);
@@ -16,7 +17,8 @@ export default function CommentsSection({ videoId }) {
   const [loadingComments, setLoadingComments] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
-
+  const { fetchData } = useApi();
+  
   useEffect(() => {
     const userId = localStorage.getItem('userId');
     if (userId) {
@@ -35,12 +37,7 @@ export default function CommentsSection({ videoId }) {
 
     setLoadingComments(true);
     try {
-      const token = localStorage.getItem('token');
-
-      const response = await getComments({
-        videoId,
-        token
-      });
+      const response = await fetchData(getComments, { videoId });
 
       if (response.success) {
         setComments(response.data || []);
@@ -61,13 +58,7 @@ export default function CommentsSection({ videoId }) {
     if (!newComment.trim() || !videoId) return;
 
     try {
-      const token = localStorage.getItem('token');
-
-      const response = await createComment({
-        token,
-        videoId,
-        comment: newComment
-      });
+      const response = await fetchData(createComment, { videoId, comment: newComment});
 
       if (response.success) {
         fetchComments(videoId);
@@ -89,13 +80,7 @@ export default function CommentsSection({ videoId }) {
     if (!editCommentText.trim()) return;
 
     try {
-      const token = localStorage.getItem('token');
-
-      const response = await updateComment({
-        token,
-        commentId: editingCommentId,
-        comment: editCommentText
-      });
+      const response = await fetchData(updateComment, {editingCommentId,editCommentText});
 
       if (response.success) {
         fetchComments(videoId);
@@ -115,12 +100,7 @@ export default function CommentsSection({ videoId }) {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      const token = localStorage.getItem('token');
-
-      const response = await deleteComment({
-        token,
-        commentId
-      });
+      const response = await fetchData(deleteComment, JSON.stringify({ commentId }));
 
       if (response.success) {
         setComments(comments.filter((comment) => comment.id !== commentId));

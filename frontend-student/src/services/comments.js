@@ -1,15 +1,15 @@
 import { BACKEND } from '../constants';
 
 // Get Comments
-export async function getComments(commentData) {
+export async function getComments(payload) {
   try {
     const result = await fetch(`${BACKEND}/comment/get-comments`, {
       method: 'POST',
       headers: {
-        Authorization: commentData.token,
+        Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ videoId: commentData.videoId })
+      body: JSON.stringify(payload.data)
     });
 
     const data = await result.json();
@@ -21,39 +21,40 @@ export async function getComments(commentData) {
 }
 
 // Create Comment
-export async function createComment(commentData) {
+export async function createComment(payload) {
   try {
     const result = await fetch(`${BACKEND}/comment/create-comment`, {
       method: 'POST',
       headers: {
-        Authorization: commentData.token,
+        Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        videoId: commentData.videoId,
-        comment: commentData.comment
+        videoId: payload.data.videoId,
+        comment: payload.data.newComment
       })
     });
 
     const data = await result.json();
     return data;
   } catch (error) {
+    console.error('Error creating comment:', error);
     return { success: false };
   }
 }
 
 // Update Comment
-export async function updateComment(commentData) {
+export async function updateComment(payload) {
   try {
     const result = await fetch(`${BACKEND}/comment/update-comment`, {
       method: 'PUT',
       headers: {
-        Authorization: commentData.token,
+        Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        commentId: commentData.commentId,
-        comment: commentData.comment
+        commentId: payload.data.editingCommentId,
+        comment: payload.data.editCommentText
       })
     });
 
@@ -66,14 +67,15 @@ export async function updateComment(commentData) {
 }
 
 // Delete Comment
-export async function deleteComment(commentData) {
+export async function deleteComment(payload) {
   try {
+    const parsedData = JSON.parse(payload.data);
     const result = await fetch(
-      `${BACKEND}/comment/delete-comment/${commentData.commentId}`,
+      `${BACKEND}/comment/delete-comment/${parsedData.commentId}`,
       {
         method: 'DELETE',
         headers: {
-          Authorization: commentData.token
+          Authorization: payload.user.token
         }
       }
     );
