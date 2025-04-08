@@ -1,5 +1,6 @@
 import React from 'react';
 import MilestoneItem from './MilestoneItem';
+import PropTypes from 'prop-types';
 
 export default function CourseSidebar({
   course,
@@ -42,3 +43,23 @@ export default function CourseSidebar({
     </div>
   );
 }
+
+CourseSidebar.propTypes = {
+  course: PropTypes.shape({
+    milestones: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        title: PropTypes.string,
+        modules: PropTypes.array // optional unless used directly here
+      })
+    ).isRequired
+  }).isRequired,
+  selectedVideo: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  }),
+  openMilestones: PropTypes.object.isRequired,
+  openModules: PropTypes.object.isRequired,
+  toggleMilestone: PropTypes.func.isRequired,
+  toggleModule: PropTypes.func.isRequired,
+  handleVideoSelect: PropTypes.func.isRequired
+};

@@ -1,5 +1,6 @@
 import React from 'react';
 import VideoItem from './VideoItem';
+import PropTypes from 'prop-types';
 
 export default function ModuleItem({
   module,
@@ -56,3 +57,24 @@ export default function ModuleItem({
     </div>
   );
 }
+
+ModuleItem.propTypes = {
+  module: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    title: PropTypes.string.isRequired,
+    videos: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        title: PropTypes.string.isRequired
+      })
+    ).isRequired
+  }).isRequired,
+  mIndex: PropTypes.number.isRequired,
+  modIndex: PropTypes.number.isRequired,
+  openModules: PropTypes.object.isRequired,
+  toggleModule: PropTypes.func.isRequired,
+  handleVideoSelect: PropTypes.func.isRequired,
+  selectedVideo: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  })
+};

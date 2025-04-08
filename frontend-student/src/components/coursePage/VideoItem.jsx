@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default function VideoItem({ video, selectedVideo, onSelect, indexPath }) {
   const isSelected = selectedVideo?.id === video.id;
@@ -31,3 +32,15 @@ export default function VideoItem({ video, selectedVideo, onSelect, indexPath })
     </button>
   );
 }
+
+VideoItem.propTypes = {
+  video: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    title: PropTypes.string.isRequired
+  }).isRequired,
+  selectedVideo: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  }),
+  onSelect: PropTypes.func.isRequired,
+  indexPath: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+};

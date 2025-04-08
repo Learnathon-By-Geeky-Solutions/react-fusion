@@ -5,7 +5,6 @@ import VideoSection from './VideoSection';
 import NotesSection from './NotesSection';
 import CommentsSection from './CommentsSection';
 import CourseSidebar from './CourseSidebar';
-import useAuth from '@/src/context/authContext';
 import useApi from '@/src/hooks/useApi';
 
 export default function CoursePage() {
