@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import avatar from '@/src/assets/avatar.svg';
+import PropTypes from 'prop-types';
 import {
   getComments,
   createComment,
@@ -285,3 +286,7 @@ export default function CommentsSection({ videoId }) {
     </div>
   );
 }
+
+CommentsSection.propTypes = {
+  videoId: PropTypes.string.isRequired
+};

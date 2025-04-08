@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useApi from '@/src/hooks/useApi';
+import PropTypes from 'prop-types';
+
 import {
   getNote,
   createNote,
@@ -187,3 +189,7 @@ export default function NotesSection({ videoId }) {
     </div>
   );
 }
+
+NotesSection.propTypes = {
+  videoId: PropTypes.string.isRequired, 
+};

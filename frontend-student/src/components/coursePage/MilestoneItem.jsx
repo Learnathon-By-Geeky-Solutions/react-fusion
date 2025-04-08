@@ -1,5 +1,6 @@
 import React from 'react';
 import ModuleItem from './ModuleItem';
+import PropTypes from 'prop-types';
 
 export default function MilestoneItem({
   milestone,
@@ -60,3 +61,26 @@ export default function MilestoneItem({
     </div>
   );
 }
+
+MilestoneItem.propTypes = {
+  milestone: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    title: PropTypes.string.isRequired,
+    modules: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        title: PropTypes.string,
+        videos: PropTypes.array
+      })
+    ).isRequired
+  }).isRequired,
+  mIndex: PropTypes.number.isRequired,
+  openMilestones: PropTypes.object.isRequired,
+  openModules: PropTypes.object.isRequired,
+  toggleMilestone: PropTypes.func.isRequired,
+  toggleModule: PropTypes.func.isRequired,
+  handleVideoSelect: PropTypes.func.isRequired,
+  selectedVideo: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  })
+};
