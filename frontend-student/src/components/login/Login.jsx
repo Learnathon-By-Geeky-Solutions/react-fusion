@@ -17,7 +17,6 @@ export default function Login() {
   const handleLogIn = async (data) => {
     const result = await authService.logInUser(data);
     if (result.success) {
-      alert('Log In Successful!');
       storeToken(result.data.accessToken);
     } else {
       alert('ERROR!');
