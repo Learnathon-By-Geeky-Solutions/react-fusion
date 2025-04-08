@@ -260,12 +260,16 @@ const getInstructorOne = async (user: JwtPayload, courseId: string) => {
 			courseId: courseId
 		}
 	})
-	const avgRating = await prisma.course.aggregate({
+	const course = await prisma.course.findUnique({
 		where: {
 			id: courseId
 		},
-		_avg: {
-			rating: true
+		select: {
+			title: true,
+			thumbnail: true,
+			rating: true,
+			description: true,
+			price: true,
 		}
 	})
 	const totalLikes = await prisma.video.aggregate({
@@ -298,8 +302,8 @@ const getInstructorOne = async (user: JwtPayload, courseId: string) => {
 	})
 
 	const result = {
+		...course,
 		totalEnrollments,
-		avgRating: avgRating._avg.rating ?? 0,
 		totalLikes: totalLikes._sum.likeCount ?? 0,
 		totalDisLikes: totalDisLikes._sum.dislikeCount ?? 0
 	}
