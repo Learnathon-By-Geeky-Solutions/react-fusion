@@ -1,7 +1,5 @@
-import DesktopNav from "./DesktopNav";
+import DesktopNav from './DesktopNav';
 
 export default function NavBar() {
-  return (
-    <DesktopNav/>
-  );
+  return <DesktopNav />;
 }
