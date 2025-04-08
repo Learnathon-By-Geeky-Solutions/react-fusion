@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 
 export default function CourseAnalytics() {
   const { fetchData } = useApi();
-  const [isLoading, setIsLoading] = useState(true);
   const [courseData, setCourseData] = useState([]);
   useEffect(() => {
     const getAnalytics = async () => {
@@ -18,8 +17,6 @@ export default function CourseAnalytics() {
       getAnalytics();
     } catch (err) {
       console.log(err);
-    } finally {
-      setIsLoading(false);
     }
   }, []);
   const { courseId } = useParams();
@@ -31,7 +28,10 @@ export default function CourseAnalytics() {
           <p className='text-gray-500'>{courseData.description}</p>
         </div>
         <div className='w-1/5'>
-          <img src='https://2ality.com/2011/10/logo-js/js.jpg' />
+          <img
+            src='https://2ality.com/2011/10/logo-js/js.jpg'
+            alt='course-banner'
+          />
         </div>
       </div>
       <div className='border-2 borgray-200 rounded-lg p-4 my-4'>

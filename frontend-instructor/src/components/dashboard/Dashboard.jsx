@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import useAuth from '@/src/context/authContext';
-import { noimage } from '../../assets';
 import useApi from '@/src/hooks/useApi';
 import { dashboardService } from '@/src/services/dashboard';
 
@@ -26,10 +25,6 @@ export default function CourseDashboard() {
       setLoading(false);
     }
   }, [instructor]);
-
-  const getThumbnail = (thumbnail) => {
-    return thumbnail === 'str' ? noimage : thumbnail;
-  };
 
   if (isLoading) {
     return <p className='text-gray-600'>Checking authentication...</p>; // Wait for auth to load
@@ -72,9 +67,9 @@ export default function CourseDashboard() {
               <div className='w-1/4'>Rating ⭐</div>
               <div className='w-1/4 pl-4'>Action</div>
             </div>
-            {profile?.courses.map((item, idx) => (
+            {profile?.courses.map((item) => (
               <div
-                key={idx}
+                key={item.id}
                 className='flex justify-between text-xl mb-2 items-center'
               >
                 <div className='w-2/4'>{item.title}</div>

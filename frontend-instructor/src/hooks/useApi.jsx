@@ -4,7 +4,6 @@ export default function useApi() {
   const { instructor } = useInstructorAuth();
 
   const fetchData = async (apiFunction, params) => {
-    //console.log(apiFunction, params);
     let newParams = {
       data: params,
       instructor: instructor
