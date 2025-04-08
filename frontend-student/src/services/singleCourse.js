@@ -1,8 +1,8 @@
 import { BACKEND } from '../constants';
 
-async function getSingleCourse(courseId) {
+async function getSingleCourse(payload) {
   try {
-    const response = await fetch(`${BACKEND}/course/${courseId}`, {
+    const response = await fetch(`${BACKEND}/course/${payload.data.id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -22,3 +22,4 @@ async function getSingleCourse(courseId) {
 }
 
 export default getSingleCourse;
+ 

@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import getSingleCourse from '@/src/services/singleCourse';
 import { buyCourse } from '@/src/services/buyCourse';
 import { noimage } from '../../assets';
+import useApi from '@/src/hooks/useApi';
+import { nanoid } from 'nanoid';
 
 export default function CourseDetails() {
   const { id } = useParams();
@@ -10,12 +12,16 @@ export default function CourseDetails() {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
+  const { fetchData } = useApi();
 
   useEffect(() => {
     async function fetchCourse() {
       try {
-        const response = await getSingleCourse(id);
+        const payload = { id };
+        const response = await fetchData(getSingleCourse, payload);
+
         if (response.success) {
+          console.log('Course data:', response);
           setCourse(response.data);
         }
       } catch (error) {
@@ -33,10 +39,7 @@ export default function CourseDetails() {
 
     try {
       // Generate random transaction ID
-      const txnId =
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
-
+      const txnId = nanoid(16);
       // Get token from localStorage or wherever you store it
       const token = localStorage.getItem('token');
 
@@ -172,3 +175,4 @@ export default function CourseDetails() {
     </div>
   );
 }
+ 

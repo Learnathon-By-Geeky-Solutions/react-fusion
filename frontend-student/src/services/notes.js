@@ -1,6 +1,6 @@
 import { BACKEND } from '../constants';
 
-// Create Note
+// Create Note  
 export async function createNote(payload) {
   try {
     const result = await fetch(`${BACKEND}/note/create`, {

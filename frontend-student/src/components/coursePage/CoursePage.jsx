@@ -6,6 +6,7 @@ import NotesSection from './NotesSection';
 import CommentsSection from './CommentsSection';
 import CourseSidebar from './CourseSidebar';
 import useAuth from '@/src/context/authContext';
+import useApi from '@/src/hooks/useApi';
 
 export default function CoursePage() {
   const { id } = useParams();
@@ -14,14 +15,13 @@ export default function CoursePage() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [openMilestones, setOpenMilestones] = useState({});
   const [openModules, setOpenModules] = useState({});
-
-  const { user } = useAuth();
-  console.log('User:', user);
+  const { fetchData } = useApi();
 
   useEffect(() => {
     async function fetchCourse() {
       try {
-        const response = await getSingleCourse(id);
+        const payload = { id };
+        const response = await fetchData(getSingleCourse, payload);
         if (response.success) {
           setCourse(response.data);
           
