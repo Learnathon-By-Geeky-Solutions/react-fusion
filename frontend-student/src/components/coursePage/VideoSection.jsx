@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { getVideo } from '@/src/services/getVideo';
-import useApi from '@/src/hooks/useApi';
 
 export default function VideoSection({ videoId, title }) {
   const [videoData, setVideoData] = useState(null);
@@ -9,15 +9,10 @@ export default function VideoSection({ videoId, title }) {
     fetchVideoData(videoId);
   }, [videoId]);
 
-  // Function to fetch video data
   const fetchVideoData = async (videoId) => {
     try {
       const token = localStorage.getItem('token');
-
-      const response = await getVideo({
-        videoId,
-        token
-      });
+      const response = await getVideo({ videoId, token });
 
       if (response.success) {
         setVideoData(response.data);
@@ -29,23 +24,19 @@ export default function VideoSection({ videoId, title }) {
     }
   };
 
-  // Function to extract YouTube video ID from URL
   const getYouTubeEmbedUrl = (url) => {
     if (!url) return null;
 
-    // Extract the video ID from different YouTube URL formats
-    const regExp =
-      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
 
     return match && match[2].length === 11
-      ? `https://www.youtube.com/embed/${match[2]}`
+      ? `https://www.youtube.com/embed/${match[2]}?modestbranding=1&rel=0`
       : null;
   };
 
   return (
     <div>
-      {/* YouTube Video Player */}
       <div className='w-full aspect-video bg-black rounded-lg overflow-hidden'>
         {videoData && videoData.url && getYouTubeEmbedUrl(videoData.url) ? (
           <iframe
@@ -63,7 +54,6 @@ export default function VideoSection({ videoId, title }) {
         )}
       </div>
 
-      {/* Like & Dislike Buttons */}
       <div className='mt-4 flex items-center space-x-4'>
         <button className='bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition'>
           👍 {videoData?.likeCount || 0}
@@ -75,3 +65,8 @@ export default function VideoSection({ videoId, title }) {
     </div>
   );
 }
+
+VideoSection.propTypes = {
+  videoId: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired
+};
