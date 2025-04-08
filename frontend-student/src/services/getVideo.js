@@ -1,11 +1,12 @@
 import { BACKEND } from '../constants';
 
-export async function getVideo(videoData) {
+export async function getVideo(payload) {
+  console.log('videoData', payload);
   try {
-    const result = await fetch(`${BACKEND}/video/${videoData.videoId}`, {
+    const result = await fetch(`${BACKEND}/video/${payload.data.videoId}`, {
       method: 'GET',
       headers: {
-        Authorization: videoData.token,
+        Authorization: payload.user.token,
         'Content-Type': 'application/json'
       }
     });

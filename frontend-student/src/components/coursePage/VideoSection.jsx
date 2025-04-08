@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { getVideo } from '@/src/services/getVideo';
+import useApi from '@/src/hooks/useApi';
 
 export default function VideoSection({ videoId, title }) {
   const [videoData, setVideoData] = useState(null);
+  const { fetchData } = useApi();
 
   useEffect(() => {
     fetchVideoData(videoId);
@@ -11,8 +13,8 @@ export default function VideoSection({ videoId, title }) {
 
   const fetchVideoData = async (videoId) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await getVideo({ videoId, token });
+      const payload = { videoId };
+      const response = await fetchData(getVideo, payload);
 
       if (response.success) {
         setVideoData(response.data);
