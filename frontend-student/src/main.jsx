@@ -1,20 +1,22 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./components/home/Home";
-import NavBar from "./components/navBar/NavBar";
-import Login from "./components/login/Login";
-import { AuthProvider } from "./context/authContext";
-import Courses from "./components/allcourses/Courses";
-import CourseDetails from "./components/CourseDetails/CourseDetails";
-import Footer from "./components/footer/Footer";
-import Signup from "./components/signup/SignUp";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.jsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Home from './components/home/Home';
+import NavBar from './components/navBar/NavBar';
+import Login from './components/login/Login';
+import { AuthProvider } from './context/authContext';
+import Courses from './components/allcourses/Courses';
+import CourseDetails from './components/CourseDetails/CourseDetails';
+import Footer from './components/footer/Footer';
+import Signup from './components/signup/SignUp';
+import CoursePage from './components/coursePage/CoursePage';
+import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
 
 const routes = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     errorElement: (
       <div>
@@ -25,34 +27,41 @@ const routes = createBrowserRouter([
     ),
     children: [
       {
-        path: "/",
-        element: <Home />,
+        path: '/',
+        element: <Home />
       },
       {
-        path: "/login",
-        element: <Login />,
+        path: '/login',
+        element: <Login />
       },
       {
-        path: "/signup",
-        element: <Signup />,
+        path: '/signup',
+        element: <Signup />
       },
       {
-        path: "/courses",
-        element: <Courses />,
+        path: '/courses',
+        element: <Courses />
       },
       {
-        path: "/courses/:id", 
-        element: <CourseDetails />,
+        path: '/courses/:id',
+        element: <CourseDetails />
       },
-    ],
-  },
+      {
+        path: '/enrolled/:id',
+        element: (
+          <ProtectedRoute>
+            <CoursePage />
+          </ProtectedRoute>
+        )
+      }
+    ]
+  }
 ]);
 
-createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <RouterProvider router={routes} />
     </AuthProvider>
   </StrictMode>
 );
-
