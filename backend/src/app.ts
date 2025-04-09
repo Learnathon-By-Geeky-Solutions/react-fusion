@@ -5,9 +5,12 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import routes from './app/routes';
 import cookieParser from 'cookie-parser';
 import { rateLimit } from 'express-rate-limit'
+import swaggerUi from 'swagger-ui-express'
+import swaggerDocument from './swagger.json';
 
 const app: Application = express();
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
