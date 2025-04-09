@@ -70,7 +70,7 @@ const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
 }
 
 
-const getAllCourses = async (payload: any) => {
+const getAllCourses = async (payload: any, user: null | JwtPayload) => {
     const items = payload.items
     const includeTerms: IIncludeTerms = {
         instructor: false,
@@ -135,7 +135,7 @@ const getAllCourses = async (payload: any) => {
             }
         }
     }
-    const whereTerms = {
+    let whereTerms = {
         instructorId: payload.filters?.instructorId,
         title: {
             contains: payload.filters?.title,
@@ -147,6 +147,33 @@ const getAllCourses = async (payload: any) => {
         sortingEntries.map(([key, value]) => (sortBy.push({ [key]: value })))
     }
 
+    if (payload.filters?.enrolled !== undefined && user) {
+        if (payload.filters?.enrolled === true) {
+            whereTerms = {
+                ...whereTerms,
+                transactions: {
+                    some: {
+                        studentId: {
+                            equals: user.userId
+                        }
+                    }
+                }
+            } as any
+
+        }
+        else {
+            whereTerms = {
+                ...whereTerms,
+                transactions: {
+                    none: {
+                        studentId: {
+                            equals: user.userId
+                        }
+                    }
+                }
+            } as any
+        }
+    }
     const result = await prisma.course.findMany({
         where: whereTerms,
         include: includeTerms,
