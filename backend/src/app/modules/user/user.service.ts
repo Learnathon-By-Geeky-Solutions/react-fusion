@@ -10,6 +10,7 @@ import { Secret } from 'jsonwebtoken';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
+import { JwtPayload } from '../../../interfaces/common';
 
 
 const createAdmin = async (payload: IAdmin, file: IUploadFile) => {
@@ -26,7 +27,9 @@ const createAdmin = async (payload: IAdmin, file: IUploadFile) => {
     email: payload.admin.email,
     password: hashPassword,
     role: UserRole.ADMIN,
-    status: UserStatus.ACTIVE
+    status: UserStatus.ACTIVE,
+    OTP: ""
+
   }
 
   const adminData = {
@@ -83,7 +86,8 @@ const createInstructor = async (payload: IInstructor, file: IUploadFile) => {
   const userData = {
     email: payload.instructor.email,
     password: hashPassword,
-    role: UserRole.INSTRUCTOR
+    role: UserRole.INSTRUCTOR,
+    OTP: hashedOTP
   }
 
   const instructorData = {
@@ -96,7 +100,6 @@ const createInstructor = async (payload: IInstructor, file: IUploadFile) => {
     currentWorkingPlace: payload.instructor.currentWorkingPlace,
     designation: payload.instructor.designation,
     image: payload.instructor.image,
-    OTP: hashedOTP
   }
 
   const result = await prisma.user.create({
@@ -162,7 +165,8 @@ const createStudent = async (payload: IStudent, file: IUploadFile) => {
   const userData = {
     email: payload.student.email,
     password: hashPassword,
-    role: UserRole.STUDENT
+    role: UserRole.STUDENT,
+    OTP: hashedOTP
   }
 
   const studentData = {
@@ -176,7 +180,6 @@ const createStudent = async (payload: IStudent, file: IUploadFile) => {
     designation: payload.student.designation,
     address: payload.student.address,
     image: payload.student.image,
-    OTP: hashedOTP
   }
 
   const result = await prisma.user.create({
@@ -279,18 +282,24 @@ const verifyUser = async (token: string, otp: number) => {
     const student = await prisma.student.findUniqueOrThrow({
       where: {
         email: isVerified.email
+      },
+      include: {
+        User: true
       }
     })
-    OTP = student.OTP
+    OTP = student.User.OTP
   } else if (isVerified.role === UserRole.INSTRUCTOR) {
     const instructor = await prisma.instructor.findUniqueOrThrow({
       where: {
         email: isVerified.email
+      },
+      include: {
+        User: true
       }
 
     })
     console.log(instructor);
-    OTP = instructor.OTP
+    OTP = instructor.User.OTP
   }
 
   const hashedOTP = await AuthUtils.comparePasswords(otp.toString(), OTP);
@@ -313,10 +322,31 @@ const verifyUser = async (token: string, otp: number) => {
   }
 
 }
+
+const getProfile = async (user: JwtPayload) => {
+  let result = null
+  if (user.role === UserRole.STUDENT) {
+    result = await prisma.student.findUnique({
+      where: {
+        userId: user.userId
+      }
+    })
+  }
+
+  if (user.role === UserRole.INSTRUCTOR) {
+    result = await prisma.instructor.findUnique({
+      where: {
+        userId: user.userId
+      }
+    })
+  }
+  return result
+}
 export const UserServices = {
   createAdmin,
   createInstructor,
   createStudent,
   getAllUser,
-  verifyUser
+  verifyUser,
+  getProfile
 };

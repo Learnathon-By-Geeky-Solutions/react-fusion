@@ -1,7 +1,6 @@
-import { relative } from "path";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";
+import { ICreateCourse, IMilestones } from "./course.interface";
 
 const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
     const courseData = {
@@ -70,72 +69,34 @@ const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
 }
 
 
-const getAllCourses = async (payload: any) => {
+const getAllCourses = async (payload: any, user: null | JwtPayload) => {
     const items = payload.items
-    const includeTerms: IIncludeTerms = {
-        instructor: false,
-        milestones: false,
-    };
-    if (items.instructors) {
-        includeTerms.instructor = true
-    }
-    if (items.milestones) {
-        includeTerms.milestones = true
-        if (items.modules) {
-            includeTerms.milestones = {
-                include: {
-                    modules: true
-                }
-            }
-            if (items.quizes) {
-                includeTerms.milestones.include.modules = {
+
+    const includeTerms: any = {
+        instructor: payload.items.instructors,
+        milestones: items.milestones === true ? {
+            include: {
+                modules: items.modules === true ? {
                     include: {
-                        quizes: {
+                        quizes: items.quizes === true ? {
                             select: {
-                                id: true,
+                                id: true
                             }
-                        }
-                    }
-                }
-            }
-            if (items.videos) {
-                includeTerms.milestones.include.modules = {
-                    include: {
-                        videos: {
+                        } : false,
+                        videos: items.videos === true ? {
                             where: { isDeleted: false },
                             select: {
                                 id: true,
                                 moduleId: true,
-                                title: true,
+                                title: true
                             }
-                        }
-                    }
-                }
-            }
-            if (items.videos && items.quizes) {
-                includeTerms.milestones.include.modules = {
-                    include: {
-                        quizes: {
-                            select: {
-                                id: true,
-                            }
-                        },
-                        videos: {
-                            where: { isDeleted: false },
-                            select: {
-                                id: true,
-                                moduleId: true,
-                                title: true,
-                            }
-                        },
-
-
-                    }
-                }
-            }
-        }
+                        } : false,
+                    },
+                } : false,
+            },
+        } : false,
     }
-    const whereTerms = {
+    let whereTerms = {
         instructorId: payload.filters?.instructorId,
         title: {
             contains: payload.filters?.title,
@@ -145,6 +106,28 @@ const getAllCourses = async (payload: any) => {
     if (payload?.sortBy) {
         const sortingEntries = Object.entries(payload.sortBy);
         sortingEntries.map(([key, value]) => (sortBy.push({ [key]: value })))
+    }
+
+    const enrollFilter = user && (payload.filters?.enrolled === true ? {
+        transactions: {
+            some: {
+                studentId: {
+                    equals: user.userId
+                }
+            }
+        }
+    } : {
+        transactions: {
+            none: {
+                studentId: {
+                    equals: user.userId
+                }
+            }
+        }
+    })
+    whereTerms = {
+        ...whereTerms,
+        ...enrollFilter
     }
 
     const result = await prisma.course.findMany({

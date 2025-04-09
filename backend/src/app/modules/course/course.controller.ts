@@ -3,6 +3,8 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { JwtPayload } from "../../../interfaces/common";
 import { courseService } from "./course.service";
+import { verifyToken } from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
 
 const createCourse = catchAsync(async (req, res, next) => {
 
@@ -15,7 +17,14 @@ const createCourse = catchAsync(async (req, res, next) => {
     })
 })
 const getAllCourses = catchAsync(async (req, res, next) => {
-    const result = await courseService.getAllCourses(req.body)
+    let result = null
+    const filterEnroll = req.body.filters?.enrolled ?? null
+    if (filterEnroll !== null) {
+        const user = await verifyToken(req, [UserRole.STUDENT])
+        result = await courseService.getAllCourses(req.body, user as JwtPayload)
+    } else {
+        result = await courseService.getAllCourses(req.body, null)
+    }
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
