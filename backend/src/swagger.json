@@ -1,0 +1,1749 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "EDUNEXUS",
+    "description": "API for EDUNEXUS, an online learning platform.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api/v1"
+    }
+  ],
+  "paths": {
+    "/user/create-admin": {
+      "post": {
+        "summary": "Create Admin",
+        "description": "Creates an admin user.",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "ASD123!@#asd"
+                  },
+                  "admin": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "example": "sunanrabbi1918@gmail.com"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Sunan Rabbi"
+                      },
+                      "contactNumber": {
+                        "type": "string",
+                        "example": "01875899096"
+                      }
+                    }
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "example": "/E:/Wallpaper/Mine/1673336035861.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin created successfully."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/user/create-instructor": {
+      "post": {
+        "summary": "Create Instructor",
+        "description": "Creates an instructor user.",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "test00"
+                  },
+                  "instructor": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "example": "b@t.com"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Wasim"
+                      },
+                      "contactNumber": {
+                        "type": "string",
+                        "example": "01828382831"
+                      },
+                      "experience": {
+                        "type": "integer",
+                        "example": 5
+                      },
+                      "gender": {
+                        "type": "string",
+                        "example": "MALE"
+                      },
+                      "qualification": {
+                        "type": "string",
+                        "example": "MASTERS"
+                      },
+                      "currentWorkingPlace": {
+                        "type": "string",
+                        "example": "XYZ University"
+                      },
+                      "designation": {
+                        "type": "string",
+                        "example": "Senior Lecturer"
+                      }
+                    }
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "example": "/E:/Wallpaper/2824298.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Instructor created successfully."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/user/create-student": {
+      "post": {
+        "summary": "Create Student",
+        "description": "Creates a student user.",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "test00"
+                  },
+                  "student": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "example": "a@s.com"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Sunan Rabbi"
+                      },
+                      "contactNumber": {
+                        "type": "string",
+                        "example": "1122334455"
+                      },
+                      "currentInstitution": {
+                        "type": "string",
+                        "example": "ABC College"
+                      },
+                      "gender": {
+                        "type": "string",
+                        "example": "FEMALE"
+                      },
+                      "qualification": {
+                        "type": "string",
+                        "example": "BACHELORS"
+                      },
+                      "address": {
+                        "type": "string",
+                        "example": "123 Main Street, City, Country"
+                      }
+                    }
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "example": "/E:/Wallpaper/wallpaperflare.com_wallpaper.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Student created successfully."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/user/verify-user": {
+      "post": {
+        "summary": "Verify User",
+        "description": "Verify a user's identity with OTP.",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User verified successfully."
+          },
+          "400": {
+            "description": "Invalid OTP."
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "description": "Login a user with email and password.",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "a@t.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "test00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful."
+          },
+          "400": {
+            "description": "Invalid credentials."
+          }
+        }
+      }
+    },
+    "/auth/change-password": {
+      "post": {
+        "summary": "Change Password",
+        "description": "Change the password for a logged-in user.",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "example": "ASD123!@#asd"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "chrome://restart"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed successfully."
+          },
+          "400": {
+            "description": "Invalid old password."
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "summary": "Forget Password",
+        "description": "Send a reset password link to the user's email.",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "wasimur211@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset link sent."
+          },
+          "400": {
+            "description": "Invalid email."
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "summary": "Reset Password",
+        "description": "Reset the user's password.",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "7762477f-0ef0-4b7b-b021-624686016031"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "sunanrabbi1918@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successful."
+          },
+          "400": {
+            "description": "Invalid request."
+          }
+        }
+      }
+    },
+    "/course/create": {
+      "post": {
+        "summary": "Create Course",
+        "description": "Creates a new course with milestones, modules, and videos.",
+        "tags": [
+          "Course Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "JavaScript Mastery"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Learn JavaScript from beginner to advanced level."
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 49.99
+                  },
+                  "thumbnail": {
+                    "type": "string",
+                    "example": "https://example.com/thumbnail.jpg"
+                  },
+                  "milestones": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "Introduction to JavaScript"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Understand the basics of JavaScript."
+                        },
+                        "modules": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "example": "Module 1: Basics"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "Learn about variables, data types, and functions."
+                              },
+                              "videos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "title": {
+                                      "type": "string",
+                                      "example": "Introduction to Variables"
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "example": "https://www.youtube.com/watch?v=lIUp8bdKiq4"
+                                    },
+                                    "length": {
+                                      "type": "integer",
+                                      "example": 33
+                                    }
+                                  }
+                                }
+                              },
+                              "quizes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "questions": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "question": {
+                                            "type": "string",
+                                            "example": "What is the result of 2 + 2?"
+                                          },
+                                          "options": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string",
+                                              "example": "4"
+                                            }
+                                          },
+                                          "answer": {
+                                            "type": "string",
+                                            "example": "4"
+                                          },
+                                          "points": {
+                                            "type": "integer",
+                                            "example": 10
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course created successfully."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/course/get-courses": {
+      "post": {
+        "summary": "Get All Courses",
+        "description": "Fetch a list of courses with optional filters and sorting.",
+        "tags": [
+          "Course Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "instructors": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "milestones": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "modules": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "quizes": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "videos": {
+                        "type": "boolean",
+                        "example": true
+                      }
+                    }
+                  },
+                  "filters": {
+                    "type": "object",
+                    "properties": {
+                      "instructorId": {
+                        "type": "string",
+                        "example": "9ffaec2c-5434-4372-8625-1abc434b3044"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "JavaScript"
+                      }
+                    }
+                  },
+                  "sortBy": {
+                    "type": "object",
+                    "properties": {
+                      "price": {
+                        "type": "string",
+                        "example": "asc"
+                      },
+                      "rating": {
+                        "type": "string",
+                        "example": "desc"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Courses retrieved successfully."
+          },
+          "400": {
+            "description": "Invalid filter or sorting parameters."
+          }
+        }
+      }
+    },
+    "/course/{courseId}": {
+      "get": {
+        "summary": "Get Single Course",
+        "description": "Fetch details of a single course by its ID.",
+        "tags": [
+          "Course Management"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "80d0765b-cba9-4bc9-b102-43c9edec1f9c"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "instructors": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "milestones": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "modules": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "quizes": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "videos": {
+                        "type": "boolean",
+                        "example": true
+                      }
+                    }
+                  },
+                  "filters": {
+                    "type": "object",
+                    "properties": {
+                      "instructorId": {
+                        "type": "string",
+                        "example": "9ffaec2c-5434-4372-8625-1abc434b3044"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "JavaScript"
+                      }
+                    }
+                  },
+                  "sortBy": {
+                    "type": "object",
+                    "properties": {
+                      "price": {
+                        "type": "string",
+                        "example": "asc"
+                      },
+                      "rating": {
+                        "type": "string",
+                        "example": "desc"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course details retrieved successfully."
+          },
+          "400": {
+            "description": "Invalid course ID."
+          }
+        }
+      }
+    },
+    "/note/get": {
+      "post": {
+        "summary": "Get Note",
+        "description": "Retrieve the note associated with a specific video.",
+        "tags": [
+          "Note Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "videoId": {
+                    "type": "string",
+                    "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+                  }
+                },
+                "required": [
+                  "videoId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note retrieved successfully."
+          },
+          "400": {
+            "description": "Invalid request, videoId is required."
+          },
+          "404": {
+            "description": "Note not found for the given videoId."
+          }
+        }
+      }
+    },
+    "/note/delete": {
+      "delete": {
+        "summary": "Delete Note",
+        "description": "Delete the note associated with a specific video.",
+        "tags": [
+          "Note Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "videoId": {
+                    "type": "string",
+                    "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+                  }
+                },
+                "required": [
+                  "videoId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request, videoId is required."
+          },
+          "404": {
+            "description": "Note not found for the given videoId."
+          }
+        }
+      }
+    },
+    "/note/create": {
+      "post": {
+        "summary": "Create Note",
+        "description": "Create a new note for a specific video.",
+        "tags": [
+          "Note Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "videoId": {
+                    "type": "string",
+                    "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "TEST NOTE"
+                  }
+                },
+                "required": [
+                  "videoId",
+                  "note"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note created successfully."
+          },
+          "400": {
+            "description": "Invalid request, videoId and note are required."
+          }
+        }
+      }
+    },
+    "/note/update": {
+      "post": {
+        "summary": "Update Note",
+        "description": "Update an existing note for a specific video.",
+        "tags": [
+          "Note Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "videoId": {
+                    "type": "string",
+                    "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "UPDATED TEST NOTE"
+                  }
+                },
+                "required": [
+                  "videoId",
+                  "note"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note updated successfully."
+          },
+          "400": {
+            "description": "Invalid request, videoId and note are required."
+          },
+          "404": {
+            "description": "Note not found for the given videoId."
+          }
+        }
+      }
+    },
+    "/comment/get-comments": {
+      "post": {
+        "summary": "Get Comments by Video ID",
+        "description": "Retrieve all comments associated with a specific video.",
+        "tags": [
+          "Comment Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "videoId": {
+                    "type": "string",
+                    "example": "4f1ac6f5-db92-439c-9701-656756277b67"
+                  }
+                },
+                "required": [
+                  "videoId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comments retrieved successfully."
+          },
+          "400": {
+            "description": "Invalid request, videoId is required."
+          },
+          "404": {
+            "description": "No comments found for the provided videoId."
+          }
+        }
+      }
+    },
+    "/comment/create-comment": {
+      "post": {
+        "summary": "Create Comment",
+        "description": "Create a new comment for a specific video.",
+        "tags": [
+          "Comment Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "videoId": {
+                    "type": "string",
+                    "example": "4f1ac6f5-db92-439c-9701-656756277b67"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "example": "Hi there!"
+                  }
+                },
+                "required": [
+                  "videoId",
+                  "comment"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comment created successfully."
+          },
+          "400": {
+            "description": "Invalid request, videoId and comment are required."
+          }
+        }
+      }
+    },
+    "/comment/update-comment": {
+      "put": {
+        "summary": "Update Comment",
+        "description": "Update an existing comment for a specific video.",
+        "tags": [
+          "Comment Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commentId": {
+                    "type": "string",
+                    "example": "4ca893c9-d9bf-442b-9470-407cd4532f27"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "example": "Updated comment!"
+                  }
+                },
+                "required": [
+                  "commentId",
+                  "comment"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comment updated successfully."
+          },
+          "400": {
+            "description": "Invalid request, commentId and comment are required."
+          },
+          "404": {
+            "description": "Comment not found for the provided commentId."
+          }
+        }
+      }
+    },
+    "/transaction/buy-course": {
+      "post": {
+        "summary": "Buy Course",
+        "description": "Process a transaction for buying a specific course.",
+        "tags": [
+          "Transaction Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courseId": {
+                    "type": "string",
+                    "example": "80d0765b-cba9-4bc9-b102-43c9edec1f9c"
+                  },
+                  "txnId": {
+                    "type": "string",
+                    "example": "test txn"
+                  }
+                },
+                "required": [
+                  "courseId",
+                  "txnId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transaction successful. The course has been bought."
+          },
+          "400": {
+            "description": "Invalid request, courseId or txnId is missing."
+          },
+          "404": {
+            "description": "Course not found for the provided courseId."
+          }
+        }
+      }
+    },
+    "/transaction/history": {
+      "get": {
+        "summary": "Get Transaction History",
+        "description": "Retrieve the history of all transactions made by the user.",
+        "tags": [
+          "Transaction Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction history retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "courseId": {
+                        "type": "string",
+                        "example": "80d0765b-cba9-4bc9-b102-43c9edec1f9c"
+                      },
+                      "txnId": {
+                        "type": "string",
+                        "example": "test txn"
+                      },
+                      "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-09T12:34:56Z"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "successful"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. User needs to be logged in."
+          }
+        }
+      }
+    },
+    "/video/{videoId}": {
+      "get": {
+        "summary": "Get Video by ID",
+        "description": "Retrieve a video by its unique ID.",
+        "tags": [
+          "Video Management"
+        ],
+        "parameters": [
+          {
+            "name": "videoId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the video.",
+            "schema": {
+              "type": "string",
+              "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the video details."
+          },
+          "404": {
+            "description": "Video not found for the given videoId."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Video by ID",
+        "description": "Delete a video by its unique ID.",
+        "tags": [
+          "Video Management"
+        ],
+        "parameters": [
+          {
+            "name": "videoId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the video.",
+            "schema": {
+              "type": "string",
+              "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the video."
+          },
+          "404": {
+            "description": "Video not found for the given videoId."
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Video by ID",
+        "description": "Update the details of a video by its unique ID.",
+        "tags": [
+          "Video Management"
+        ],
+        "parameters": [
+          {
+            "name": "videoId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the video.",
+            "schema": {
+              "type": "string",
+              "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "new title"
+                  },
+                  "url": {
+                    "type": "string",
+                    "example": "test url"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the video details."
+          },
+          "400": {
+            "description": "Invalid request, missing required fields."
+          },
+          "404": {
+            "description": "Video not found for the given videoId."
+          }
+        }
+      }
+    },
+    "/video/{videoId}2": {
+      "get": {
+        "summary": "Get Video by ID (Alternative)",
+        "description": "Retrieve a video by its unique ID using another endpoint.",
+        "tags": [
+          "Video Management"
+        ],
+        "parameters": [
+          {
+            "name": "videoId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the video.",
+            "schema": {
+              "type": "string",
+              "example": "dad3e36a-346a-4adf-afa3-5f8c87783d11"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the video details."
+          },
+          "404": {
+            "description": "Video not found for the given videoId."
+          }
+        }
+      }
+    },
+    "/quiz/{id}": {
+      "get": {
+        "summary": "Get Quiz by ID",
+        "description": "Retrieve a quiz by its unique ID.",
+        "tags": [
+          "Quiz Management"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the quiz.",
+            "schema": {
+              "type": "string",
+              "example": "22b33f42-b666-4bac-9d3c-7c139b138cfb"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the quiz details."
+          },
+          "404": {
+            "description": "Quiz not found for the given id."
+          }
+        }
+      }
+    },
+    "/quiz/create": {
+      "post": {
+        "summary": "Create Quiz",
+        "description": "Create a new quiz with questions and options.",
+        "tags": [
+          "Quiz Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "moduleId": {
+                    "type": "string",
+                    "example": "46fe6ba8-b1dc-45c5-973f-b55fcac7d506"
+                  },
+                  "questions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "question": {
+                          "type": "string",
+                          "example": "What is the capital of France?"
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "example": "Paris"
+                          }
+                        },
+                        "answer": {
+                          "type": "string",
+                          "example": "Paris"
+                        },
+                        "points": {
+                          "type": "integer",
+                          "example": 10
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "moduleId",
+                  "questions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Quiz successfully created."
+          },
+          "400": {
+            "description": "Invalid input data."
+          }
+        }
+      }
+    },
+    "/quiz/check/{id}": {
+      "post": {
+        "summary": "Check Quiz Answers",
+        "description": "Submit answers for a quiz and check the result.",
+        "tags": [
+          "Quiz Management"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the quiz.",
+            "schema": {
+              "type": "string",
+              "example": "22b33f42-b666-4bac-9d3c-7c139b138cfb"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "da376725-5e66-496f-a82e-6dd89b41d812"
+                        },
+                        "answer": {
+                          "type": "string",
+                          "example": "Paris"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "answers"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully checked the quiz answers."
+          },
+          "400": {
+            "description": "Invalid answers submitted."
+          }
+        }
+      }
+    },
+    "/quiz/update/{id}": {
+      "put": {
+        "summary": "Update Quiz",
+        "description": "Update the details of an existing quiz.",
+        "tags": [
+          "Quiz Management"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the quiz.",
+            "schema": {
+              "type": "string",
+              "example": "2728e0f6-5abe-47b0-a8b9-728d664bafda"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "questions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "question": {
+                          "type": "string",
+                          "example": "What is the capital of France?"
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "example": "Paris"
+                          }
+                        },
+                        "answer": {
+                          "type": "string",
+                          "example": "Paris"
+                        },
+                        "points": {
+                          "type": "integer",
+                          "example": 10
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "questions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Quiz successfully updated."
+          },
+          "400": {
+            "description": "Invalid input data."
+          },
+          "404": {
+            "description": "Quiz not found for the given id."
+          }
+        }
+      }
+    },
+    "/quiz/delete/{id}": {
+      "delete": {
+        "summary": "Delete Quiz",
+        "description": "Delete a quiz by its unique ID.",
+        "tags": [
+          "Quiz Management"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the quiz.",
+            "schema": {
+              "type": "string",
+              "example": "2728e0f6-5abe-47b0-a8b9-728d664bafda"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quiz successfully deleted."
+          },
+          "404": {
+            "description": "Quiz not found for the given id."
+          }
+        }
+      }
+    },
+    "/progress/video": {
+      "post": {
+        "summary": "Update Video Progress",
+        "description": "Update the progress of a video watched by the user.",
+        "tags": [
+          "Progress Tracking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "videoId": {
+                    "type": "string",
+                    "example": "8eca8ade-bd21-4b9f-a8f5-30cb5d4ec0aa"
+                  },
+                  "isCompleted": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "timeWatched": {
+                    "type": "number",
+                    "example": 1.5
+                  }
+                },
+                "required": [
+                  "videoId",
+                  "isCompleted",
+                  "timeWatched"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Video progress successfully updated."
+          },
+          "400": {
+            "description": "Invalid input data."
+          }
+        }
+      }
+    },
+    "/progress/quiz": {
+      "post": {
+        "summary": "Update Quiz Progress",
+        "description": "Update the progress of a quiz attempted by the user.",
+        "tags": [
+          "Progress Tracking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "quizId": {
+                    "type": "string",
+                    "example": "6f9a2fee-efbc-4906-941a-bc6cc04a10d2"
+                  },
+                  "isCompleted": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "score": {
+                    "type": "number",
+                    "example": 1.5
+                  }
+                },
+                "required": [
+                  "quizId",
+                  "isCompleted",
+                  "score"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Quiz progress successfully updated."
+          },
+          "400": {
+            "description": "Invalid input data."
+          }
+        }
+      }
+    },
+    "/progress/module": {
+      "post": {
+        "summary": "Update Module Progress",
+        "description": "Update the progress of a module completed by the user.",
+        "tags": [
+          "Progress Tracking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "moduleId": {
+                    "type": "string",
+                    "example": "946e37e4-5b14-4911-ae47-0ae2b70669e8"
+                  },
+                  "isCompleted": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                },
+                "required": [
+                  "moduleId",
+                  "isCompleted"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Module progress successfully updated."
+          },
+          "400": {
+            "description": "Invalid input data."
+          }
+        }
+      }
+    },
+    "/progress/milestone": {
+      "post": {
+        "summary": "Update Milestone Progress",
+        "description": "Update the progress of a milestone reached by the user.",
+        "tags": [
+          "Progress Tracking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "milestoneId": {
+                    "type": "string",
+                    "example": "6066427a-51b1-4e05-8a10-29435041a675"
+                  },
+                  "isCompleted": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                },
+                "required": [
+                  "milestoneId",
+                  "isCompleted"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Milestone progress successfully updated."
+          },
+          "400": {
+            "description": "Invalid input data."
+          }
+        }
+      }
+    },
+    "/analytics/student-all": {
+      "get": {
+        "summary": "Get All Students Analytics",
+        "description": "Retrieve analytics data for all students.",
+        "tags": [
+          "Analytics"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all student analytics."
+          },
+          "400": {
+            "description": "Invalid request."
+          }
+        }
+      }
+    },
+    "/analytics/instructor-all": {
+      "get": {
+        "summary": "Get All Instructors Analytics",
+        "description": "Retrieve analytics data for all instructors.",
+        "tags": [
+          "Analytics"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all instructor analytics."
+          },
+          "400": {
+            "description": "Invalid request."
+          }
+        }
+      }
+    },
+    "/analytics/instructor/{courseId}": {
+      "get": {
+        "summary": "Get Instructor Analytics by Course ID",
+        "description": "Retrieve analytics data for a specific instructor based on course ID.",
+        "tags": [
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the course.",
+            "schema": {
+              "type": "string",
+              "example": "7f40bbca-af29-43f7-8d46-43b90ce8f8bb"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved instructor analytics for the course."
+          },
+          "400": {
+            "description": "Invalid request."
+          }
+        }
+      }
+    },
+    "/analytics/student/{courseId}": {
+      "get": {
+        "summary": "Get Student Analytics by Course ID",
+        "description": "Retrieve analytics data for a specific student based on course ID.",
+        "tags": [
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the course.",
+            "schema": {
+              "type": "string",
+              "example": "f0df763c-931f-465d-9acc-78cec20feac6"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved student analytics for the course."
+          },
+          "400": {
+            "description": "Invalid request."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "User Management",
+      "description": "Operations related to creating and managing users (admin, instructor, student)."
+    },
+    {
+      "name": "Authentication",
+      "description": "Operations related to authentication (login, password reset, etc.)."
+    },
+    {
+      "name": "Course Management",
+      "description": "Operations related to creating, retrieving, and managing courses."
+    },
+    {
+      "name": "Transaction Management",
+      "description": "Operations related to buying courses and retrieving transaction history."
+    },
+    {
+      "name": "Video Management",
+      "description": "Operations related to managing videos."
+    },
+    {
+      "name": "Quiz Management",
+      "description": "Operations related to creating, updating, checking, and deleting quizzes."
+    },
+    {
+      "name": "Note Management",
+      "description": "Operations related to creating, retrieving, updating, and deleting notes for videos."
+    },
+    {
+      "name": "Comment Management",
+      "description": "Operations related to creating, retrieving, and updating comments for videos."
+    },
+    {
+      "name": "Progress Tracking",
+      "description": "Operations related to tracking user progress through videos, quizzes, modules, and milestones."
+    },
+    {
+      "name": "Analytics",
+      "description": "Operations related to retrieving analytics data for students and instructors."
+    }
+  ]
+}
