@@ -681,6 +681,59 @@
         }
       }
     },
+    "/course/checkenroll/{courseId}": {
+      "get": {
+        "summary": "Check Course Enrollment",
+        "operationId": "checkEnrollment",
+        "tags": [
+          "Course Management"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "7f40bbca-af29-43f7-8d46-43b90ce8f8bb"
+            },
+            "description": "The unique ID of the course to check enrollment for"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer your-access-token"
+            },
+            "description": "Bearer token for authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully checked enrollment",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "enrolled",
+                  "message": "The user is enrolled in the course"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, invalid courseId or missing Authorization header"
+          },
+          "401": {
+            "description": "Unauthorized, invalid token"
+          },
+          "404": {
+            "description": "Course not found"
+          }
+        }
+      }
+    },
     "/note/get": {
       "post": {
         "summary": "Get Note",

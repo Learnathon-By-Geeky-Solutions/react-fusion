@@ -11,7 +11,11 @@ const router = express.Router()
 router.post('/create', auth(UserRole.INSTRUCTOR), validateRequest(courseZodSchema.createCourseValidation), courseController.createCourse)
 //router.post('/', courseController.createCourse)
 router.post("/get-courses", validateRequest(courseZodSchema.getCourseValidataion), courseController.getAllCourses)
+
 router.get("/:id", courseController.getSingleCourse)
+
+router.get('/checkenroll/:courseId', auth(UserRole.STUDENT), courseController.checkEnrollment)
+
 //TODO:
 //  update for instructor
 //  add isActive for courses

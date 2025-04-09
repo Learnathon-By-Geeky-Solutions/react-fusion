@@ -1,3 +1,4 @@
+import { relative } from "path";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";
@@ -199,10 +200,27 @@ const getSingleCourse = async (id: string) => {
     return result
 }
 
+const checkEnrollment = async (courseId: string, user: JwtPayload) => {
+    const result = await prisma.transactions.findUnique({
+        where: {
+            courseId_studentId: {
+                courseId: courseId,
+                studentId: user.userId
+            }
+        }
+    })
+    return {
+        isEnrolled: result ? true : false,
+        courseId: courseId,
+        transactionId: result?.id,
+    }
+}
+
 export const courseService = {
     createCourse,
     getAllCourses,
-    getSingleCourse
+    getSingleCourse,
+    checkEnrollment
 }
 
 
