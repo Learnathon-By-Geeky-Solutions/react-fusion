@@ -1,7 +1,6 @@
 import { BACKEND } from '../constants';
 
 export async function buyCourse(payload) {
-  console.log('Course data in buyCourse:', payload);
   try {
     const result = await fetch(`${BACKEND}/transaction/buy-course`, {
       method: 'POST',
@@ -13,7 +12,6 @@ export async function buyCourse(payload) {
     });
 
     const data = await result.json();
-    console.log('Response from buyCourse:', data);
     return data;
   } catch (error) {
     console.error('Error buying course:', error);

@@ -1,6 +1,7 @@
 import { BACKEND } from '../constants';
 
 export async function enrollCheck(payload) {
+  console.log('Payload for enrollCheck:', payload);
   try {
     const result = await fetch(`${BACKEND}/course/checkenroll/${payload.data.courseId}`, {
       method: 'GET',

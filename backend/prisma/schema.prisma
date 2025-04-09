@@ -252,6 +252,8 @@ model Transactions {
   course    Course  @relation(fields: [courseId], references: [id])
   studentId String
   student   Student @relation(fields: [studentId], references: [userId])
+
+  @@unique([courseId, studentId])
 }
 
 model StudentAnalytics {

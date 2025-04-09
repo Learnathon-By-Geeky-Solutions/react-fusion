@@ -55,6 +55,7 @@ export default function CourseDetails() {
       const response = await fetchData(buyCourse, purchaseData);
 
       if (response.success) {
+        alert('Course purchased successfully!');
         navigate(`/enrolled/${id}`);
       } else {
         alert(
