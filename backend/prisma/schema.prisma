@@ -8,33 +8,31 @@ datasource db {
 }
 
 model User {
-  id         String        @id @default(uuid())
-  email      String        @unique
+  id         String      @id @default(uuid())
+  email      String      @unique
   password   String
   role       UserRole
-  status     UserStatus    @default(PENDING)
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  status     UserStatus  @default(PENDING)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
   Admin      Admin?
   Instructor Instructor?
   Student    Student?
   comments   Comment[]
-  likes      LikeUser[]
-  dislikes   DislikeUser[]
-  notes      Note[]
+
+  OTP       String
+  isDeleted Boolean @default(false)
 
   @@map("users")
 }
 
 model Admin {
-  id            String   @id @default(uuid())
-  userId        String   @unique
+  id            String  @id @default(uuid())
+  userId        String  @unique
   name          String
-  email         String   @unique
+  email         String  @unique
   image         String?
   contactNumber String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 
   User User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -53,16 +51,10 @@ model Instructor {
   designation         String
   image               String?
   contactNumber       String
-  OTP                 String
-  isDeleted           Boolean            @default(false)
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
 
   courses            Course[]
   User               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  //InstructorAnalytics   InstructorAnalytics?
   InstructorFeedback InstructorFeedback[]
-  //instructorAnalyticsId String
 
   @@map("instructors")
 }
@@ -78,12 +70,11 @@ model Student {
   image              String?
   contactNumber      String
   address            String
-  OTP                String
-  isDeleted          Boolean            @default(false)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
 
   User               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes              LikeUser[]
+  dislikes           DislikeUser[]
+  notes              Note[]
   courses            CourseStudent[]
   transactions       Transactions[]
   StudentAnalytics   StudentAnalytics?
@@ -136,7 +127,6 @@ model Course {
   milestones     Milestone[]
   students       CourseStudent[]
   transactions   Transactions[]
-  //CourseAnalytics CourseAnalytics[]
   CourseProgress CourseProgress[]
 }
 
@@ -204,33 +194,32 @@ model Comment {
   user      User     @relation(fields: [userId], references: [id])
   comment   String
   createdAt DateTime @default(now())
-  //TODO: DESIGN REPLY RELATION
 }
 
 model LikeUser {
   videoId String
-  video   Video  @relation(fields: [videoId], references: [id])
+  video   Video   @relation(fields: [videoId], references: [id])
   userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  user    Student @relation(fields: [userId], references: [userId])
 
   @@id([videoId, userId])
 }
 
 model DislikeUser {
   videoId String
-  video   Video  @relation(fields: [videoId], references: [id])
+  video   Video   @relation(fields: [videoId], references: [id])
   userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  user    Student @relation(fields: [userId], references: [userId])
 
   @@id([videoId, userId])
 }
 
 model Note {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  user    Student @relation(fields: [userId], references: [id])
   videoId String
-  video   Video  @relation(fields: [videoId], references: [id])
+  video   Video   @relation(fields: [videoId], references: [id])
   note    String
 
   @@unique([userId, videoId])
@@ -338,38 +327,6 @@ model MilestoneProgress {
   @@unique([courseProgressId, milestoneId])
   @@map("milestone_progress")
 }
-
-//TODO: drop table
-// model InstructorAnalytics {
-//   id              String     @id @default(uuid())
-//   instructorId    String @unique
-//   instructor      Instructor @relation(fields: [instructorId], references: [userId])
-//   coursesCreated  Int
-//   totalStudents   Int
-//   averageRating   Float // Average course rating
-//   totalEarnings   Float // Total earnings from courses
-//   studentFeedback Float // Average student feedback score (e.g., from course reviews)
-//   lastUpdated     DateTime   @default(now())
-//
-//   @@map("instructor_analytics")
-// }
-
-//TODO: drop table
-// model CourseAnalytics {
-//   id                String   @id @default(uuid())
-//   courseId          String
-//   course            Course   @relation(fields: [courseId], references: [id])
-//   totalEnrollments  Int
-//   totalViews        Int
-//   averageRating     Float
-//   totalComments     Int
-//   totalLikes        Int
-//   totalDislikes     Int
-//   totalTransactions Int
-//   lastUpdated       DateTime @default(now())
-//
-//   @@map("course_analytics")
-// }
 
 model InstructorFeedback {
   id           String     @id @default(uuid())
