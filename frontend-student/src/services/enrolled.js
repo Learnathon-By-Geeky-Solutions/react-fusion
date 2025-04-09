@@ -1,7 +1,6 @@
 import { BACKEND } from '../constants';
 
 export async function enrollCheck(payload) {
-  console.log('Payload for enrollCheck:', payload);
   try {
     const result = await fetch(`${BACKEND}/course/checkenroll/${payload.data.courseId}`, {
       method: 'GET',
@@ -12,7 +11,6 @@ export async function enrollCheck(payload) {
     });
 
     const data = await result.json();
-    console.log('Response from enrollCheck:', data);
     return data;
   } catch (error) {
     console.error('Error fetching video:', error);
