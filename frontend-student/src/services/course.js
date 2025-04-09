@@ -33,7 +33,6 @@ async function getEnrolledCourses(payload) {
       videos: true,
     },
     filters:{
-        title:"JavaScript",
         enrolled:true
     },
   };
@@ -47,7 +46,7 @@ async function getEnrolledCourses(payload) {
     body: JSON.stringify(items)
   });
   const data = await result.json();
-  console.log(data);
+  console.log("Naim er data", data);
   return data;
 }
 
