@@ -147,33 +147,28 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
         sortingEntries.map(([key, value]) => (sortBy.push({ [key]: value })))
     }
 
-    if (payload.filters?.enrolled !== undefined && user) {
-        if (payload.filters?.enrolled === true) {
-            whereTerms = {
-                ...whereTerms,
-                transactions: {
-                    some: {
-                        studentId: {
-                            equals: user.userId
-                        }
-                    }
+    const enrollFilter = user && (payload.filters?.enrolled === true ? {
+        transactions: {
+            some: {
+                studentId: {
+                    equals: user.userId
                 }
-            } as any
-
+            }
         }
-        else {
-            whereTerms = {
-                ...whereTerms,
-                transactions: {
-                    none: {
-                        studentId: {
-                            equals: user.userId
-                        }
-                    }
+    } : {
+        transactions: {
+            none: {
+                studentId: {
+                    equals: user.userId
                 }
-            } as any
+            }
         }
+    })
+    whereTerms = {
+        ...whereTerms,
+        ...enrollFilter
     }
+
     const result = await prisma.course.findMany({
         where: whereTerms,
         include: includeTerms,

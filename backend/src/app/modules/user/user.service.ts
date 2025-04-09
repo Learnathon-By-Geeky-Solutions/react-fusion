@@ -10,8 +10,6 @@ import { Secret } from 'jsonwebtoken';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
-import { trace } from 'console';
-import { truncate } from 'fs';
 import { JwtPayload } from '../../../interfaces/common';
 
 

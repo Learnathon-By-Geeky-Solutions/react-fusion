@@ -10,7 +10,6 @@ const auth =
   (...requiredRoles: string[]) =>
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        //req.user = verifiedUser as JwtPayload; // role  , userid
         req.user = await verifyToken(req, requiredRoles) as JwtPayload;
         next();
       } catch (error) {
