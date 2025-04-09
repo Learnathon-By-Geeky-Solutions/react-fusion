@@ -519,6 +519,18 @@
         "tags": [
           "Course Management"
         ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Bearer your-access-token"
+            },
+            "description": "Bearer token for authorization"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -560,6 +572,10 @@
                       "title": {
                         "type": "string",
                         "example": "JavaScript"
+                      },
+                      "enrolled": {
+                        "type": "boolean",
+                        "example": "false"
                       }
                     }
                   },
@@ -1752,6 +1768,41 @@
           },
           "400": {
             "description": "Invalid request."
+          }
+        }
+      }
+    },
+    "/user/profile": {
+      "get": {
+        "summary": "Get User Profile",
+        "operationId": "getUserProfile",
+        "tags": [
+          "User Management"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer your-access-token"
+            },
+            "description": "Bearer token for authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user profile"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized, invalid token"
+          },
+          "404": {
+            "description": "User not found"
           }
         }
       }

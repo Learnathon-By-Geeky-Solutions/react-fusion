@@ -5,6 +5,7 @@ import sendResponse from '../../../shared/sendResponse';
 import { UserServices } from './user.service';
 import { IUploadFile } from '../../../interfaces/file';
 import ApiError from '../../../errors/ApiError';
+import { JwtPayload } from '../../../interfaces/common';
 
 const createAdmin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
@@ -71,6 +72,16 @@ const verifyUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getProfile = catchAsync(async (req: Request, res: Response) => {
+
+  const result = await UserServices.getProfile(req.user as JwtPayload);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User Profile retrieved successfully',
+    data: result
+  });
+});
 
 
 export const UserController = {
@@ -78,5 +89,7 @@ export const UserController = {
   createInstructor,
   createStudent,
   getAllUser,
-  verifyUser
+  verifyUser,
+  getProfile
+
 };

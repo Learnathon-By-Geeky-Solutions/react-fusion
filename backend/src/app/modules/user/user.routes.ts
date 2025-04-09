@@ -3,6 +3,8 @@ import { UserController } from './user.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { FileUploadHelper } from '../../../helpers/fileUploadHelper';
 import { UserValidation } from './user.validations';
+import auth from '../../middlewares/auth';
+import { UserRole } from '@prisma/client';
 
 const router = express.Router();
 
@@ -49,5 +51,7 @@ router.post(
   validateRequest(UserValidation.StudentZodSchema),
   UserController.createStudent
 );
+
+router.get("/profile", auth(UserRole.STUDENT, UserRole.INSTRUCTOR), UserController.getProfile);
 
 export const userRoutes = router;

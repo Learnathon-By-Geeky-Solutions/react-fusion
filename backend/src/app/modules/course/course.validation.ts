@@ -45,6 +45,7 @@ const getCourseValidataion = z.object({
             instructorId: z.string().optional(),
             title: z.string().optional(),
             category: z.string().optional(),
+            enrolled: z.boolean().optional(),
         }).optional(),
         sortBy: z.object({
             price: z.enum(['asc', 'desc']).optional(),
