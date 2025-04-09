@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import getAllCourses from '@/src/services/course';
+import { getAllCourses } from '@/src/services/course';
 import { noimage } from '../../assets';
 
 export default function Courses() {

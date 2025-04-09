@@ -13,7 +13,6 @@ export default function Dashboard() {
   const fetchInitiated = useRef(false);
 
   useEffect(() => {
-    // This prevents infinite API calls by ensuring we only fetch once
     if (fetchInitiated.current) return;
 
     async function fetchCourses() {
