@@ -21,7 +21,6 @@ export default function CourseDetails() {
         const response = await fetchData(getSingleCourse, payload);
 
         if (response.success) {
-          console.log('Course data:', response);
           setCourse(response.data);
         }
       } catch (error) {
@@ -38,9 +37,7 @@ export default function CourseDetails() {
     setPurchasing(true);
 
     try {
-      // Generate random transaction ID
       const txnId = nanoid(16);
-      // Get token from localStorage or wherever you store it
       const token = localStorage.getItem('token');
 
       if (!token) {
@@ -51,14 +48,11 @@ export default function CourseDetails() {
       }
 
       const purchaseData = {
-        token,
-        data: {
-          courseId: id,
-          txnId
-        }
+        courseId: id,
+        txnId
       };
 
-      const response = await buyCourse(purchaseData);
+      const response = await fetchData(buyCourse, purchaseData);
 
       if (response.success) {
         navigate(`/enrolled/${id}`);
@@ -175,4 +169,3 @@ export default function CourseDetails() {
     </div>
   );
 }
- 

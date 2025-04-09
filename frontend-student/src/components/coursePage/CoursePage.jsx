@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import getSingleCourse from '@/src/services/singleCourse';
+import { enrollCheck } from '@/src/services/enrolled';
 import VideoSection from './VideoSection';
 import NotesSection from './NotesSection';
 import CommentsSection from './CommentsSection';
@@ -9,21 +10,50 @@ import useApi from '@/src/hooks/useApi';
 
 export default function CoursePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [openMilestones, setOpenMilestones] = useState({});
   const [openModules, setOpenModules] = useState({});
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [enrollmentChecked, setEnrollmentChecked] = useState(false);
   const { fetchData } = useApi();
 
   useEffect(() => {
+    async function checkEnrollment() {
+      try {
+        const payload = { courseId: id };
+        const response = await fetchData(enrollCheck, payload);
+        setIsEnrolled(response.success && response.data.enrolled);
+        setEnrollmentChecked(true);
+
+        if (!response.success || !response.data.enrolled) {
+          alert('You need to enroll in this course first.');
+          navigate(`/courses/${id}`);
+        }
+      } catch (error) {
+        console.error('Error checking enrollment status:', error);
+        setEnrollmentChecked(true);
+        // Redirect on enrollment check error as well
+        alert('Unable to verify enrollment. Please try again.');
+        navigate(`/courses/${id}`);
+      }
+    }
+
+    checkEnrollment();
+  }, [id, navigate]);
+
+  useEffect(() => {
     async function fetchCourse() {
+      if (!enrollmentChecked || !isEnrolled) return;
+
       try {
         const payload = { id };
         const response = await fetchData(getSingleCourse, payload);
         if (response.success) {
           setCourse(response.data);
-          
+
           const firstMilestone = response.data.milestones?.[0];
           const firstModule = firstMilestone?.modules?.[0];
           const firstVideo = firstModule?.videos?.[0];
@@ -54,7 +84,7 @@ export default function CoursePage() {
     }
 
     fetchCourse();
-  }, [id]);
+  }, [id, isEnrolled, enrollmentChecked]);
 
   const toggleMilestone = (milestoneId) => {
     setOpenMilestones((prev) => ({
@@ -87,7 +117,9 @@ export default function CoursePage() {
     setSelectedVideo(videoWithNumbers);
   };
 
-  if (loading) return <p className='text-center text-lg'>Loading lecture...</p>;
+  if (!enrollmentChecked || loading)
+    return <p className='text-center text-lg'>Loading lecture...</p>;
+  if (!isEnrolled) return null; // This shouldn't render as we redirect in the useEffect
   if (!course)
     return <p className='text-center text-red-500'>Course not found.</p>;
 
