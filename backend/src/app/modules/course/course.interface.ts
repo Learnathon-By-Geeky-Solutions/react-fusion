@@ -50,29 +50,3 @@ export interface IMilestones {
         }[];
     }[];
 };
-
-
-export interface IIncludeTerms {
-    instructor: boolean;
-    milestones: {
-        include: {
-            modules: {
-                include: {
-                    quizes?: {
-                        select: {
-                            id: boolean,
-                        }
-                    }
-                    videos?: {
-                        where: { isDeleted: boolean },
-                        select: {
-                            id: boolean;
-                            moduleId: boolean;
-                            title: boolean;
-                        }
-                    };
-                };
-            } | boolean;
-        };
-    } | boolean;
-}

@@ -1,6 +1,6 @@
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import { ICreateCourse, IIncludeTerms, IMilestones } from "./course.interface";
+import { ICreateCourse, IMilestones } from "./course.interface";
 
 const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
     const courseData = {
