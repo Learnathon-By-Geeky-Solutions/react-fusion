@@ -12,6 +12,7 @@ import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
 import { trace } from 'console';
 import { truncate } from 'fs';
+import { JwtPayload } from '../../../interfaces/common';
 
 
 const createAdmin = async (payload: IAdmin, file: IUploadFile) => {
@@ -323,10 +324,31 @@ const verifyUser = async (token: string, otp: number) => {
   }
 
 }
+
+const getProfile = async (user: JwtPayload) => {
+  let result = null
+  if (user.role === UserRole.STUDENT) {
+    result = await prisma.student.findUnique({
+      where: {
+        userId: user.userId
+      }
+    })
+  }
+
+  if (user.role === UserRole.INSTRUCTOR) {
+    result = await prisma.instructor.findUnique({
+      where: {
+        userId: user.userId
+      }
+    })
+  }
+  return result
+}
 export const UserServices = {
   createAdmin,
   createInstructor,
   createStudent,
   getAllUser,
-  verifyUser
+  verifyUser,
+  getProfile
 };
