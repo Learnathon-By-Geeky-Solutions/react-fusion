@@ -176,13 +176,10 @@ export default function EnrolledCourses() {
               <h2 className='text-xl font-bold text-gray-900 mb-2'>
                 {course.title}
               </h2>
-              <div className='flex justify-between items-center mt-4'>
-                <p className='text-2xl font-bold text-blue-600'>
-                  ৳ {course.price}
-                </p>
-                <Link to={`/courses/${course.id}`}>
-                  <button className='px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center'>
-                    View Course
+              <div className='flex justify-center items-center w-full'>
+                <Link to={`/enrolled/${course.id}`}>
+                  <button className='mt-4 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center'>
+                    Continue Learning
                     <svg
                       className='ml-2 w-4 h-4'
                       fill='none'

@@ -115,7 +115,7 @@ export default function CoursePage() {
     return <p className='text-center text-red-500'>Course not found.</p>;
 
   return (
-    <div className='max-w-[1280px] mx-auto py-8 grid grid-cols-1 md:grid-cols-3 gap-12'>
+    <div className='max-w-6xl mx-auto py-8 grid grid-cols-1 md:grid-cols-3 gap-12 mt-16'>
       <div className='md:col-span-2'>
         {selectedVideo && (
           <>
