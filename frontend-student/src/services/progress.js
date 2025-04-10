@@ -69,6 +69,7 @@ export async function video(payload) {
     });
 
     const data = await result.json();
+    console.log('video progress', data);
     return data;
   } catch (error) {
     console.error('Error buying course:', error);
