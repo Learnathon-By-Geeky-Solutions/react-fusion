@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllCourses } from '@/src/services/course';
+import { getEnrolledCourses } from '@/src/services/course';
 import { noimage } from '../../assets';
+import useApi from '@/src/hooks/useApi';
 import { motion } from 'framer-motion';
 
-export default function Courses() {
+export default function EnrolledCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const { fetchData } = useApi();
 
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const data = await getAllCourses();
+        const data = await fetchData(getEnrolledCourses, {});
         setCourses(data.data);
       } catch (err) {
-        console.error('Error fetching courses:', err);
-        setError('Failed to load courses. Please try again later.');
+        console.error('Error fetching enrolled courses:', err);
+        setError('Failed to load enrolled courses. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -54,16 +55,9 @@ export default function Courses() {
     }
   };
 
-  const filteredCourses = courses
-    .filter((course) => {
-      if (filter === 'all') return true;
-      if (filter === 'rated' && course.rating !== null) return true;
-      if (filter === 'unrated' && course.rating === null) return true;
-      return false;
-    })
-    .filter((course) => {
-      return course.title.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+  const filteredCourses = courses.filter((course) => {
+    return course.title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const renderSkeleton = () => {
     return Array(6)
@@ -137,10 +131,10 @@ export default function Courses() {
             />
           </svg>
           <h3 className='mt-2 text-lg font-medium text-gray-900'>
-            No courses found
+            No enrolled courses found
           </h3>
           <p className='mt-1 text-sm text-gray-500'>
-            Try adjusting your search or filter to find what you're looking for.
+            Try adjusting your search or enroll in some courses to get started.
           </p>
         </div>
       );
@@ -182,13 +176,10 @@ export default function Courses() {
               <h2 className='text-xl font-bold text-gray-900 mb-2'>
                 {course.title}
               </h2>
-              <div className='flex justify-between items-center mt-4'>
-                <p className='text-2xl font-bold text-blue-600'>
-                  ৳ {course.price}
-                </p>
-                <Link to={`/courses/${course.id}`}>
-                  <button className='px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center'>
-                    View Details
+              <div className='flex justify-center items-center w-full'>
+                <Link to={`/enrolled/${course.id}`}>
+                  <button className='mt-4 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center'>
+                    Continue Learning
                     <svg
                       className='ml-2 w-4 h-4'
                       fill='none'
@@ -221,7 +212,7 @@ export default function Courses() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          Our Courses
+          My Enrolled Courses
         </motion.h1>
         <motion.p
           className='text-xl text-gray-600 mb-8'
@@ -229,19 +220,19 @@ export default function Courses() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          Explore our wide range of courses to boost your skills and career
+          Continue learning with your enrolled courses
         </motion.p>
 
         <motion.div
-          className='flex flex-col md:flex-row gap-4 mb-8'
+          className='mb-8'
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className='relative flex-grow'>
+          <div className='relative'>
             <input
               type='text'
-              placeholder='Search courses...'
+              placeholder='Search your enrolled courses...'
               className='w-full py-3 px-4 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -257,38 +248,6 @@ export default function Courses() {
             >
               <path d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'></path>
             </svg>
-          </div>
-          <div className='flex space-x-2'>
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-3 rounded-lg transition-colors ${
-                filter === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              All Courses
-            </button>
-            <button
-              onClick={() => setFilter('rated')}
-              className={`px-4 py-3 rounded-lg transition-colors ${
-                filter === 'rated'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Rated
-            </button>
-            <button
-              onClick={() => setFilter('unrated')}
-              className={`px-4 py-3 rounded-lg transition-colors ${
-                filter === 'unrated'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              New
-            </button>
           </div>
         </motion.div>
       </div>

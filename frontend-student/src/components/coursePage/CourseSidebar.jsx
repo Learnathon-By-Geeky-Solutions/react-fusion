@@ -12,7 +12,7 @@ export default function CourseSidebar({
   handleVideoSelect
 }) {
   return (
-    <div className='md:col-span-1 bg-gray-50 p-4 rounded-lg shadow-lg border border-gray-200'>
+    <div className='md:col-span-1 bg-gray-50 p-4 rounded-lg shadow-lg border border-gray-200 max-h-screen overflow-y-auto'>
       <h2 className='text-xl font-bold mb-4 text-gray-800 flex items-center'>
         <svg
           className='w-5 h-5 mr-2 text-blue-500'
@@ -48,7 +48,8 @@ CourseSidebar.propTypes = {
   course: PropTypes.shape({
     milestones: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+          .isRequired,
         title: PropTypes.string,
         modules: PropTypes.array // optional unless used directly here
       })

@@ -39,7 +39,8 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 			VideoProgress: true,
 			QuizProgress: true,
 			ModuleProgress: true,
-			MilestoneProgress: true
+			MilestoneProgress: true,
+			course : true
 		},
 
 	})

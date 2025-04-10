@@ -35,8 +35,6 @@ export default function AddCourse() {
         price: Number(values.price)
       };
 
-      console.log('Submitting course data:', courseData);
-
       const result = await fetchData(addCourse, courseData);
 
       if (result.success) {
@@ -269,15 +267,15 @@ export default function AddCourse() {
                                   <div className='mt-3'>
                                     <h4 className='font-medium'>Quiz</h4>
                                     <FieldArray
-                                      name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes`}
+                                      name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[0].questions`}
                                     >
                                       {({
                                         push: pushQuiz,
                                         remove: removeQuiz
                                       }) => (
                                         <div>
-                                          {module.quizes &&
-                                            module.quizes.map(
+                                          {module.quizes[0].questions &&
+                                            module.quizes[0].questions.map(
                                               (quiz, quizIndex) => (
                                                 <div
                                                   key={quizIndex}
@@ -300,13 +298,13 @@ export default function AddCourse() {
 
                                                   <Field
                                                     type='text'
-                                                    name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].question`}
+                                                    name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[0].questions[${quizIndex}].question`}
                                                     placeholder='Question'
                                                     className='w-full p-2 border mt-2 rounded-lg'
                                                   />
 
                                                   <FieldArray
-                                                    name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].options`}
+                                                    name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[0].questions[${quizIndex}].options`}
                                                   >
                                                     {({ replace }) => (
                                                       <>
@@ -318,8 +316,10 @@ export default function AddCourse() {
                                                             <Field
                                                               key={optionIndex}
                                                               type='text'
-                                                              name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].options[${optionIndex}]`}
-                                                              placeholder={`Option ${optionIndex + 1}`}
+                                                              name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[0].questions[${quizIndex}].options[${optionIndex}]`}
+                                                              placeholder={`Option ${
+                                                                optionIndex + 1
+                                                              }`}
                                                               className='w-full p-2 border mt-2 rounded-lg'
                                                             />
                                                           )
@@ -330,14 +330,14 @@ export default function AddCourse() {
 
                                                   <Field
                                                     type='text'
-                                                    name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].answer`}
+                                                    name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[0].questions[${quizIndex}].answer`}
                                                     placeholder='Correct Answer'
                                                     className='w-full p-2 border mt-2 rounded-lg'
                                                   />
 
                                                   <Field
                                                     type='number'
-                                                    name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[${quizIndex}].value`}
+                                                    name={`milestones[${milestoneIndex}].modules[${moduleIndex}].quizes[0].questions[${quizIndex}].points`}
                                                     placeholder='Points'
                                                     className='w-full p-2 border mt-2 rounded-lg'
                                                   />
@@ -351,7 +351,7 @@ export default function AddCourse() {
                                                 question: '',
                                                 options: ['', '', '', ''],
                                                 answer: '',
-                                                value: ''
+                                                points: ''
                                               })
                                             }
                                             className='mt-2 px-4 bg-red-500 text-white py-1 rounded-lg hover:bg-red-600 transition'
@@ -371,7 +371,7 @@ export default function AddCourse() {
                                   title: '',
                                   description: '',
                                   videos: [],
-                                  quizes: []
+                                  quizes: [{ questions: [] }]
                                 })
                               }
                               className='mt-3 px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition'
