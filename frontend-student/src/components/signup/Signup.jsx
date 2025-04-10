@@ -61,7 +61,7 @@ export default function Signup() {
   return (
     <div className='flex bg-gradient-to-br from-blue-50 to-white mt-18 max-w-6xl mx-auto'>
       {/* Left section with illustration/info */}
-      <div className='hidden lg:flex lg:w-1/2 bg-blue-600 text-white p-12 flex-col justify-center py-8'>
+      <div className='hidden lg:flex lg:w-1/2 bg-gradient-to-r from-blue-500 to-blue-800 text-white p-12 flex-col justify-center py-8'>
         <div>
           <h1 className='text-4xl font-bold mb-6'>Welcome to EduNexus</h1>
           <p className='text-xl opacity-90 mb-8'>

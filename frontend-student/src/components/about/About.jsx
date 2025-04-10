@@ -1,5 +1,5 @@
 import React from 'react';
-import { saim, naim } from '@/src/assets/index';
+import { saim, naim, aboutBanner } from '@/src/assets/index';
 import { motion } from 'framer-motion';
 
 const AboutUs = () => {
@@ -82,20 +82,20 @@ const AboutUs = () => {
                 Our Story
               </h2>
               <div className='h-1 w-24 bg-blue-600 mb-8'></div>
-              <p className='text-lg text-gray-700 mb-6'>
+              <p className='text-lg text-gray-700 mb-6 text-justify'>
                 EduNexus began with a simple yet powerful insight: education
                 should evolve with technology, not struggle to catch up with it.
                 Founded in 2023, our platform emerged from countless
                 conversations with students, educators, and institutions who all
                 faced similar challenges in the digital learning landscape.
               </p>
-              <p className='text-lg text-gray-700 mb-6'>
+              <p className='text-lg text-gray-700 mb-6 text-justify'>
                 We observed how traditional educational methods were failing to
                 engage modern learners, while advanced technologies were often
                 implemented without pedagogical foundations. The disconnect was
                 clear—and we set out to bridge it.
               </p>
-              <p className='text-lg text-gray-700'>
+              <p className='text-lg text-gray-700 text-justify'>
                 Today, EduNexus stands as a testament to what's possible when
                 technology and education are thoughtfully integrated. We've
                 created a platform that doesn't just digitize learning but
@@ -107,7 +107,7 @@ const AboutUs = () => {
               <div className='absolute -top-8 -left-8 w-64 h-64 bg-blue-100 rounded-full opacity-70'></div>
               <div className='relative z-10 rounded-2xl overflow-hidden shadow-xl'>
                 <img
-                  src='/api/placeholder/600/400'
+                  src={aboutBanner}
                   alt='Students learning on EduNexus'
                   className='w-full object-cover'
                 />
