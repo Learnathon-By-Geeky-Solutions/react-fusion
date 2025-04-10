@@ -16,6 +16,7 @@ import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
 import MyCourses from './components/myCourses/MyCourses';
 import Dashboard from './components/dashboard/Dashboard';
 import Profile from './components/profile/Profile';
+import AboutUs from './components/about/About';
 
 const routes = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const routes = createBrowserRouter([
       {
         path: '/courses',
         element: <Courses />
+      },
+      {
+        path: '/about',
+        element: <AboutUs />
       },
       {
         path: '/courses/:id',
@@ -80,7 +85,7 @@ const routes = createBrowserRouter([
             <Profile />
           </ProtectedRoute>
         )
-      },
+      }
     ]
   }
 ]);
