@@ -22,4 +22,16 @@ async function getAllCourses(params) {
   return data;
 }
 
+async function getCourseById(params) {
+  const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
+    headers: {
+      Authorization: params.instructor.token
+    }
+  });
+  const resJson = await result.json();
+  console.log('🚀 resJson  : ', resJson);
+  return resJson;
+}
+export { getCourseById };
+
 export default getAllCourses;
