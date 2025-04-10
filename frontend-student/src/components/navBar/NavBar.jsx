@@ -33,8 +33,16 @@ export default function Navbar() {
 
   const getLinkStyles = (path) => {
     const isActive = location.pathname === path;
-    return isActive
-      ? 'relative text-blue-600 font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-blue-600'
+    const isHomeNotScrolled = location.pathname === '/' && !isScrolled;
+
+    if (isActive) {
+      return isHomeNotScrolled
+        ? 'relative text-white font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-white'
+        : 'relative text-blue-600 font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-blue-600';
+    }
+
+    return isHomeNotScrolled
+      ? 'text-white hover:text-blue-100 transition'
       : 'text-gray-700 hover:text-blue-600 transition';
   };
 
@@ -140,7 +148,11 @@ export default function Navbar() {
                 <div className='flex items-center space-x-3'>
                   <Link
                     to='/login'
-                    className='py-2 px-4 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition'
+                    className={`py-2 px-4 border rounded-lg transition ${
+                      location.pathname === '/' && !isScrolled
+                        ? 'text-white border-white hover:bg-white hover:text-blue-600'
+                        : 'text-blue-600 border-blue-600 hover:bg-blue-50'
+                    }`}
                   >
                     Login
                   </Link>
