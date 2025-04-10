@@ -19,7 +19,6 @@ async function getAllCourses(params) {
     body: JSON.stringify(items)
   });
   const data = await result.json();
-  console.log(data);
   return data;
 }
 
