@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import useAuth from '@/src/context/authContext';
 import { authService } from '@/src/services/auth';
 import { toast } from 'sonner';
+import { avatar } from '@/src/assets/index';
 
 export default function Login() {
   const { user, storeToken } = useAuth();
@@ -14,7 +15,7 @@ export default function Login() {
 
   useEffect(() => {
     if (user.authenticated) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [user, navigate]);
 
@@ -68,7 +69,7 @@ export default function Login() {
           <h1 className='text-4xl font-bold text-white mb-6'>
             Welcome back to EduNexus
           </h1>
-          <p className='text-blue-100 text-lg max-w-md'>
+          <p className='text-blue-100 text-lg'>
             Log in to access your personalized learning journey. Discover
             courses, track your progress, and connect with educators worldwide.
           </p>
@@ -93,7 +94,7 @@ export default function Login() {
               </svg>
             </div>
             <div>
-              <h3 className='text-white font-medium'>
+              <h3 className='text-white font-medium text-left'>
                 Secure Learning Environment
               </h3>
               <p className='text-blue-100 text-sm'>
@@ -120,7 +121,9 @@ export default function Login() {
               </svg>
             </div>
             <div>
-              <h3 className='text-white font-medium'>Personalized Learning</h3>
+              <h3 className='text-white font-medium text-left'>
+                Personalized Learning
+              </h3>
               <p className='text-blue-100 text-sm'>
                 Access your customized dashboard and course materials
               </p>
@@ -129,11 +132,31 @@ export default function Login() {
         </div>
 
         <div className='text-blue-100'>
-          <p className='mb-2 font-medium'>Trusted by learners worldwide</p>
+          <p className='mb-2 font-medium text-left'>
+            Trusted by learners worldwide
+          </p>
           <div className='flex space-x-4'>
-            <div className='w-12 h-12 bg-white rounded-full'></div>
-            <div className='w-12 h-12 bg-white rounded-full'></div>
-            <div className='w-12 h-12 bg-white rounded-full'></div>
+            <div className='w-12 h-12 bg-white rounded-full flex items-center justify-center'>
+              <img
+                src={avatar}
+                alt='Avatar'
+                className='w-full h-full object-cover rounded-full'
+              />
+            </div>
+            <div className='w-12 h-12 bg-white rounded-full flex items-center justify-center'>
+              <img
+                src={avatar}
+                alt='Avatar'
+                className='w-full h-full object-cover rounded-full'
+              />
+            </div>
+            <div className='w-12 h-12 bg-white rounded-full flex items-center justify-center'>
+              <img
+                src={avatar}
+                alt='Avatar'
+                className='w-full h-full object-cover rounded-full'
+              />
+            </div>
             <div className='w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold'>
               +2k
             </div>

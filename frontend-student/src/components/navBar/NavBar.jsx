@@ -25,14 +25,12 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle logout
   const handleLogOut = () => {
     logOutUser();
     setIsMobileMenuOpen(false);
     toast.success('User Logged Out');
   };
 
-  // Navigation link style helper
   const getLinkStyles = (path) => {
     const isActive = location.pathname === path;
     return isActive
@@ -40,7 +38,6 @@ export default function Navbar() {
       : 'text-gray-700 hover:text-blue-600 transition';
   };
 
-  // Mobile navigation button style helper
   const getMobileLinkStyles = (path) => {
     const isActive = location.pathname === path;
     return `w-full px-4 py-3 text-left rounded-lg transition ${
@@ -85,9 +82,6 @@ export default function Navbar() {
                   </Link>
                   <Link to='/courses' className={getLinkStyles('/courses')}>
                     Browse Courses
-                  </Link>
-                  <Link to='/profile' className={getLinkStyles('/profile')}>
-                    Profile
                   </Link>
                 </>
               ) : (

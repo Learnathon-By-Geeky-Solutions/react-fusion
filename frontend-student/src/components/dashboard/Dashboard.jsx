@@ -174,12 +174,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className='dashboard p-6 bg-gray-50 min-h-screen'>
-      <div className='max-w-7xl mx-auto'>
-        <h1 className='text-3xl font-bold text-gray-800 mb-6'>
-          Learning Dashboard
-        </h1>
-
+    <div className='dashboard p-6 bg-gray-50 min-h-screen pt-20'>
+      <div className='max-w-6xl mx-auto'>
         {/* Overall Progress */}
         <div className='bg-white rounded-xl shadow-md p-6 mb-6'>
           <div className='flex items-center justify-between mb-4'>

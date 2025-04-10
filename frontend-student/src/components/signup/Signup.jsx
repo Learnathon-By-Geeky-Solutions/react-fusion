@@ -59,9 +59,9 @@ export default function Signup() {
   const errorClasses = 'text-red-500 text-sm mt-1';
 
   return (
-    <div className='flex min-h-screen bg-gradient-to-br from-blue-50 to-white'>
+    <div className='flex bg-gradient-to-br from-blue-50 to-white mt-18 max-w-6xl mx-auto'>
       {/* Left section with illustration/info */}
-      <div className='hidden lg:flex lg:w-1/2 bg-blue-600 text-white p-12 flex-col justify-between py-18'>
+      <div className='hidden lg:flex lg:w-1/2 bg-blue-600 text-white p-12 flex-col justify-center py-8'>
         <div>
           <h1 className='text-4xl font-bold mb-6'>Welcome to EduNexus</h1>
           <p className='text-xl opacity-90 mb-8'>
@@ -87,7 +87,9 @@ export default function Signup() {
                 </svg>
               </div>
               <div>
-                <h3 className='font-semibold text-lg'>Personalized Learning</h3>
+                <h3 className='font-semibold text-lg text-left'>
+                  Personalized Learning
+                </h3>
                 <p className='opacity-80'>
                   Adaptive courses tailored to your unique learning style
                 </p>
@@ -112,7 +114,9 @@ export default function Signup() {
                 </svg>
               </div>
               <div>
-                <h3 className='font-semibold text-lg'>Expert-Led Curriculum</h3>
+                <h3 className='font-semibold text-lg text-left'>
+                  Expert-Led Curriculum
+                </h3>
                 <p className='opacity-80'>
                   Learn from industry professionals and academic experts
                 </p>
@@ -137,7 +141,9 @@ export default function Signup() {
                 </svg>
               </div>
               <div>
-                <h3 className='font-semibold text-lg'>Vibrant Community</h3>
+                <h3 className='font-semibold text-lg text-left'>
+                  Vibrant Community
+                </h3>
                 <p className='opacity-80'>
                   Connect with peers and mentors in your field
                 </p>
@@ -146,7 +152,7 @@ export default function Signup() {
           </div>
         </div>
 
-        <div className='pt-8 border-t border-white border-opacity-20'>
+        <div className='pt-8 border-t border-white border-opacity-20 mt-8'>
           <p className='opacity-80'>
             "Education is the most powerful weapon which you can use to change
             the world."
@@ -156,7 +162,7 @@ export default function Signup() {
       </div>
 
       {/* Right section with form */}
-      <div className='w-full lg:w-1/2 flex items-center justify-center p-6 py-18'>
+      <div className='w-full lg:w-1/2 flex items-center justify-center p-6 py-8'>
         <div className='w-full max-w-md p-8 bg-white shadow-xl rounded-2xl'>
           <div className='text-center mb-8'>
             <h1 className='text-3xl font-bold text-gray-800'>Create Account</h1>
