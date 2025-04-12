@@ -279,7 +279,10 @@ function Profile() {
             <div className='space-y-6'>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div className='space-y-2'>
-                  <label className='block text-sm font-medium text-gray-500'>
+                  <label
+                    htmlFor='fullName'
+                    className='block text-sm font-medium text-gray-500'
+                  >
                     Full Name
                   </label>
                   <div className='bg-gray-50 p-3 rounded-lg border border-gray-200 text-gray-800'>
@@ -288,7 +291,10 @@ function Profile() {
                 </div>
 
                 <div className='space-y-2'>
-                  <label className='block text-sm font-medium text-gray-500'>
+                  <label
+                    htmlFor='email'
+                    className='block text-sm font-medium text-gray-500'
+                  >
                     Email Address
                   </label>
                   <div className='bg-gray-50 p-3 rounded-lg border border-gray-200 text-gray-800'>
@@ -299,7 +305,10 @@ function Profile() {
 
               <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div className='space-y-2'>
-                  <label className='block text-sm font-medium text-gray-500'>
+                  <label
+                    htmlFor='gender'
+                    className='block text-sm font-medium text-gray-500'
+                  >
                     Gender
                   </label>
                   <div className='bg-gray-50 p-3 rounded-lg border border-gray-200 text-gray-800 flex items-center justify-center'>
@@ -312,7 +321,10 @@ function Profile() {
                 </div>
 
                 <div className='space-y-2'>
-                  <label className='block text-sm font-medium text-gray-500'>
+                  <label
+                    htmlFor='contactNumber'
+                    className='block text-sm font-medium text-gray-500'
+                  >
                     Contact Number
                   </label>
                   <div className='bg-gray-50 p-3 rounded-lg border border-gray-200 text-gray-800'>
@@ -343,7 +355,10 @@ function Profile() {
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
               <div className='space-y-2'>
-                <label className='block text-sm font-medium text-gray-500'>
+                <label
+                  htmlFor='currentInstitution'
+                  className='block text-sm font-medium text-gray-500'
+                >
                   Current Institution
                 </label>
                 <div className='bg-gray-50 p-3 rounded-lg border border-gray-200 text-gray-800'>
@@ -352,7 +367,10 @@ function Profile() {
               </div>
 
               <div className='space-y-2'>
-                <label className='block text-sm font-medium text-gray-500'>
+                <label
+                  htmlFor='qualification'
+                  className='block text-sm font-medium text-gray-500'
+                >
                   Qualification
                 </label>
                 <div className='bg-gray-50 p-3 rounded-lg border border-gray-200 text-gray-800'>
@@ -387,7 +405,10 @@ function Profile() {
             </h3>
 
             <div className='space-y-2'>
-              <label className='block text-sm font-medium text-gray-500'>
+              <label
+                htmlFor='address'
+                className='block text-sm font-medium text-gray-500'
+              >
                 Full Address
               </label>
               <div className='bg-gray-50 p-3 rounded-lg border border-gray-200 text-gray-800'>
