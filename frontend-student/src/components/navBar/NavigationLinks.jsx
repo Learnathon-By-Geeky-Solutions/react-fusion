@@ -1,4 +1,3 @@
-import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import NavLink from './NavLink';
 import useAuth from '@/src/context/authContext';
@@ -8,7 +7,6 @@ export default function NavigationLinks({
   closeMobileMenu,
   isScrolled
 }) {
-  const location = useLocation();
   const { user } = useAuth();
   const isAuthenticated = user.authenticated;
 

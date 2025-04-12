@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 export default function NavLink({ to, label, isMobile, onClick }) {
   const location = useLocation();
   const isActive = location.pathname === to;
-  const isHome = location.pathname === '/';
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -40,12 +39,10 @@ export default function NavLink({ to, label, isMobile, onClick }) {
       style =
         'relative text-blue-600 font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-blue-600';
     }
+  } else if (!isActive && isHomeNotScrolled) {
+    style = 'text-white hover:text-blue-100 transition';
   } else {
-    if (isHomeNotScrolled) {
-      style = 'text-white hover:text-blue-100 transition';
-    } else {
-      style = 'text-gray-700 hover:text-blue-600 transition';
-    }
+    style = 'text-gray-700 hover:text-blue-600 transition';
   }
 
   return (
