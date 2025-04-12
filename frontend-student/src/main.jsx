@@ -17,6 +17,8 @@ import MyCourses from './components/myCourses/MyCourses';
 import Dashboard from './components/dashboard/Dashboard';
 import Profile from './components/profile/Profile';
 import AboutUs from './components/about/About';
+import ContactUs from './components/contact/Contact';
+import { Contact } from 'lucide-react';
 
 const routes = createBrowserRouter([
   {
@@ -49,6 +51,10 @@ const routes = createBrowserRouter([
       {
         path: '/about',
         element: <AboutUs />
+      },
+      {
+        path: '/contact',
+        element: <ContactUs />
       },
       {
         path: '/courses/:id',
