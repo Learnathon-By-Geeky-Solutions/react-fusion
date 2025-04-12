@@ -14,7 +14,7 @@ export async function milestone(payload) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error buying course:', error);
+    console.error('Error fetching milestone data:', error);
     return { success: false };
   }
 }
@@ -33,7 +33,7 @@ export async function module(payload) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error buying course:', error);
+    console.error('Error fetching module data:', error);
     return { success: false };
   }
 }
@@ -52,7 +52,7 @@ export async function quiz(payload) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error buying course:', error);
+    console.error('Error fetching quiz data:', error);
     return { success: false };
   }
 }
@@ -72,7 +72,7 @@ export async function video(payload) {
     console.log('video progress', data);
     return data;
   } catch (error) {
-    console.error('Error buying course:', error);
+    console.error('Error fetching video data:', error);
     return { success: false };
   }
 }
