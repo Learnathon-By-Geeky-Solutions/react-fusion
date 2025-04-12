@@ -386,7 +386,7 @@ export default function CourseDetails() {
                   variants={fadeIn}
                   className='border border-gray-200 rounded-lg overflow-hidden shadow-sm'
                 >
-                  <div
+                  <button
                     className={`p-4 flex justify-between items-center cursor-pointer transition-colors ${
                       activeAccordion === milestone.id
                         ? 'bg-blue-600 text-white'
@@ -415,7 +415,7 @@ export default function CourseDetails() {
                         d='M19 9l-7 7-7-7'
                       />
                     </svg>
-                  </div>
+                  </button>
 
                   {activeAccordion === milestone.id && (
                     <div className='bg-gray-50 p-4 space-y-3'>
@@ -424,7 +424,7 @@ export default function CourseDetails() {
                           key={module.id}
                           className='border border-gray-200 rounded-lg overflow-hidden'
                         >
-                          <div
+                          <button
                             className={`p-3 flex justify-between items-center cursor-pointer ${
                               activeModule === module.id
                                 ? 'bg-blue-100 text-blue-900'
@@ -456,7 +456,7 @@ export default function CourseDetails() {
                                 />
                               </svg>
                             </div>
-                          </div>
+                          </button>
 
                           {activeModule === module.id && (
                             <div className='bg-gray-50 pl-12 pr-4 py-3 space-y-2'>
