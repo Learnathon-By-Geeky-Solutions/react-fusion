@@ -13,6 +13,11 @@ import Footer from './components/footer/Footer';
 import Signup from './components/signup/SignUp';
 import CoursePage from './components/coursePage/CoursePage';
 import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
+import MyCourses from './components/myCourses/MyCourses';
+import Dashboard from './components/dashboard/Dashboard';
+import Profile from './components/profile/Profile';
+import AboutUs from './components/about/About';
+import ContactUs from './components/contact/Contact';
 
 const routes = createBrowserRouter([
   {
@@ -43,6 +48,14 @@ const routes = createBrowserRouter([
         element: <Courses />
       },
       {
+        path: '/about',
+        element: <AboutUs />
+      },
+      {
+        path: '/contact',
+        element: <ContactUs />
+      },
+      {
         path: '/courses/:id',
         element: <CourseDetails />
       },
@@ -51,6 +64,30 @@ const routes = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CoursePage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: '/my-courses',
+        element: (
+          <ProtectedRoute>
+            <MyCourses />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: '/dashboard',
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: '/profile',
+        element: (
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         )
       }

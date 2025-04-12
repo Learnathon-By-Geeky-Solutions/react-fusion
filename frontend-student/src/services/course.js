@@ -1,13 +1,13 @@
 import { BACKEND } from '../constants';
 
-async function getAllCourses(token) {
+async function getAllCourses(payload) {
   const items = {
     items: {
       instructors: true,
       milestones: true,
       modules: true,
       quizes: true,
-      videos: true
+      videos: true,
     }
   };
 
@@ -19,8 +19,33 @@ async function getAllCourses(token) {
     body: JSON.stringify(items)
   });
   const data = await result.json();
-  console.log(data);
   return data;
 }
 
-export default getAllCourses;
+async function getEnrolledCourses(payload) {
+  const items = {
+    items: {
+      instructors: true,
+      milestones: true,
+      modules: true,
+      quizes: true,
+      videos: true,
+    },
+    filters:{
+        enrolled:true
+    },
+  };
+
+  const result = await fetch(`${BACKEND}/course/get-courses`, {
+    method: 'POST',
+    headers: {
+      Authorization: payload.user.token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(items)
+  });
+  const data = await result.json();
+  return data;
+}
+
+export {getAllCourses, getEnrolledCourses};

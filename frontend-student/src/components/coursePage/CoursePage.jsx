@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import getSingleCourse from '@/src/services/singleCourse';
 import VideoSection from './VideoSection';
 import NotesSection from './NotesSection';
 import CommentsSection from './CommentsSection';
 import CourseSidebar from './CourseSidebar';
+import { enrollCheck } from '@/src/services/enrolled';
 import useApi from '@/src/hooks/useApi';
 
 export default function CoursePage() {
@@ -14,16 +15,39 @@ export default function CoursePage() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [openMilestones, setOpenMilestones] = useState({});
   const [openModules, setOpenModules] = useState({});
+  const [enrollment, setEnrollment] = useState(false);
+  const navigate = useNavigate(); // inside your component
   const { fetchData } = useApi();
+  let hasRun = false;
 
   useEffect(() => {
     async function fetchCourse() {
+      if (hasRun) return;
+      hasRun = true;
+
       try {
+        const enrollmentPayload = { courseId: id };
+        const enrollmentResponse = await fetchData(
+          enrollCheck,
+          enrollmentPayload
+        );
+        if (!enrollmentResponse.data.isEnrolled) {
+          setEnrollment(false);
+          console.log('Naim boleche');
+          alert(
+            'You are not enrolled in this course. Please enroll to access the content.'
+          );
+          navigate(`/courses/${id}`);
+          return;
+        } else {
+          setEnrollment(true);
+        }
+
         const payload = { id };
         const response = await fetchData(getSingleCourse, payload);
         if (response.success) {
           setCourse(response.data);
-          
+
           const firstMilestone = response.data.milestones?.[0];
           const firstModule = firstMilestone?.modules?.[0];
           const firstVideo = firstModule?.videos?.[0];
@@ -52,9 +76,8 @@ export default function CoursePage() {
         setLoading(false);
       }
     }
-
     fetchCourse();
-  }, [id]);
+  }, []);
 
   const toggleMilestone = (milestoneId) => {
     setOpenMilestones((prev) => ({
@@ -92,7 +115,7 @@ export default function CoursePage() {
     return <p className='text-center text-red-500'>Course not found.</p>;
 
   return (
-    <div className='max-w-[1280px] mx-auto py-8 grid grid-cols-1 md:grid-cols-3 gap-12'>
+    <div className='max-w-6xl mx-auto py-8 grid grid-cols-1 md:grid-cols-3 gap-12 mt-16'>
       <div className='md:col-span-2'>
         {selectedVideo && (
           <>
