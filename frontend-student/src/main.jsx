@@ -18,7 +18,6 @@ import Dashboard from './components/dashboard/Dashboard';
 import Profile from './components/profile/Profile';
 import AboutUs from './components/about/About';
 import ContactUs from './components/contact/Contact';
-import { Contact } from 'lucide-react';
 
 const routes = createBrowserRouter([
   {

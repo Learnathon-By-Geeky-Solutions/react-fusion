@@ -5,6 +5,10 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useApi from '@/src/hooks/useApi';
 import { profile } from '@/src/services/profile';
+import NavigationLinks from './NavigationLinks';
+import UserProfile from './UserProfile';
+import AuthButtons from './AuthButtons';
+import Logo from './Logo';
 
 export default function Navbar() {
   const { user, logOutUser } = useAuth();
@@ -15,17 +19,15 @@ export default function Navbar() {
   const [profileData, setProfileData] = useState(null);
   const { fetchData } = useApi();
 
-  // Handle scroll event to change navbar appearance
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 5);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch profile data when authenticated - only once
   useEffect(() => {
     let isMounted = true;
 
@@ -47,7 +49,7 @@ export default function Navbar() {
     return () => {
       isMounted = false;
     };
-  }, [isAuthenticated, profileData]);
+  }, [isAuthenticated, profileData, fetchData]);
 
   const handleLogOut = () => {
     logOutUser();
@@ -55,262 +57,6 @@ export default function Navbar() {
     setProfileData(null); // Clear profile data on logout
     toast.success('User Logged Out');
   };
-
-  // Extracted component for navigation links
-  const NavigationLinks = ({ isMobile = false, closeMobileMenu }) => {
-    const renderLinks = () => {
-      if (isAuthenticated) {
-        return (
-          <>
-            <NavLink
-              to='/dashboard'
-              label='Dashboard'
-              isMobile={isMobile}
-              onClick={closeMobileMenu}
-            />
-            <NavLink
-              to='/my-courses'
-              label='My Courses'
-              isMobile={isMobile}
-              onClick={closeMobileMenu}
-            />
-            <NavLink
-              to='/courses'
-              label='Browse Courses'
-              isMobile={isMobile}
-              onClick={closeMobileMenu}
-            />
-            {isMobile && (
-              <>
-                <NavLink
-                  to='/profile'
-                  label='Profile'
-                  isMobile={isMobile}
-                  onClick={closeMobileMenu}
-                />
-                <NavLink
-                  to='/settings'
-                  label='Settings'
-                  isMobile={isMobile}
-                  onClick={closeMobileMenu}
-                />
-              </>
-            )}
-          </>
-        );
-      }
-
-      return (
-        <>
-          <NavLink
-            to='/'
-            label='Home'
-            isMobile={isMobile}
-            onClick={closeMobileMenu}
-          />
-          <NavLink
-            to='/courses'
-            label='Courses'
-            isMobile={isMobile}
-            onClick={closeMobileMenu}
-          />
-          <NavLink
-            to='/about'
-            label='About'
-            isMobile={isMobile}
-            onClick={closeMobileMenu}
-          />
-          <NavLink
-            to='/contact'
-            label='Contact Us'
-            isMobile={isMobile}
-            onClick={closeMobileMenu}
-          />
-        </>
-      );
-    };
-
-    return isMobile ? (
-      <nav className='flex flex-col space-y-1'>{renderLinks()}</nav>
-    ) : (
-      <nav className='hidden md:flex items-center space-x-8'>
-        {renderLinks()}
-      </nav>
-    );
-  };
-
-  // Extracted navigation link styling logic
-  const NavLink = ({ to, label, isMobile, onClick }) => {
-    const location = useLocation();
-
-    if (isMobile) {
-      const isActive = location.pathname === to;
-      const mobileStyle = `w-full px-4 py-3 text-left rounded-lg transition ${
-        isActive ? 'bg-blue-50 text-blue-600 font-medium' : 'hover:bg-gray-50'
-      }`;
-
-      return (
-        <Link to={to} className={mobileStyle} onClick={onClick}>
-          {label}
-        </Link>
-      );
-    }
-
-    const isActive = location.pathname === to;
-    const isHomeNotScrolled = location.pathname === '/' && !isScrolled;
-
-    const style = isActive
-      ? isHomeNotScrolled
-        ? 'relative text-white font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-white'
-        : 'relative text-blue-600 font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-blue-600'
-      : isHomeNotScrolled
-        ? 'text-white hover:text-blue-100 transition'
-        : 'text-gray-700 hover:text-blue-600 transition';
-
-    return (
-      <Link to={to} className={style}>
-        {label}
-      </Link>
-    );
-  };
-
-  // User profile display component
-  const UserProfile = ({ isMobile = false }) => {
-    const displayName = profileData?.name || user.name || 'User';
-    const email = profileData?.email || user.email || 'user@example.com';
-    const initial = displayName.charAt(0).toUpperCase();
-    const profileImage = profileData?.image;
-
-    if (isMobile) {
-      return (
-        <div className='mb-6 flex items-center p-3 bg-gray-50 rounded-lg'>
-          {profileImage ? (
-            <img
-              src={profileImage}
-              alt={displayName}
-              className='w-10 h-10 rounded-full object-cover mr-3'
-            />
-          ) : (
-            <div className='w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center mr-3'>
-              {initial}
-            </div>
-          )}
-          <div>
-            <div className='font-medium'>{displayName}</div>
-            <div className='text-sm text-gray-500'>{email}</div>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className='relative group'>
-        <button className='flex items-center space-x-2 bg-gray-100 rounded-full pl-2 pr-4 py-1 hover:bg-gray-200 transition'>
-          {profileImage ? (
-            <img
-              src={profileImage}
-              alt={displayName}
-              className='w-8 h-8 rounded-full object-cover'
-            />
-          ) : (
-            <div className='w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center'>
-              {initial}
-            </div>
-          )}
-          <span className='text-gray-700'>{displayName}</span>
-        </button>
-        <div className='absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 z-10'>
-          <Link
-            to='/profile'
-            className='block px-4 py-2 text-gray-700 hover:bg-gray-100'
-          >
-            My Profile
-          </Link>
-          <Link
-            to='/settings'
-            className='block px-4 py-2 text-gray-700 hover:bg-gray-100'
-          >
-            Settings
-          </Link>
-          <hr className='my-1' />
-          <button
-            onClick={handleLogOut}
-            className='w-full text-left px-4 py-2 text-red-600 hover:bg-red-50'
-          >
-            Log Out
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  // Authentication buttons component
-  const AuthButtons = ({ isMobile = false }) => {
-    if (isAuthenticated) {
-      return isMobile ? (
-        <button
-          onClick={handleLogOut}
-          className='w-full py-3 text-center bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition'
-        >
-          Log Out
-        </button>
-      ) : (
-        <div className='flex items-center space-x-4'>
-          <UserProfile />
-        </div>
-      );
-    }
-
-    const desktopLinkClass = `py-2 px-4 border rounded-lg transition ${
-      location.pathname === '/' && !isScrolled
-        ? 'text-white border-white hover:bg-white hover:text-blue-600'
-        : 'text-blue-600 border-blue-600 hover:bg-blue-50'
-    }`;
-
-    return isMobile ? (
-      <div className='flex flex-col space-y-2'>
-        <Link
-          to='/login'
-          className='w-full py-3 text-center border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition'
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          Login
-        </Link>
-        <Link
-          to='/signup'
-          className='w-full py-3 text-center bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          Sign Up
-        </Link>
-      </div>
-    ) : (
-      <div className='flex items-center space-x-3'>
-        <Link to='/login' className={desktopLinkClass}>
-          Login
-        </Link>
-        <Link
-          to='/signup'
-          className='py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'
-        >
-          Sign Up
-        </Link>
-      </div>
-    );
-  };
-
-  const Logo = () => (
-    <Link to='/' className='flex items-center space-x-2'>
-      <div className='w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xl font-bold'>
-        E
-      </div>
-      <span
-        className={`text-xl font-bold ${isScrolled || location.pathname !== '/' ? 'text-blue-600' : 'text-white'}`}
-      >
-        EduNexus
-      </span>
-    </Link>
-  );
 
   return (
     <>
@@ -321,12 +67,21 @@ export default function Navbar() {
       >
         <div className='container mx-auto px-4 max-w-6xl'>
           <div className='flex items-center justify-between'>
-            <Logo />
-            <NavigationLinks />
+            <Logo isScrolled={isScrolled} location={location} />
+            <NavigationLinks
+              closeMobileMenu={() => setIsMobileMenuOpen(false)}
+            />
 
             {/* Action Buttons */}
             <div className='hidden md:flex items-center space-x-4'>
-              <AuthButtons />
+              <AuthButtons
+                isAuthenticated={isAuthenticated}
+                handleLogOut={handleLogOut}
+                setIsMobileMenuOpen={setIsMobileMenuOpen}
+                isScrolled={isScrolled}
+                profileData={profileData}
+                user={user}
+              />
             </div>
 
             {/* Mobile menu button */}
@@ -411,7 +166,14 @@ export default function Navbar() {
                   </button>
                 </div>
 
-                {isAuthenticated && <UserProfile isMobile />}
+                {isAuthenticated && (
+                  <UserProfile
+                    isMobile
+                    profileData={profileData}
+                    user={user}
+                    handleLogOut={handleLogOut}
+                  />
+                )}
 
                 <NavigationLinks
                   isMobile
@@ -419,7 +181,15 @@ export default function Navbar() {
                 />
 
                 <div className='mt-auto'>
-                  <AuthButtons isMobile />
+                  <AuthButtons
+                    isMobile
+                    isAuthenticated={isAuthenticated}
+                    handleLogOut={handleLogOut}
+                    setIsMobileMenuOpen={setIsMobileMenuOpen}
+                    isScrolled={isScrolled}
+                    profileData={profileData}
+                    user={user}
+                  />
                 </div>
               </div>
             </motion.div>
