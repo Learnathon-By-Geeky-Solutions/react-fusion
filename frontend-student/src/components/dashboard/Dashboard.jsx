@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import useApi from '@/src/hooks/useApi';
 import { getDashboard, getSingleCourse } from '@/src/services/dashboard';
+import { profile } from '@/src/services/profile';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { BookOpen, Clock, CheckCircle, Award, Activity } from 'lucide-react';
 
@@ -9,6 +10,9 @@ export default function Dashboard() {
   const [analytics, setAnalytics] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [overallProgress, setOverallProgress] = useState(0);
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { fetchData } = useApi();
   const fetchInitiated = useRef(false);
 
@@ -20,11 +24,12 @@ export default function Dashboard() {
         setIsLoading(true);
         fetchInitiated.current = true;
         const response = await fetchData(getDashboard, {});
+        // console.log('getDashboard ', response);
 
         if (response.success) {
           const enrolledCourses = response?.data?.enrolledCourses || [];
           setCourses(enrolledCourses);
-
+          console.log('Course ', enrolledCourses);
           // Fetch individual course analytics
           const analyticsPromises = enrolledCourses.map(async (course) => {
             try {
@@ -32,10 +37,13 @@ export default function Dashboard() {
                 getSingleCourse,
                 course.courseId
               );
+              console.log('Single course analytics', singleCourseRes);
               if (singleCourseRes.success) {
                 return {
                   courseId: course.courseId,
-                  courseTitle: course.title || 'Untitled Course',
+                  courseTitle:
+                    singleCourseRes.data.courseProgress.course.title ||
+                    'Untitled Course',
                   ...singleCourseRes.data
                 };
               }
@@ -70,14 +78,24 @@ export default function Dashboard() {
         setIsLoading(false);
       }
     }
+    async function fetchProfile() {
+      try {
+        const data = await fetchData(profile, {});
+        setProfileData(data.data);
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+        setError('Failed to load profile information. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
 
+    fetchProfile();
     fetchCourses();
-
-    // Optional cleanup function that runs when the component unmounts
     return () => {
       fetchInitiated.current = false;
     };
-  }, []); // Remove fetchData from dependencies
+  }, []);
 
   // Calculate summary statistics across all courses
   const totalStats = analytics.reduce(
@@ -176,6 +194,11 @@ export default function Dashboard() {
   return (
     <div className='dashboard p-6 bg-gray-50 min-h-screen pt-20'>
       <div className='max-w-6xl mx-auto'>
+        <div>
+          <h2 className='text-2xl font-bold text-gray-900 mt-2 mb-4'>
+            Welcome Back, {profileData.name}
+          </h2>
+        </div>
         {/* Overall Progress */}
         <div className='bg-white rounded-xl shadow-md p-6 mb-6'>
           <div className='flex items-center justify-between mb-4'>
@@ -446,7 +469,7 @@ export default function Dashboard() {
                       <h4 className='font-medium text-gray-800'>
                         {course.courseTitle}
                       </h4>
-                      <p className='text-sm text-gray-500 mt-1'>
+                      <p className='text-sm text-gray-500 mt-1 text-left'>
                         {course.summary?.completedModules || 0} of{' '}
                         {course.summary?.totalModules || 0} modules completed
                       </p>
