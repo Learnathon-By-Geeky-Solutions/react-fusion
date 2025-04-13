@@ -6,31 +6,9 @@ const createCourseValidation = z.object({
         description: z.string(),
         price: z.number(),
         thumbnail: z.string(),
-        milestones: z.array(z.object({
-            title: z.string(),
-            description: z.string(),
-            modules: z.array(z.object({
-                title: z.string(),
-                description: z.string(),
-                videos: z.array(z.object({
-                    title: z.string(),
-                    url: z.string(),
-                    length: z.number()
-                })),
-                quizes: z.array(z.object({
-                    questions: z.array(z.object({
-                        question: z.string(),
-                        options: z.array(z.string()),
-                        answer: z.string(),
-                        points: z.number()
-
-                    })),
-                }))
-
-            }))
-        }))
     })
 })
+
 
 const getCourseValidataion = z.object({
     body: z.object({
@@ -54,8 +32,61 @@ const getCourseValidataion = z.object({
     })
 })
 
+
+const createMilestoneValidation = z.object({
+    body: z.object({
+        courseId: z.string(),
+        milestone: z.object({
+            title: z.string(),
+            description: z.string(),
+        })
+    })
+})
+
+
+const createModuleValidation = z.object({
+    body: z.object({
+        milestoneId: z.string(),
+        module: z.object({
+            title: z.string(),
+            description: z.string(),
+        })
+    })
+})
+
+const createVideoValidation = z.object({
+    body: z.object({
+        moduleId: z.string(),
+        video: z.object({
+            title: z.string(),
+            url: z.string(),
+            length: z.number()
+        }),
+    })
+})
+
+
+const createQuizValidation = z.object({
+    body: z.object({
+        moduleId: z.string(),
+        quize: z.object({
+            questions: z.array(z.object({
+                question: z.string(),
+                options: z.array(z.string()),
+                answer: z.string(),
+                points: z.number()
+
+            }))
+        })
+    })
+})
+
+
 export const courseZodSchema = {
     createCourseValidation,
-    getCourseValidataion
+    getCourseValidataion,
+    createMilestoneValidation,
+    createModuleValidation,
+    createVideoValidation,
+    createQuizValidation
 };
-
