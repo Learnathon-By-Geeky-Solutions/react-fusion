@@ -124,6 +124,8 @@ model Course {
   thumbnail      String
   instructorId   String
   instructor     Instructor       @relation(fields: [instructorId], references: [userId])
+  isPublished    Boolean          @default(false)
+  isDeleted      Boolean          @default(false)
   milestones     Milestone[]
   students       CourseStudent[]
   transactions   Transactions[]
@@ -179,9 +181,9 @@ model Video {
   isDeleted     Boolean         @default(false)
   comments      Comment[]
   notes         Note[]
-  likeCount     Int
+  likeCount     Int             @default(0)
   likes         LikeUser[]
-  dislikeCount  Int
+  dislikeCount  Int             @default(0)
   dislike       DislikeUser[]
   VideoProgress VideoProgress[]
 }
