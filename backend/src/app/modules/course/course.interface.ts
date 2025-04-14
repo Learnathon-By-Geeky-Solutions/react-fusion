@@ -7,14 +7,6 @@ export interface ICreateCourse {
 
 export type IUpdateCourse = Partial<ICreateCourse>
 
-export interface ICreateMilestone {
-    courseId: string;
-    milestone: {
-        title: string;
-        description: string;
-    };
-}
-
 export interface ICreateVideo {
     moduleId: string;
     video: {

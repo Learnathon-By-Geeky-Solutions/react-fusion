@@ -1,6 +1,6 @@
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import { ICreateCourse, ICreateMilestone, ICreateModule, IUpdateCourse } from "./course.interface";
+import { ICreateCourse, IUpdateCourse } from "./course.interface";
 
 const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
     const result = await prisma.course.create({
@@ -171,16 +171,6 @@ const checkEnrollment = async (courseId: string, user: JwtPayload) => {
     }
 }
 
-const createMilestone = async (payload: ICreateMilestone) => {
-    const result = payload
-    return result
-}
-
-const createModule = async (payload: ICreateModule) => {
-    const result = payload
-    return result
-}
-
 export const courseService = {
     createCourse,
     updateCourse,
@@ -188,8 +178,6 @@ export const courseService = {
     getAllCourses,
     getSingleCourse,
     checkEnrollment,
-    createMilestone,
-    createModule
 }
 
 
