@@ -13,6 +13,7 @@ const createMilestone = catchAsync(async (req, res, next) => {
 	})
 })
 
+
 const updateMilestone = catchAsync(async (req, res, next) => {
 	const result = await milestoneService.updateMilestone(req.params.milestoneId, req.body)
 	sendResponse(res, {
@@ -22,6 +23,7 @@ const updateMilestone = catchAsync(async (req, res, next) => {
 		data: result
 	})
 })
+
 
 const deleteMilestone = catchAsync(async (req, res, next) => {
 	const result = await milestoneService.deleteMilestone(req.params.milestoneId)
@@ -33,6 +35,7 @@ const deleteMilestone = catchAsync(async (req, res, next) => {
 	})
 })
 
+
 const getMilestone = catchAsync(async (req, res, next) => {
 	const result = await milestoneService.getMilestone(req.params.milestoneId)
 	sendResponse(res, {
@@ -42,5 +45,6 @@ const getMilestone = catchAsync(async (req, res, next) => {
 		data: result
 	})
 })
+
 
 export const milestoneController = { createMilestone, updateMilestone, deleteMilestone, getMilestone }
