@@ -7,14 +7,6 @@ export interface ICreateCourse {
 
 export type IUpdateCourse = Partial<ICreateCourse>
 
-export interface ICreateVideo {
-    moduleId: string;
-    video: {
-        title: string;
-        url: string;
-        length: number;
-    };
-}
 
 export interface ICreateQuiz {
     moduleId: string;
