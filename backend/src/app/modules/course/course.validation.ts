@@ -6,30 +6,11 @@ const createCourseValidation = z.object({
         description: z.string(),
         price: z.number(),
         thumbnail: z.string(),
-        milestones: z.array(z.object({
-            title: z.string(),
-            description: z.string(),
-            modules: z.array(z.object({
-                title: z.string(),
-                description: z.string(),
-                videos: z.array(z.object({
-                    title: z.string(),
-                    url: z.string(),
-                    length: z.number()
-                })),
-                quizes: z.array(z.object({
-                    questions: z.array(z.object({
-                        question: z.string(),
-                        options: z.array(z.string()),
-                        answer: z.string(),
-                        points: z.number()
-
-                    })),
-                }))
-
-            }))
-        }))
     })
+})
+
+const updateCourseValidation = z.object({
+    body: createCourseValidation.shape.body.partial()
 })
 
 const getCourseValidataion = z.object({
@@ -54,8 +35,25 @@ const getCourseValidataion = z.object({
     })
 })
 
+const createQuizValidation = z.object({
+    body: z.object({
+        moduleId: z.string(),
+        quize: z.object({
+            questions: z.array(z.object({
+                question: z.string(),
+                options: z.array(z.string()),
+                answer: z.string(),
+                points: z.number()
+
+            }))
+        })
+    })
+})
+
+
 export const courseZodSchema = {
     createCourseValidation,
-    getCourseValidataion
+    updateCourseValidation,
+    getCourseValidataion,
+    createQuizValidation
 };
-

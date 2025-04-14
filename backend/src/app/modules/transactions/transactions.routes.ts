@@ -11,7 +11,4 @@ router.get('/history', auth(UserRole.STUDENT), transactionController.getHistory)
 
 router.post('/buy-course', auth(UserRole.STUDENT), validateRequest(transactionValidationSchema.buyCourseSchema), transactionController.buyCourse)
 
-//TODO:
-//  check isActive before buying
-
 export const transactionRoutes = router

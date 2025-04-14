@@ -15,6 +15,7 @@ const getVideo = catchAsync(async (req, res, next) => {
     })
 })
 
+
 const updateVideo = catchAsync(async (req, res, next) => {
     const result = await videoService.updateVideo(req.params.videoId, req.body)
     sendResponse(res, {
@@ -36,4 +37,16 @@ const deleteVideo = catchAsync(async (req, res, next) => {
     })
 })
 
-export const videoController = { getVideo, updateVideo, deleteVideo }
+
+const createVideo = catchAsync(async (req, res, next) => {
+    const result = await videoService.createVideo(req.body)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: 'Video Created Successfully',
+        data: result
+    })
+})
+
+
+export const videoController = { getVideo, updateVideo, deleteVideo, createVideo }

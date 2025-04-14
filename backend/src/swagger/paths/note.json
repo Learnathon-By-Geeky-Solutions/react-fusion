@@ -1,0 +1,161 @@
+{
+  "/note/get": {
+    "post": {
+      "summary": "Get Note",
+      "description": "Retrieve the note associated with a specific video.",
+      "tags": [
+        "Note Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videoId": {
+                  "type": "string",
+                  "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+                }
+              },
+              "required": [
+                "videoId"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Note retrieved successfully."
+        },
+        "400": {
+          "description": "Invalid request, videoId is required."
+        },
+        "404": {
+          "description": "Note not found for the given videoId."
+        }
+      }
+    }
+  },
+  "/note/delete": {
+    "delete": {
+      "summary": "Delete Note",
+      "description": "Delete the note associated with a specific video.",
+      "tags": [
+        "Note Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videoId": {
+                  "type": "string",
+                  "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+                }
+              },
+              "required": [
+                "videoId"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Note deleted successfully."
+        },
+        "400": {
+          "description": "Invalid request, videoId is required."
+        },
+        "404": {
+          "description": "Note not found for the given videoId."
+        }
+      }
+    }
+  },
+  "/note/create": {
+    "post": {
+      "summary": "Create Note",
+      "description": "Create a new note for a specific video.",
+      "tags": [
+        "Note Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videoId": {
+                  "type": "string",
+                  "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+                },
+                "note": {
+                  "type": "string",
+                  "example": "TEST NOTE"
+                }
+              },
+              "required": [
+                "videoId",
+                "note"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Note created successfully."
+        },
+        "400": {
+          "description": "Invalid request, videoId and note are required."
+        }
+      }
+    }
+  },
+  "/note/update": {
+    "post": {
+      "summary": "Update Note",
+      "description": "Update an existing note for a specific video.",
+      "tags": [
+        "Note Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videoId": {
+                  "type": "string",
+                  "example": "5c31f4cd-15fc-4981-861f-bf6c7aa79929"
+                },
+                "note": {
+                  "type": "string",
+                  "example": "UPDATED TEST NOTE"
+                }
+              },
+              "required": [
+                "videoId",
+                "note"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Note updated successfully."
+        },
+        "400": {
+          "description": "Invalid request, videoId and note are required."
+        },
+        "404": {
+          "description": "Note not found for the given videoId."
+        }
+      }
+    }
+  }
+}
