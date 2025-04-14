@@ -1,4 +1,3 @@
-import { truncate } from "fs";
 import prisma from "../../../shared/prisma";
 import { ICreateModule, IUpdateModule } from "./module.interface";
 

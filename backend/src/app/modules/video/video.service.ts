@@ -1,6 +1,6 @@
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import { ICreateVideo, IUpdateVideo, IVideo } from "./video.interface";
+import { ICreateVideo, IUpdateVideo } from "./video.interface";
 
 
 const getVideo = async (user: JwtPayload, videoId: string) => {
