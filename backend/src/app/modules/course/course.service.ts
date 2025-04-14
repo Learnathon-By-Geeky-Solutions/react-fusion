@@ -1,3 +1,5 @@
+import httpStatus from "http-status";
+import ApiError from "../../../errors/ApiError";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import { ICreateCourse, IUpdateCourse } from "./course.interface";
@@ -72,7 +74,9 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
         instructorId: payload.filters?.instructorId,
         title: {
             contains: payload.filters?.title,
-        }
+        },
+        isDeleted: false,
+        isPublished: true
     }
     let sortBy = [] as any
     if (payload?.sortBy) {
@@ -152,6 +156,10 @@ const getSingleCourse = async (id: string) => {
             },
         }
     })
+
+    if (!result || result?.isDeleted) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
+    }
     return result
 }
 
