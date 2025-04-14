@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "EDUNEXUS",
+    "description": "API for EDUNEXUS, an online learning platform.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api/v1"
+    }
+  ],
+  "paths": {},
+  "tags": [
+    {
+      "name": "User Management",
+      "description": "Operations related to creating and managing users (admin, instructor, student)."
+    },
+    {
+      "name": "Authentication",
+      "description": "Operations related to authentication (login, password reset, etc.)."
+    },
+    {
+      "name": "Transaction Management",
+      "description": "Operations related to buying courses and retrieving transaction history."
+    },
+    {
+      "name": "Course Management",
+      "description": "Operations related to creating, retrieving, and managing courses."
+    },
+    {
+      "name": "Milestone Management",
+      "description": "Operations related to creating, retrieving, and managing milestones."
+    },
+    {
+      "name": "Module Management",
+      "description": "Operations related to creating, retrieving, updating, and deleting modules."
+    },
+    {
+      "name": "Video Management",
+      "description": "Operations related to managing videos."
+    },
+    {
+      "name": "Quiz Management",
+      "description": "Operations related to creating, updating, checking, and deleting quizzes."
+    },
+    {
+      "name": "Note Management",
+      "description": "Operations related to creating, retrieving, updating, and deleting notes for videos."
+    },
+    {
+      "name": "Comment Management",
+      "description": "Operations related to creating, retrieving, and updating comments for videos."
+    },
+    {
+      "name": "Progress Tracking",
+      "description": "Operations related to tracking user progress through videos, quizzes, modules, and milestones."
+    },
+    {
+      "name": "Analytics",
+      "description": "Operations related to retrieving analytics data for students and instructors."
+    }
+  ]
+}

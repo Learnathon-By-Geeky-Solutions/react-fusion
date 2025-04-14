@@ -1,0 +1,94 @@
+{
+  "/analytics/student-all": {
+    "get": {
+      "summary": "Get All Students Analytics",
+      "description": "Retrieve analytics data for all students.",
+      "tags": [
+        "Analytics"
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully retrieved all student analytics."
+        },
+        "400": {
+          "description": "Invalid request."
+        }
+      }
+    }
+  },
+  "/analytics/instructor-all": {
+    "get": {
+      "summary": "Get All Instructors Analytics",
+      "description": "Retrieve analytics data for all instructors.",
+      "tags": [
+        "Analytics"
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully retrieved all instructor analytics."
+        },
+        "400": {
+          "description": "Invalid request."
+        }
+      }
+    }
+  },
+  "/analytics/instructor/{courseId}": {
+    "get": {
+      "summary": "Get Instructor Analytics by Course ID",
+      "description": "Retrieve analytics data for a specific instructor based on course ID.",
+      "tags": [
+        "Analytics"
+      ],
+      "parameters": [
+        {
+          "name": "courseId",
+          "in": "path",
+          "required": true,
+          "description": "The unique identifier of the course.",
+          "schema": {
+            "type": "string",
+            "example": "7f40bbca-af29-43f7-8d46-43b90ce8f8bb"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully retrieved instructor analytics for the course."
+        },
+        "400": {
+          "description": "Invalid request."
+        }
+      }
+    }
+  },
+  "/analytics/student/{courseId}": {
+    "get": {
+      "summary": "Get Student Analytics by Course ID",
+      "description": "Retrieve analytics data for a specific student based on course ID.",
+      "tags": [
+        "Analytics"
+      ],
+      "parameters": [
+        {
+          "name": "courseId",
+          "in": "path",
+          "required": true,
+          "description": "The unique identifier of the course.",
+          "schema": {
+            "type": "string",
+            "example": "f0df763c-931f-465d-9acc-78cec20feac6"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully retrieved student analytics for the course."
+        },
+        "400": {
+          "description": "Invalid request."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,305 @@
+{
+  "/course/checkenroll/{courseId}": {
+    "get": {
+      "tags": [
+        "Course Management"
+      ],
+      "summary": "Check enrollment status",
+      "parameters": [
+        {
+          "name": "courseId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Enrollment status returned"
+        }
+      }
+    }
+  },
+  "/course/": {
+    "post": {
+      "tags": [
+        "Course Management"
+      ],
+      "summary": "Create a new course",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "description",
+                "price",
+                "thumbnail"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "thumbnail": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Course created successfully"
+        }
+      }
+    }
+  },
+  "/course/{courseId}": {
+    "put": {
+      "tags": [
+        "Course Management"
+      ],
+      "summary": "Update an existing course",
+      "parameters": [
+        {
+          "name": "courseId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "thumbnail": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Course updated successfully"
+        }
+      }
+    },
+    "delete": {
+      "tags": [
+        "Course Management"
+      ],
+      "summary": "Delete a course",
+      "parameters": [
+        {
+          "name": "courseId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Course deleted successfully"
+        }
+      }
+    },
+    "get": {
+      "tags": [
+        "Course Management"
+      ],
+      "summary": "Get a single course by ID",
+      "parameters": [
+        {
+          "name": "courseId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "instructors": {
+                      "type": "boolean"
+                    },
+                    "milestones": {
+                      "type": "boolean"
+                    },
+                    "modules": {
+                      "type": "boolean"
+                    },
+                    "quizes": {
+                      "type": "boolean"
+                    },
+                    "videos": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "filters": {
+                  "type": "object",
+                  "properties": {
+                    "instructorId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "sortBy": {
+                  "type": "object",
+                  "properties": {
+                    "price": {
+                      "type": "string",
+                      "enum": [
+                        "asc",
+                        "desc"
+                      ]
+                    },
+                    "rating": {
+                      "type": "string",
+                      "enum": [
+                        "asc",
+                        "desc"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Course retrieved successfully"
+        }
+      }
+    }
+  },
+  "/course/get-courses": {
+    "post": {
+      "tags": [
+        "Course Management"
+      ],
+      "summary": "Get all courses with filters",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "instructors": {
+                      "type": "boolean"
+                    },
+                    "milestones": {
+                      "type": "boolean"
+                    },
+                    "modules": {
+                      "type": "boolean"
+                    },
+                    "quizes": {
+                      "type": "boolean"
+                    },
+                    "videos": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "filters": {
+                  "type": "object",
+                  "properties": {
+                    "instructorId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "enrolled": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "sortBy": {
+                  "type": "object",
+                  "properties": {
+                    "price": {
+                      "type": "string",
+                      "enum": [
+                        "asc",
+                        "desc"
+                      ]
+                    },
+                    "rating": {
+                      "type": "string",
+                      "enum": [
+                        "asc",
+                        "desc"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Courses retrieved successfully"
+        }
+      }
+    }
+  }
+}

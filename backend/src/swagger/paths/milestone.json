@@ -1,0 +1,140 @@
+{
+  "/milestone/": {
+    "post": {
+      "tags": [
+        "Milestone Management"
+      ],
+      "summary": "Create a new milestone",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "courseId",
+                "milestone"
+              ],
+              "properties": {
+                "courseId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "milestone": {
+                  "type": "object",
+                  "required": [
+                    "title",
+                    "description"
+                  ],
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Milestone created successfully"
+        }
+      }
+    }
+  },
+  "/milestone/{milestoneId}": {
+    "put": {
+      "tags": [
+        "Milestone Management"
+      ],
+      "summary": "Update an existing milestone",
+      "parameters": [
+        {
+          "name": "milestoneId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "description"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Milestone updated successfully"
+        }
+      }
+    },
+    "get": {
+      "tags": [
+        "Milestone Management"
+      ],
+      "summary": "Get a milestone by ID",
+      "parameters": [
+        {
+          "name": "milestoneId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Milestone retrieved successfully"
+        }
+      }
+    },
+    "delete": {
+      "tags": [
+        "Milestone Management"
+      ],
+      "summary": "Delete a milestone",
+      "parameters": [
+        {
+          "name": "milestoneId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Milestone deleted successfully"
+        }
+      }
+    }
+  }
+}

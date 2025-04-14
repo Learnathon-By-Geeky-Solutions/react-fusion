@@ -1,0 +1,91 @@
+{
+  "/transaction/buy-course": {
+    "post": {
+      "summary": "Buy Course",
+      "description": "Process a transaction for buying a specific course.",
+      "tags": [
+        "Transaction Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "courseId": {
+                  "type": "string",
+                  "example": "80d0765b-cba9-4bc9-b102-43c9edec1f9c"
+                },
+                "txnId": {
+                  "type": "string",
+                  "example": "test txn"
+                }
+              },
+              "required": [
+                "courseId",
+                "txnId"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Transaction successful. The course has been bought."
+        },
+        "400": {
+          "description": "Invalid request, courseId or txnId is missing."
+        },
+        "404": {
+          "description": "Course not found for the provided courseId."
+        }
+      }
+    }
+  },
+  "/transaction/history": {
+    "get": {
+      "summary": "Get Transaction History",
+      "description": "Retrieve the history of all transactions made by the user.",
+      "tags": [
+        "Transaction Management"
+      ],
+      "responses": {
+        "200": {
+          "description": "Transaction history retrieved successfully.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "courseId": {
+                      "type": "string",
+                      "example": "80d0765b-cba9-4bc9-b102-43c9edec1f9c"
+                    },
+                    "txnId": {
+                      "type": "string",
+                      "example": "test txn"
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-04-09T12:34:56Z"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "successful"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized. User needs to be logged in."
+        }
+      }
+    }
+  }
+}
