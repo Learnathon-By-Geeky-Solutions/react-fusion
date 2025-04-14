@@ -76,26 +76,6 @@ const checkEnrollment = catchAsync(async (req, res, next) => {
 
 })
 
-const createMilestone = catchAsync(async (req, res, next) => {
-    const result = await courseService.createMilestone(req.body)
-    sendResponse(res, {
-        success: true,
-        statusCode: httpStatus.CREATED,
-        message: "Milestone Created Successfully!",
-        data: result
-    })
-})
-
-const createModule = catchAsync(async (req, res, next) => {
-    const result = await courseService.createModule(req.body)
-    sendResponse(res, {
-        success: true,
-        statusCode: httpStatus.CREATED,
-        message: "Module Created Successfully!",
-        data: result
-    })
-})
-
 export const courseController = {
     createCourse,
     updateCourse,
@@ -103,6 +83,4 @@ export const courseController = {
     getAllCourses,
     getSingleCourse,
     checkEnrollment,
-    createMilestone,
-    createModule,
 }
