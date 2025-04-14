@@ -17,7 +17,7 @@ const getHistory = async (user: JwtPayload) => {
     return result
 }
 const buyCourse = async (user: JwtPayload, payload: IBuyCourseSchema) => {
-    //TODO: validate with bank
+    // validate with bank in real world
 
     const isDuplicate = await prisma.transactions.findUnique({
         where: {
@@ -26,6 +26,13 @@ const buyCourse = async (user: JwtPayload, payload: IBuyCourseSchema) => {
     })
     if (isDuplicate) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Course Already Purchased!')
+    }
+
+    const course = await prisma.course.findUnique({
+        where: { id: payload.courseId }
+    })
+    if (!course || course.isDeleted) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Course Not Available!')
     }
 
 
