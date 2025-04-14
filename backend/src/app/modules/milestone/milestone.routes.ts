@@ -9,6 +9,11 @@ import { milestoneController } from './milestone.controller'
 
 const router = express.Router()
 
-router.post("/", auth(UserRole.INSTRUCTOR), validateRequest(milestoneZodSchema.createMilestoneValidation), accessValidation("milestone"), milestoneController.createMilestone)
+router.post("/", auth(UserRole.INSTRUCTOR), validateRequest(milestoneZodSchema.createMilestoneValidation), accessValidation("course"), milestoneController.createMilestone)
+
+router.put("/:milestoneId", auth(UserRole.INSTRUCTOR), validateRequest(milestoneZodSchema.updateMilestoneValidation), accessValidation("milestone"), milestoneController.updateMilestone)
+
+router.delete("/:milestoneId", auth(UserRole.INSTRUCTOR), accessValidation("milestone"), milestoneController.deleteMilestone)
+
 
 export const milestoneRoutes = router

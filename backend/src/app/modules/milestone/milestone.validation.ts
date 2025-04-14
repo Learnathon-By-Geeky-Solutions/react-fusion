@@ -10,4 +10,8 @@ const createMilestoneValidation = z.object({
 	})
 })
 
-export const milestoneZodSchema = { createMilestoneValidation }
+const updateMilestoneValidation = z.object({
+	body: createMilestoneValidation.shape.body.shape.milestone.partial()
+})
+
+export const milestoneZodSchema = { createMilestoneValidation, updateMilestoneValidation }
