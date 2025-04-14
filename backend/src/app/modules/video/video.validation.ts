@@ -1,11 +1,18 @@
 import { z } from 'zod';
 
-const videoValidation = z.object({
+const createVideoValidation = z.object({
     body: z.object({
-        title: z.string().nonempty(),
-        url: z.string().nonempty(),
+        moduleId: z.string(),
+        video: z.object({
+            title: z.string(),
+            url: z.string(),
+            length: z.number()
+        }),
     })
 })
 
+const updateVideoValidation = z.object({
+    body: createVideoValidation.shape.body.shape.video.partial()
+})
 
-export const videoValidationSchema = { videoValidation }
+export const videoValidationSchema = { createVideoValidation, updateVideoValidation }

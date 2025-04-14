@@ -10,8 +10,10 @@ const router = express.Router()
 
 router.get('/:videoId', auth(UserRole.STUDENT), accessValidation('video'), videoController.getVideo)
 
-router.post('/update/:videoId', auth(UserRole.INSTRUCTOR), validateRequest(videoValidationSchema.videoValidation), accessValidation('video'), videoController.updateVideo)
+router.post("/", auth(UserRole.INSTRUCTOR), validateRequest(videoValidationSchema.createVideoValidation), accessValidation('module'), videoController.createVideo)
 
-router.delete('/delete/:videoId', auth(UserRole.INSTRUCTOR), accessValidation('video'), videoController.deleteVideo)
+router.put('/:videoId', auth(UserRole.INSTRUCTOR), validateRequest(videoValidationSchema.updateVideoValidation), accessValidation('video'), videoController.updateVideo)
+
+router.delete('/:videoId', auth(UserRole.INSTRUCTOR), accessValidation('video'), videoController.deleteVideo)
 
 export const videoRoutes = router

@@ -1,6 +1,6 @@
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import { IVideo } from "./video.interface";
+import { ICreateVideo, IUpdateVideo, IVideo } from "./video.interface";
 
 
 const getVideo = async (user: JwtPayload, videoId: string) => {
@@ -32,7 +32,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
 }
 
 
-const updateVideo = async (videoId: string, payload: IVideo) => {
+const updateVideo = async (videoId: string, payload: IUpdateVideo) => {
     const result = await prisma.video.update({
         where: {
             id: videoId
@@ -43,6 +43,7 @@ const updateVideo = async (videoId: string, payload: IVideo) => {
     })
     return result
 }
+
 
 const deleteVideo = async (videoId: string) => {
     const result = await prisma.video.update({
@@ -55,4 +56,16 @@ const deleteVideo = async (videoId: string) => {
     return result
 }
 
-export const videoService = { getVideo, updateVideo, deleteVideo }
+
+const createVideo = async (payload: ICreateVideo) => {
+    const result = await prisma.video.create({
+        data: {
+            moduleId: payload.moduleId,
+            ...payload.video
+        }
+    })
+    return result
+}
+
+
+export const videoService = { getVideo, updateVideo, deleteVideo, createVideo }
