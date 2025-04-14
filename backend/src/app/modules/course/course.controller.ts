@@ -7,7 +7,6 @@ import { verifyToken } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
 
 const createCourse = catchAsync(async (req, res, next) => {
-
     const result = await courseService.createCourse(req.user as JwtPayload, req.body)
     sendResponse(res, {
         success: true,
@@ -56,7 +55,6 @@ const checkEnrollment = catchAsync(async (req, res, next) => {
 })
 
 const createMilestone = catchAsync(async (req, res, next) => {
-
     const result = await courseService.createMilestone(req.body)
     sendResponse(res, {
         success: true,
@@ -67,7 +65,6 @@ const createMilestone = catchAsync(async (req, res, next) => {
 })
 
 const createModule = catchAsync(async (req, res, next) => {
-
     const result = await courseService.createModule(req.body)
     sendResponse(res, {
         success: true,
