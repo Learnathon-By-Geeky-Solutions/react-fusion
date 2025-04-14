@@ -15,5 +15,7 @@ router.put("/:milestoneId", auth(UserRole.INSTRUCTOR), validateRequest(milestone
 
 router.delete("/:milestoneId", auth(UserRole.INSTRUCTOR), accessValidation("milestone"), milestoneController.deleteMilestone)
 
+router.get("/:milestoneId", milestoneController.getMilestone)
+
 
 export const milestoneRoutes = router

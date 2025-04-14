@@ -33,4 +33,14 @@ const deleteMilestone = catchAsync(async (req, res, next) => {
 	})
 })
 
-export const milestoneController = { createMilestone, updateMilestone, deleteMilestone }
+const getMilestone = catchAsync(async (req, res, next) => {
+	const result = await milestoneService.getMilestone(req.params.milestoneId)
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: "Milestone Retrieved Successfully!",
+		data: result
+	})
+})
+
+export const milestoneController = { createMilestone, updateMilestone, deleteMilestone, getMilestone }

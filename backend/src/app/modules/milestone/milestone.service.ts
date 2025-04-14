@@ -35,4 +35,15 @@ const deleteMilestone = async (milestoneId: string) => {
 	return result
 }
 
-export const milestoneService = { createMilestone, updateMilestone, deleteMilestone }
+
+const getMilestone = async (milestoneId: string) => {
+	const result = await prisma.milestone.findUnique({
+		where: {
+			id: milestoneId
+		}
+	})
+	return result
+}
+
+
+export const milestoneService = { createMilestone, updateMilestone, deleteMilestone, getMilestone }
