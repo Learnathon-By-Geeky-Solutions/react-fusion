@@ -9,6 +9,9 @@ const createCourseValidation = z.object({
     })
 })
 
+const updateCourseValidation = z.object({
+    body: createCourseValidation.shape.body.partial()
+})
 
 const getCourseValidataion = z.object({
     body: z.object({
@@ -84,6 +87,7 @@ const createQuizValidation = z.object({
 
 export const courseZodSchema = {
     createCourseValidation,
+    updateCourseValidation,
     getCourseValidataion,
     createMilestoneValidation,
     createModuleValidation,

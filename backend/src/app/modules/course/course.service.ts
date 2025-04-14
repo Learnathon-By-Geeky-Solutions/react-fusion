@@ -1,72 +1,43 @@
-import { resolve } from "path";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import { ICreateCourse, ICreateMilestone, ICreateModule, IMilestones } from "./course.interface";
+import { ICreateCourse, ICreateMilestone, ICreateModule, IUpdateCourse } from "./course.interface";
 
 const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
-    const courseData = {
-        title: payload.title,
-        description: payload.description,
-        price: payload.price,
-        thumbnail: payload.thumbnail,
-        instructorId: user.userId,
-        milestones: {
-            create: payload.milestones.map((milestone: IMilestones) => ({
-                title: milestone.title,
-                description: milestone.description,
-                modules: {
-                    create: milestone.modules.map(module => ({
-                        title: module.title,
-                        description: module.description,
-                        videos: {
-                            create: module.videos.map(video => ({
-                                title: video.title,
-                                likeCount: 0,
-                                dislikeCount: 0,
-                                url: video.url,
-                                length: video.length,
-                            }))
-                        },
-                        quizes: {
-                            create: module.quizes.map(quiz => ({
-                                questions: {
-                                    create: quiz.questions.map(ques => ({
-                                        question: ques.question,
-                                        options: ques.options,
-                                        answer: ques.answer,
-                                        points: ques.points
-                                    })),
-                                }
-                            }))
-                        }
-                    }))
-                }
-            }))
-        }
-    };
-
-    // Create the course with all related data in a single transaction
     const result = await prisma.course.create({
-        data: courseData,
-        include: {
-            milestones: {
-                include: {
-                    modules: {
-                        include: {
-                            videos: true,
-                            quizes: true
-                        }
-                    },
-
-                },
-            },
-            instructor: true
-
+        data: {
+            instructorId: user.userId,
+            title: payload.title,
+            description: payload.description,
+            thumbnail: payload.thumbnail,
+            price: payload.price
         }
     });
-
     return result;
+}
 
+const updateCourse = async (courseId: string, payload: IUpdateCourse) => {
+    const result = await prisma.course.update({
+        where: {
+            id: courseId,
+        },
+        data: {
+            ...payload
+        }
+    })
+    return result;
+}
+
+const deleteCourse = async (courseId: string) => {
+    const result = await prisma.course.update({
+        where: {
+            id: courseId,
+        },
+        data: {
+            isDeleted: true,
+            isPublished: false
+        }
+    })
+    return result;
 }
 
 
@@ -148,7 +119,7 @@ const getSingleCourse = async (id: string) => {
         include: {
             instructor: {
                 select: {
-                    id: true,
+                    userId: true,
                     name: true,
                     image: true,
                     designation: true,
@@ -212,6 +183,8 @@ const createModule = async (payload: ICreateModule) => {
 
 export const courseService = {
     createCourse,
+    updateCourse,
+    deleteCourse,
     getAllCourses,
     getSingleCourse,
     checkEnrollment,
