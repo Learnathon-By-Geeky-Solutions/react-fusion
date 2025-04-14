@@ -11,4 +11,8 @@ const createModuleValidation = z.object({
 
 })
 
-export const moduleZodSchema = { createModuleValidation }
+const updateModuleValidation = z.object({
+	body: createModuleValidation.shape.body.shape.module.partial()
+
+})
+export const moduleZodSchema = { createModuleValidation, updateModuleValidation }
