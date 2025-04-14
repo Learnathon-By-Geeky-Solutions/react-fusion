@@ -21,8 +21,4 @@ router.get("/:id", courseController.getSingleCourse)
 
 router.get('/checkenroll/:courseId', auth(UserRole.STUDENT), courseController.checkEnrollment)
 
-//TODO:
-//  update for instructor
-//  add isActive for courses
-//  delete for instructor
 export const courseRoutes = router
