@@ -46,17 +46,6 @@ const createMilestoneValidation = z.object({
     })
 })
 
-
-const createModuleValidation = z.object({
-    body: z.object({
-        milestoneId: z.string(),
-        module: z.object({
-            title: z.string(),
-            description: z.string(),
-        })
-    })
-})
-
 const createVideoValidation = z.object({
     body: z.object({
         moduleId: z.string(),
@@ -90,7 +79,6 @@ export const courseZodSchema = {
     updateCourseValidation,
     getCourseValidataion,
     createMilestoneValidation,
-    createModuleValidation,
     createVideoValidation,
     createQuizValidation
 };

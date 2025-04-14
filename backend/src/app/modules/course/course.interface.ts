@@ -15,14 +15,6 @@ export interface ICreateMilestone {
     };
 }
 
-export interface ICreateModule {
-    milestoneId: string;
-    module: {
-        title: string;
-        description: string;
-    };
-}
-
 export interface ICreateVideo {
     moduleId: string;
     video: {
