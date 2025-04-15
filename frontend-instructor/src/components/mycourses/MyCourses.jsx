@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import useAuth from '@/src/context/authContext';
-import getAllCourses from '@/src/services/course';
+import getAllCourses from '@/src/services/getCourse';
 import { noimage } from '../../assets';
 import useApi from '@/src/hooks/useApi';
 
@@ -100,7 +100,7 @@ export default function CourseDashboard() {
 
           {/* Add Course Button */}
           <div className='text-center mt-6'>
-            <Link to='/add-courses'>
+            <Link to='/create-course'>
               <button className='px-6 py-3 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition'>
                 + Add Course
               </button>

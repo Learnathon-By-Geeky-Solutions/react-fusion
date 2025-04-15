@@ -1,37 +1,76 @@
 import { BACKEND } from '../constants';
 
-async function getAllCourses(params) {
-  const items = {
-    items: {
-      instructors: true,
-      milestones: true,
-      modules: true,
-      quizes: true,
-      videos: true
-    }
-  };
+export async function addCourse(params) {
+  try {
+    const result = await fetch(`${BACKEND}/course/`, {
+      method: 'POST',
+      headers: {
+        Authorization: params.token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params.data)
+    });
 
-  const result = await fetch(`${BACKEND}/course/get-courses`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(items)
-  });
-  const data = await result.json();
-  return data;
+    const data = await result.json();
+    return data;
+  } catch (error) {
+    console.error('Error adding course:', error);
+    return { success: false };
+  }
 }
 
-async function getCourseById(params) {
-  const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
-    headers: {
-      Authorization: params.instructor.token
-    }
-  });
-  const resJson = await result.json();
-  console.log('🚀 resJson  : ', resJson);
-  return resJson;
-}
-export { getCourseById };
+export async function updateCourse(params) {
+  try {
+    const result = await fetch(`${BACKEND}/course/`, {
+      method: 'POST',
+      headers: {
+        Authorization: params.token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params.data)
+    });
 
-export default getAllCourses;
+    const data = await result.json();
+    return data;
+  } catch (error) {
+    console.error('Error updating course:', error);
+    return { success: false };
+  }
+}
+
+export async function deleteCourse(params) {
+  try {
+    const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: params.token
+      }
+    });
+
+    const data = await result.json();
+    return data;
+  } catch (error) {
+    console.error('Error delete course:', error);
+    return { success: false };
+  }
+}
+
+export async function checkEnrollmentCourse(params) {
+  try {
+    const result = await fetch(
+      `${BACKEND}/course/checkenroll/${params.courseId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: params.token
+        }
+      }
+    );
+
+    const data = await result.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching enrollment data:', error);
+    return { success: false };
+  }
+}

@@ -1,5 +1,5 @@
 import useApi from '@/src/hooks/useApi';
-import { getCourseById } from '@/src/services/course';
+import { getCourseById } from '@/src/services/getCourse';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
