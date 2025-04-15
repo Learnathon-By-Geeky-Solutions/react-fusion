@@ -1,8 +1,8 @@
 import { BACKEND } from '../constants';
 
-export async function addCourse(params) {
+export async function addModule(params) {
   try {
-    const result = await fetch(`${BACKEND}/course/`, {
+    const result = await fetch(`${BACKEND}/module/`, {
       method: 'POST',
       headers: {
         Authorization: params.token,
@@ -14,15 +14,15 @@ export async function addCourse(params) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error adding course:', error);
+    console.error('Error adding module:', error);
     return { success: false };
   }
 }
 
-export async function updateCourse(params) {
+export async function updateModule(params) {
   try {
-    const result = await fetch(`${BACKEND}/course/`, {
-      method: 'POST',
+    const result = await fetch(`${BACKEND}/module/${params.data.moduleId}`, {
+      method: 'PUT',
       headers: {
         Authorization: params.token,
         'Content-Type': 'application/json'
@@ -33,14 +33,14 @@ export async function updateCourse(params) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error updating course:', error);
+    console.error('Error updating module:', error);
     return { success: false };
   }
 }
 
-export async function deleteCourse(params) {
+export async function deleteModule(params) {
   try {
-    const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
+    const result = await fetch(`${BACKEND}/module/${params.data.moduleId}`, {
       method: 'DELETE',
       headers: {
         Authorization: params.token
@@ -50,27 +50,24 @@ export async function deleteCourse(params) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error delete course:', error);
+    console.error('Error delete module:', error);
     return { success: false };
   }
 }
 
-export async function checkEnrollmentCourse(params) {
+export async function checkModule(params) {
   try {
-    const result = await fetch(
-      `${BACKEND}/course/checkenroll/${params.courseId}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: params.token
-        }
+    const result = await fetch(`${BACKEND}/module/${params.moduleId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: params.token
       }
-    );
+    });
 
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error fetching enrollment data:', error);
+    console.error('Error fetching module data:', error);
     return { success: false };
   }
 }

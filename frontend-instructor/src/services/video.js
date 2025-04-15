@@ -1,8 +1,8 @@
 import { BACKEND } from '../constants';
 
-export async function addCourse(params) {
+export async function addVideo(params) {
   try {
-    const result = await fetch(`${BACKEND}/course/`, {
+    const result = await fetch(`${BACKEND}/video/`, {
       method: 'POST',
       headers: {
         Authorization: params.token,
@@ -14,15 +14,15 @@ export async function addCourse(params) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error adding course:', error);
+    console.error('Error adding video:', error);
     return { success: false };
   }
 }
 
-export async function updateCourse(params) {
+export async function updateVideo(params) {
   try {
-    const result = await fetch(`${BACKEND}/course/`, {
-      method: 'POST',
+    const result = await fetch(`${BACKEND}/video/${params.data.videoId}`, {
+      method: 'PUT',
       headers: {
         Authorization: params.token,
         'Content-Type': 'application/json'
@@ -33,14 +33,14 @@ export async function updateCourse(params) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error updating course:', error);
+    console.error('Error updating video:', error);
     return { success: false };
   }
 }
 
-export async function deleteCourse(params) {
+export async function deleteVideo(params) {
   try {
-    const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
+    const result = await fetch(`${BACKEND}/video/${params.data.videoId}`, {
       method: 'DELETE',
       headers: {
         Authorization: params.token
@@ -50,27 +50,24 @@ export async function deleteCourse(params) {
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error delete course:', error);
+    console.error('Error delete video:', error);
     return { success: false };
   }
 }
 
-export async function checkEnrollmentCourse(params) {
+export async function checkVideo(params) {
   try {
-    const result = await fetch(
-      `${BACKEND}/course/checkenroll/${params.courseId}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: params.token
-        }
+    const result = await fetch(`${BACKEND}/video/${params.videoId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: params.token
       }
-    );
+    });
 
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error fetching enrollment data:', error);
+    console.error('Error fetching video data:', error);
     return { success: false };
   }
 }
