@@ -34,6 +34,31 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
 	}
 
+	if (video?.ModuleItem?.order && video?.ModuleItem?.order > 1) {
+		const prevVideo = await prisma.moduleItem.findUnique({
+			where: {
+				moduleId_order: {
+					moduleId: video?.ModuleItem?.moduleId,
+					order: video?.ModuleItem?.order - 1
+				}
+			},
+			include: {
+				video: true
+			}
+		})
+		const prevVideoProgress = await prisma.videoProgress.findUnique({
+			where: {
+				courseProgressId_videoId: {
+					courseProgressId: progressData.id,
+					videoId: prevVideo?.video?.id ?? ""
+				}
+			}
+		})
+		if (!prevVideoProgress?.isCompleted) {
+			throw new ApiError(httpStatus.FORBIDDEN, "Previous Video Not Completed")
+		}
+	}
+
 	const result = await prisma.videoProgress.upsert({
 		where: {
 			courseProgressId_videoId: {
