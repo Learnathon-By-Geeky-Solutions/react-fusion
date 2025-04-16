@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
-import MilestoneForm from '@/components/courseManagement/MilestoneForm';
+import MilestoneForm from '@/src/components/courseManagement/MilestoneForm';
 
 const EditMilestone = () => {
   const { courseId, milestoneId } = useParams();
@@ -15,7 +15,6 @@ const EditMilestone = () => {
   useEffect(() => {
     const fetchMilestone = async () => {
       try {
-        // Assuming there's a getMilestone service function
         const result = await fetchData(
           (params) =>
             fetch(`${process.env.BACKEND}/milestone/${milestoneId}`, {

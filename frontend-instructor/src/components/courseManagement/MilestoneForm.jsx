@@ -14,8 +14,11 @@ const MilestoneForm = ({
 }) => {
   const { fetchData } = useApi();
   const defaultValues = {
-    title: '',
-    description: ''
+    milestone: {
+      title: '',
+      description: ''
+    },
+    courseId: courseId
   };
 
   const validationSchema = Yup.object({
@@ -25,23 +28,21 @@ const MilestoneForm = ({
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      let params;
-
-      if (isEdit) {
-        params = {
-          data: {
+      const params = isEdit
+        ? {
             milestoneId,
-            ...values
+            milestone: {
+              title: values.title,
+              description: values.description
+            }
           }
-        };
-      } else {
-        params = {
-          data: {
-            courseId,
-            milestone: values
-          }
-        };
-      }
+        : {
+            milestone: {
+              title: values.title,
+              description: values.description
+            },
+            courseId
+          };
 
       const result = await fetchData(
         isEdit ? updateMilestone : addMilestone,

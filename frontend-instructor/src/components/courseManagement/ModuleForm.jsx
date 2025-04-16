@@ -25,23 +25,21 @@ const ModuleForm = ({
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      let params;
-
-      if (isEdit) {
-        params = {
-          data: {
+      const params = isEdit
+        ? {
             moduleId,
-            ...values
+            module: {
+              title: values.title,
+              description: values.description
+            }
           }
-        };
-      } else {
-        params = {
-          data: {
+        : {
             milestoneId,
-            module: values
-          }
-        };
-      }
+            module: {
+              title: values.title,
+              description: values.description
+            }
+          };
 
       const result = await fetchData(isEdit ? updateModule : addModule, params);
 

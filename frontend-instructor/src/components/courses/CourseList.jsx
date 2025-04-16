@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
-import CourseListComponent from '@/components/courseManagement/CourseList';
+import CourseListComponent from '@/src/components/courseManagement/CourseList';
 
 const CourseList = () => {
   const { fetchData } = useApi();

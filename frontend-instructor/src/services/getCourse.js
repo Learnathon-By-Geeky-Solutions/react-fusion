@@ -29,7 +29,6 @@ async function getCourseById(params) {
     }
   });
   const resJson = await result.json();
-  console.log('🚀 resJson  : ', resJson);
   return resJson;
 }
 export { getCourseById };

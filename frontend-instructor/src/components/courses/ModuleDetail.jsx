@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
-import VideoForm from '@/components/courseManagement/VideoForm';
-import QuizForm from '@/components/courseManagement/QuizForm';
+import VideoForm from '@/src/components/courseManagement/VideoForm';
+import QuizForm from '@/src/components/courseManagement/QuizForm';
 import { deleteVideo } from '@/src/services/video';
 import { deleteQuiz, getVideo as getQuiz } from '@/src/services/quiz';
 

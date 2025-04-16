@@ -1,14 +1,15 @@
 // src/pages/Courses/CreateMilestone.jsx
-import React from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import MilestoneForm from '@/src/components/courseManagement/MilestoneForm';
+import MilestoneList from '@/src/components/courseManagement/MilestoneList';
 
 const CreateMilestone = () => {
   const { courseId } = useParams();
-  const navigate = useNavigate();
+  const [refreshList, setRefreshList] = useState(0);
 
   const handleSuccess = () => {
-    navigate(`/courses/${courseId}`);
+    setRefreshList((prev) => prev + 1);
   };
 
   return (
@@ -22,9 +23,11 @@ const CreateMilestone = () => {
         </Link>
       </div>
 
-      <h1 className='text-3xl font-bold mb-8'>Create Milestone</h1>
+      <h1 className='text-3xl font-bold mb-8'>Manage Course Milestones</h1>
 
       <MilestoneForm courseId={courseId} onSuccess={handleSuccess} />
+
+      <MilestoneList courseId={courseId} refreshTrigger={refreshList} />
     </div>
   );
 };

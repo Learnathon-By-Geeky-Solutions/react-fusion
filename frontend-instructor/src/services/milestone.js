@@ -62,9 +62,10 @@ export async function deleteMilestone(params) {
 }
 
 export async function checkMilestone(params) {
+  console.log('checkMilestone', params);
   try {
     const result = await fetch(
-      `${BACKEND}/course/milestone/${params.milestoneId}`,
+      `${BACKEND}/milestone/${params.data.milestoneId}`,
       {
         method: 'GET',
         headers: {
