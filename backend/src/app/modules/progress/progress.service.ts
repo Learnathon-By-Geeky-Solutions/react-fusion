@@ -10,14 +10,18 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 			id: payload.videoId
 		},
 		include: {
-			module: {
+			ModuleItem: {
 				include: {
-					milestone: true
+					module: {
+						include: {
+							milestone: true
+						}
+					},
 				}
-			},
+			}
 		}
 	})
-	const courseId = video?.module.milestone.courseId ?? ""
+	const courseId = video?.ModuleItem?.module.milestone.courseId ?? ""
 	const progressData = await prisma.courseProgress.findUnique({
 		where: {
 			studentId_courseId: {
@@ -57,15 +61,21 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 			id: payload.quizId
 		},
 		include: {
-			module: {
+			ModuleItem: {
 				include: {
-					milestone: true
+
+					module: {
+						include: {
+							milestone: true
+						}
+					},
+
 				}
-			},
+			}
 		}
 	})
 
-	const courseId = quiz?.module.milestone.courseId ?? ""
+	const courseId = quiz?.ModuleItem?.module.milestone.courseId ?? ""
 	const progressData = await prisma.courseProgress.findUnique({
 		where: {
 			studentId_courseId: {

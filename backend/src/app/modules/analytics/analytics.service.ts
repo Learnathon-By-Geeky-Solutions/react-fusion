@@ -40,7 +40,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 			QuizProgress: true,
 			ModuleProgress: true,
 			MilestoneProgress: true,
-			course : true
+			course: true
 		},
 
 	})
@@ -50,9 +50,11 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const totalVideos = await prisma.video.count({
 		where: {
-			module: {
-				milestone: {
-					courseId: courseId
+			ModuleItem: {
+				module: {
+					milestone: {
+						courseId: courseId
+					}
 				}
 			}
 		}
@@ -77,9 +79,11 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const totalQuizzes = await prisma.quiz.count({
 		where: {
-			module: {
-				milestone: {
-					courseId: courseId
+			ModuleItem: {
+				module: {
+					milestone: {
+						courseId: courseId
+					}
 				}
 			}
 		}
@@ -150,9 +154,11 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 	const totalScore = await prisma.question.aggregate({
 		where: {
 			quiz: {
-				module: {
-					milestone: {
-						courseId: courseId
+				ModuleItem: {
+					module: {
+						milestone: {
+							courseId: courseId
+						}
 					}
 				}
 			}
@@ -172,9 +178,13 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const totalWatchTime = await prisma.video.aggregate({
 		where: {
-			module: {
-				milestone: {
-					courseId: courseId
+			ModuleItem: {
+
+
+				module: {
+					milestone: {
+						courseId: courseId
+					}
 				}
 			}
 		},
@@ -275,9 +285,13 @@ const getInstructorOne = async (user: JwtPayload, courseId: string) => {
 	})
 	const totalLikes = await prisma.video.aggregate({
 		where: {
-			module: {
-				milestone: {
-					courseId: courseId
+			ModuleItem: {
+
+
+				module: {
+					milestone: {
+						courseId: courseId
+					}
 				}
 			}
 		},
@@ -290,9 +304,11 @@ const getInstructorOne = async (user: JwtPayload, courseId: string) => {
 
 	const totalDisLikes = await prisma.video.aggregate({
 		where: {
-			module: {
-				milestone: {
-					courseId: courseId
+			ModuleItem: {
+				module: {
+					milestone: {
+						courseId: courseId
+					}
 				}
 			}
 		},

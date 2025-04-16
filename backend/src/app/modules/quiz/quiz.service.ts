@@ -2,9 +2,26 @@ import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
 import { ICheckQuiz, ICreateQuiz, IUpdateQuiz } from "./quiz.interface"
 const createQuiz = async (payload: ICreateQuiz) => {
+    const orderNo = await prisma.moduleItem.aggregate({
+        where: {
+            moduleId: payload.moduleId
+        },
+        _max: {
+            order: true
+        }
+    })
+    let nextOrder = 1
+    if (orderNo._max.order) {
+        nextOrder += orderNo._max.order
+    }
     const result = await prisma.quiz.create({
         data: {
-            moduleId: payload.moduleId,
+            ModuleItem: {
+                create: {
+                    moduleId: payload.moduleId,
+                    order: nextOrder
+                }
+            },
             questions: {
                 create: payload.questions.map((ques) => ({
                     question: ques.question,

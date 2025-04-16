@@ -1,5 +1,7 @@
+import { create } from "domain";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
+import { progressService } from "../progress/progress.service";
 import { ICreateVideo, IUpdateVideo } from "./video.interface";
 
 
@@ -9,9 +11,14 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             id: videoId
         },
         include: {
-            module: {
+            ModuleItem: {
                 include: {
-                    milestone: true
+                    module: {
+                        include: {
+                            milestone: true
+                        }
+                    },
+
                 }
             },
             notes: {
@@ -58,12 +65,39 @@ const deleteVideo = async (videoId: string) => {
 
 
 const createVideo = async (payload: ICreateVideo) => {
-    const result = await prisma.video.create({
-        data: {
-            moduleId: payload.moduleId,
-            ...payload.video
+    const orderNo = await prisma.moduleItem.aggregate({
+        where: {
+            moduleId: payload.moduleId
+        },
+        _max: {
+            order: true
         }
     })
+    console.log(orderNo._max)
+    let nextOrder = 1
+    if (orderNo._max.order) {
+        nextOrder += orderNo._max.order
+    }
+
+    const result = await prisma.video.create({
+        data: {
+            ...payload.video,
+            ModuleItem: {
+                create: {
+                    moduleId: payload.moduleId,
+                    order: nextOrder
+                }
+            }
+        }
+    })
+
+    // const result = await prisma.video.create({
+    //     data: {
+    //         moduleId: payload.moduleId,
+    //         ...payload.video
+    //     }
+    // })
+    //
     return result
 }
 
