@@ -1,7 +1,5 @@
-import { create } from "domain";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import { progressService } from "../progress/progress.service";
 import { ICreateVideo, IUpdateVideo } from "./video.interface";
 
 
@@ -91,13 +89,6 @@ const createVideo = async (payload: ICreateVideo) => {
         }
     })
 
-    // const result = await prisma.video.create({
-    //     data: {
-    //         moduleId: payload.moduleId,
-    //         ...payload.video
-    //     }
-    // })
-    //
     return result
 }
 
