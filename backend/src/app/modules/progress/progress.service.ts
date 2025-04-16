@@ -267,6 +267,23 @@ const updateMilestone = async (user: JwtPayload, payload: IMilestoneUpdate) => {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
 	}
 
+	const totalModules = await prisma.module.count({
+		where: {
+			milestoneId: payload.milestoneId,
+		}
+	})
+
+	const completedModules = await prisma.moduleProgress.count({
+		where: {
+			courseProgressId: progressData.id,
+			isCompleted: true
+		}
+	})
+	if (totalModules !== completedModules) {
+		throw new ApiError(httpStatus.FORBIDDEN, "All Modules Are Not Completed")
+
+	}
+
 	const result = await prisma.milestoneProgress.upsert({
 		where: {
 			courseProgressId_milestoneId: {
