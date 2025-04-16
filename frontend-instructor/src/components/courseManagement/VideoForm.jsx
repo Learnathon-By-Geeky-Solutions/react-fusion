@@ -1,56 +1,43 @@
-// src/components/CourseManagement/VideoForm.jsx
+// src/components/ContentManagement/VideoForm.jsx
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import useApi from '@/src/hooks/useApi';
-import { addVideo, updateVideo } from '@/src/services/video';
+import { addVideo } from '@/src/services/video';
 
-const VideoForm = ({
-  moduleId,
-  videoId = null,
-  initialValues = null,
-  onSuccess,
-  isEdit = false
-}) => {
+const VideoForm = ({ moduleId, onSuccess }) => {
   const { fetchData } = useApi();
-  const defaultValues = {
+
+  const initialValues = {
     title: '',
     url: '',
-    length: 0
+    length: ''
   };
 
   const validationSchema = Yup.object({
     title: Yup.string().required('Title is required'),
-    url: Yup.string().required('Video URL is required'),
+    url: Yup.string().required('URL is required'),
     length: Yup.number()
       .required('Video length is required')
-      .min(0, 'Length cannot be negative')
+      .positive('Length must be a positive number')
+      .integer('Length must be a whole number')
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      let params;
+      const params = {
+        moduleId,
+        video: {
+          title: values.title,
+          url: values.url,
+          length: parseInt(values.length, 10)
+        }
+      };
 
-      if (isEdit) {
-        params = {
-          data: {
-            videoId,
-            ...values
-          }
-        };
-      } else {
-        params = {
-          data: {
-            moduleId,
-            video: values
-          }
-        };
-      }
-
-      const result = await fetchData(isEdit ? updateVideo : addVideo, params);
+      const result = await fetchData(addVideo, params);
 
       if (result.success) {
-        if (!isEdit) resetForm();
+        resetForm();
         if (onSuccess) onSuccess(result);
       } else {
         alert('Error: ' + (result.message || 'Could not save video'));
@@ -64,11 +51,9 @@ const VideoForm = ({
 
   return (
     <div className='bg-white p-6 rounded-lg shadow-md'>
-      <h2 className='text-xl font-semibold mb-4'>
-        {isEdit ? 'Edit Video' : 'Add New Video'}
-      </h2>
+      <h2 className='text-xl font-semibold mb-4'>Add New Video</h2>
       <Formik
-        initialValues={initialValues || defaultValues}
+        initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
@@ -127,6 +112,7 @@ const VideoForm = ({
                 type='number'
                 name='length'
                 id='length'
+                min='1'
                 className='w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500'
                 placeholder='Enter video length in minutes'
               />
@@ -143,11 +129,7 @@ const VideoForm = ({
                 disabled={isSubmitting}
                 className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300'
               >
-                {isSubmitting
-                  ? 'Saving...'
-                  : isEdit
-                  ? 'Update Video'
-                  : 'Add Video'}
+                {isSubmitting ? 'Saving...' : 'Add Video'}
               </button>
             </div>
           </Form>

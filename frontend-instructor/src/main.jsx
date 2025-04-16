@@ -17,7 +17,7 @@ import CourseList from './components/courses/CourseList';
 import CreateMilestone from './components/courses/CreateMilestone';
 import CreateModule from './components/courses/CreateModule';
 import EditMilestone from './components/courses/EditMilestone';
-import ModuleDetail from './components/courses/ModuleDetail';
+import ContentPage from './components/courses/CreateContent';
 
 const routes = createBrowserRouter([
   {
@@ -71,7 +71,7 @@ const routes = createBrowserRouter([
       },
       {
         path: '/content/:moduleId',
-        element: <ModuleDetail />
+        element: <ContentPage />
       }
     ]
   }

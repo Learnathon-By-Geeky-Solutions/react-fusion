@@ -59,7 +59,7 @@ export async function deleteModule(params) {
 
 export async function checkModule(params) {
   try {
-    const result = await fetch(`${BACKEND}/module/${params.moduleId}`, {
+    const result = await fetch(`${BACKEND}/module/${params.data.moduleId}`, {
       method: 'GET',
       headers: {
         Authorization: params.instructor.token
