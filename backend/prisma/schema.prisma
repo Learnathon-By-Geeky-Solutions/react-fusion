@@ -148,17 +148,27 @@ model Module {
   description    String
   milestoneId    String
   milestone      Milestone        @relation(fields: [milestoneId], references: [id])
-  videos         Video[]
-  quizes         Quiz[]
   ModuleProgress ModuleProgress[]
+  ModuleItem     ModuleItem[]
+}
+
+model ModuleItem {
+  id       String @id @default(uuid())
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id])
+  order    Int
+  video    Video?
+  quiz     Quiz?
+
+  @@unique([moduleId, order])
 }
 
 model Quiz {
   id           String         @id @default(uuid())
-  moduleId     String
-  module       Module         @relation(fields: [moduleId], references: [id])
   questions    Question[]
   QuizProgress QuizProgress[]
+  moudleItemId String         @unique
+  ModuleItem   ModuleItem?    @relation(fields: [moudleItemId], references: [id])
 }
 
 model Question {
@@ -173,8 +183,6 @@ model Question {
 
 model Video {
   id            String          @id @default(uuid())
-  moduleId      String
-  module        Module          @relation(fields: [moduleId], references: [id])
   title         String
   url           String
   length        Float // Length in seconds
@@ -186,6 +194,9 @@ model Video {
   dislikeCount  Int             @default(0)
   dislike       DislikeUser[]
   VideoProgress VideoProgress[]
+
+  moudleItemId String      @unique
+  ModuleItem   ModuleItem? @relation(fields: [moudleItemId], references: [id])
 }
 
 model Comment {

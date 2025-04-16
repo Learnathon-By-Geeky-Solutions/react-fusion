@@ -82,6 +82,8 @@ CREATE TABLE "Course" (
     "price" DOUBLE PRECISION NOT NULL,
     "thumbnail" TEXT NOT NULL,
     "instructorId" TEXT NOT NULL,
+    "isPublished" BOOLEAN NOT NULL DEFAULT false,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Course_pkey" PRIMARY KEY ("id")
 );
@@ -107,9 +109,18 @@ CREATE TABLE "Module" (
 );
 
 -- CreateTable
-CREATE TABLE "Quiz" (
+CREATE TABLE "ModuleItem" (
     "id" TEXT NOT NULL,
     "moduleId" TEXT NOT NULL,
+    "order" INTEGER NOT NULL,
+
+    CONSTRAINT "ModuleItem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Quiz" (
+    "id" TEXT NOT NULL,
+    "moudleItemId" TEXT NOT NULL,
 
     CONSTRAINT "Quiz_pkey" PRIMARY KEY ("id")
 );
@@ -129,13 +140,13 @@ CREATE TABLE "Question" (
 -- CreateTable
 CREATE TABLE "Video" (
     "id" TEXT NOT NULL,
-    "moduleId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "length" DOUBLE PRECISION NOT NULL,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
-    "likeCount" INTEGER NOT NULL,
-    "dislikeCount" INTEGER NOT NULL,
+    "likeCount" INTEGER NOT NULL DEFAULT 0,
+    "dislikeCount" INTEGER NOT NULL DEFAULT 0,
+    "moudleItemId" TEXT NOT NULL,
 
     CONSTRAINT "Video_pkey" PRIMARY KEY ("id")
 );
@@ -298,6 +309,15 @@ CREATE UNIQUE INDEX "students_userId_key" ON "students"("userId");
 CREATE UNIQUE INDEX "students_email_key" ON "students"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "ModuleItem_moduleId_order_key" ON "ModuleItem"("moduleId", "order");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Quiz_moudleItemId_key" ON "Quiz"("moudleItemId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Video_moudleItemId_key" ON "Video"("moudleItemId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Note_userId_videoId_key" ON "Note"("userId", "videoId");
 
 -- CreateIndex
@@ -343,13 +363,16 @@ ALTER TABLE "Milestone" ADD CONSTRAINT "Milestone_courseId_fkey" FOREIGN KEY ("c
 ALTER TABLE "Module" ADD CONSTRAINT "Module_milestoneId_fkey" FOREIGN KEY ("milestoneId") REFERENCES "Milestone"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Quiz" ADD CONSTRAINT "Quiz_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ModuleItem" ADD CONSTRAINT "ModuleItem_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Quiz" ADD CONSTRAINT "Quiz_moudleItemId_fkey" FOREIGN KEY ("moudleItemId") REFERENCES "ModuleItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Question" ADD CONSTRAINT "Question_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Video" ADD CONSTRAINT "Video_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Video" ADD CONSTRAINT "Video_moudleItemId_fkey" FOREIGN KEY ("moudleItemId") REFERENCES "ModuleItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES "Video"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
