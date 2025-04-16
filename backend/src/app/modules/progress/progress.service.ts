@@ -4,6 +4,49 @@ import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
 import { IMilestoneUpdate, IModuleUpdate, IQuizUpdate, IVideoUpdate } from "./progress.interface"
 
+
+const checkPreviousItemCompletion = async (moduleId: string, order: number, progressId: string) => {
+	const prevItem = await prisma.moduleItem.findUnique({
+		where: {
+			moduleId_order: {
+				moduleId: moduleId,
+				order: order - 1
+			}
+		},
+		include: {
+			quiz: true,
+			video: true
+		}
+	})
+	if (prevItem?.video) {
+		const prevVideoProgress = await prisma.videoProgress.findUnique({
+			where: {
+				courseProgressId_videoId: {
+					courseProgressId: progressId,
+					videoId: prevItem?.video?.id ?? ""
+				}
+			}
+		})
+		if (!prevVideoProgress?.isCompleted) {
+			throw new ApiError(httpStatus.FORBIDDEN, "Previous Video Not Completed")
+		}
+
+	}
+	else if (prevItem?.quiz) {
+		const prevQuizProgress = await prisma.quizProgress.findUnique({
+			where: {
+				courseProgressId_quizId: {
+					courseProgressId: progressId,
+					quizId: prevItem?.quiz?.id ?? ""
+				}
+			}
+		})
+
+		if (!prevQuizProgress?.isCompleted) {
+			throw new ApiError(httpStatus.FORBIDDEN, "Previous Quiz Not Completed")
+		}
+	}
+}
 const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 	const video = await prisma.video.findUnique({
 		where: {
@@ -35,28 +78,8 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 	}
 
 	if (video?.ModuleItem?.order && video?.ModuleItem?.order > 1) {
-		const prevVideo = await prisma.moduleItem.findUnique({
-			where: {
-				moduleId_order: {
-					moduleId: video?.ModuleItem?.moduleId,
-					order: video?.ModuleItem?.order - 1
-				}
-			},
-			include: {
-				video: true
-			}
-		})
-		const prevVideoProgress = await prisma.videoProgress.findUnique({
-			where: {
-				courseProgressId_videoId: {
-					courseProgressId: progressData.id,
-					videoId: prevVideo?.video?.id ?? ""
-				}
-			}
-		})
-		if (!prevVideoProgress?.isCompleted) {
-			throw new ApiError(httpStatus.FORBIDDEN, "Previous Video Not Completed")
-		}
+		await checkPreviousItemCompletion(video?.ModuleItem?.moduleId, video?.ModuleItem?.order, progressData.id)
+
 	}
 
 	const result = await prisma.videoProgress.upsert({
@@ -88,7 +111,6 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		include: {
 			ModuleItem: {
 				include: {
-
 					module: {
 						include: {
 							milestone: true
@@ -107,10 +129,15 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 				studentId: user.userId,
 				courseId: courseId
 			}
-		},
+		}
 	})
 	if (!progressData) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
+	}
+
+
+	if (quiz?.ModuleItem?.order && quiz?.ModuleItem?.order > 1) {
+		await checkPreviousItemCompletion(quiz?.ModuleItem?.moduleId, quiz?.ModuleItem?.order, progressData.id)
 	}
 
 	const result = await prisma.quizProgress.upsert({
