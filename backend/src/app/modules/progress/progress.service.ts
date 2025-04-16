@@ -186,21 +186,59 @@ const updateModule = async (user: JwtPayload, payload: IModuleUpdate) => {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
 	}
 
+	let isModuleCompleted = true
+
+	const totalVideos = await prisma.video.count({
+		where: {
+			ModuleItem: {
+				moduleId: payload.moduleId
+			},
+			isDeleted: false
+		}
+	})
+	const completedVideos = await prisma.videoProgress.count({
+		where: {
+			courseProgressId: progressData.id,
+			isCompleted: true
+		}
+	})
+
+	const totalQuizzes = await prisma.quiz.count({
+		where: {
+			ModuleItem: {
+				moduleId: payload.moduleId
+			},
+		}
+	})
+	const completedQuizzes = await prisma.quizProgress.count({
+		where: {
+			courseProgressId: progressData.id,
+			isCompleted: true
+		}
+	})
+	if (totalVideos !== completedVideos) {
+		isModuleCompleted = false
+		throw new ApiError(httpStatus.FORBIDDEN, "All Module Items Are Not Completed")
+	}
+	if (totalQuizzes !== completedQuizzes) {
+		isModuleCompleted = false
+		throw new ApiError(httpStatus.FORBIDDEN, "All Module Items Are Not Completed")
+	}
+
 	const result = await prisma.moduleProgress.upsert({
 		where: {
 			courseProgressId_moduleId: {
 				courseProgressId: progressData.id,
 				moduleId: payload.moduleId
 			}
-
 		},
 		create: {
 			courseProgressId: progressData.id,
 			moduleId: payload.moduleId,
-			isCompleted: payload.isCompleted,
+			isCompleted: isModuleCompleted
 		},
 		update: {
-			isCompleted: payload.isCompleted,
+			isCompleted: isModuleCompleted
 		}
 	})
 
