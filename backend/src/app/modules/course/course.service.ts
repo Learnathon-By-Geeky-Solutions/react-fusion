@@ -136,7 +136,7 @@ const getSingleCourse = async (id: string) => {
                 include: {
                     modules: {
                         include: {
-                            ModuleItem: {
+                            moduleItems: {
                                 include: {
                                     video: {
                                         where: { isDeleted: false },

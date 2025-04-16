@@ -21,7 +21,7 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
       resource = await prisma.quiz.findUnique({
         where: { id: quizId },
         include: {
-          ModuleItem: {
+          moduleItem: {
             include: {
               module: {
                 include: {
@@ -39,15 +39,15 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
         }
       })
 
-      instructorId = resource?.ModuleItem?.module?.milestone?.course?.instructorId
-      courseId = resource?.ModuleItem?.module.milestone.courseId ?? ""
+      instructorId = resource?.moduleItem?.module?.milestone?.course?.instructorId
+      courseId = resource?.moduleItem?.module.milestone.courseId ?? ""
     }
 
     else if (resourceType === 'video') {
       resource = await prisma.video.findUnique({
         where: { id: videoId },
         include: {
-          ModuleItem: {
+          moduleItem: {
             include: {
 
               module: {
@@ -64,8 +64,8 @@ const accessValidation = (resourceType: string) => async (req: Request, res: Res
           }
         }
       })
-      instructorId = resource?.ModuleItem?.module?.milestone?.course?.instructorId
-      courseId = resource?.ModuleItem?.module?.milestone?.courseId ?? ""
+      instructorId = resource?.moduleItem?.module?.milestone?.course?.instructorId
+      courseId = resource?.moduleItem?.module?.milestone?.courseId ?? ""
     }
     else if (resourceType === 'module') {
       resource = await prisma.module.findUnique({

@@ -53,7 +53,7 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 			id: payload.videoId
 		},
 		include: {
-			ModuleItem: {
+			moduleItem: {
 				include: {
 					module: {
 						include: {
@@ -64,7 +64,7 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 			}
 		}
 	})
-	const courseId = video?.ModuleItem?.module.milestone.courseId ?? ""
+	const courseId = video?.moduleItem?.module.milestone.courseId ?? ""
 	const progressData = await prisma.courseProgress.findUnique({
 		where: {
 			studentId_courseId: {
@@ -77,8 +77,8 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
 	}
 
-	if (video?.ModuleItem?.order && video?.ModuleItem?.order > 1) {
-		await checkPreviousItemCompletion(video?.ModuleItem?.moduleId, video?.ModuleItem?.order, progressData.id)
+	if (video?.moduleItem?.order && video?.moduleItem?.order > 1) {
+		await checkPreviousItemCompletion(video?.moduleItem?.moduleId, video?.moduleItem?.order, progressData.id)
 
 	}
 
@@ -109,7 +109,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 			id: payload.quizId
 		},
 		include: {
-			ModuleItem: {
+			moduleItem: {
 				include: {
 					module: {
 						include: {
@@ -122,7 +122,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		}
 	})
 
-	const courseId = quiz?.ModuleItem?.module.milestone.courseId ?? ""
+	const courseId = quiz?.moduleItem?.module.milestone.courseId ?? ""
 	const progressData = await prisma.courseProgress.findUnique({
 		where: {
 			studentId_courseId: {
@@ -136,8 +136,8 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 	}
 
 
-	if (quiz?.ModuleItem?.order && quiz?.ModuleItem?.order > 1) {
-		await checkPreviousItemCompletion(quiz?.ModuleItem?.moduleId, quiz?.ModuleItem?.order, progressData.id)
+	if (quiz?.moduleItem?.order && quiz?.moduleItem?.order > 1) {
+		await checkPreviousItemCompletion(quiz?.moduleItem?.moduleId, quiz?.moduleItem?.order, progressData.id)
 	}
 
 	const result = await prisma.quizProgress.upsert({
@@ -189,7 +189,7 @@ const updateModule = async (user: JwtPayload, payload: IModuleUpdate) => {
 
 	const totalVideos = await prisma.video.count({
 		where: {
-			ModuleItem: {
+			moduleItem: {
 				moduleId: payload.moduleId
 			},
 			isDeleted: false
@@ -204,7 +204,7 @@ const updateModule = async (user: JwtPayload, payload: IModuleUpdate) => {
 
 	const totalQuizzes = await prisma.quiz.count({
 		where: {
-			ModuleItem: {
+			moduleItem: {
 				moduleId: payload.moduleId
 			},
 		}

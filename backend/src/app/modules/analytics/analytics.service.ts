@@ -50,7 +50,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const totalVideos = await prisma.video.count({
 		where: {
-			ModuleItem: {
+			moduleItem: {
 				module: {
 					milestone: {
 						courseId: courseId
@@ -79,7 +79,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const totalQuizzes = await prisma.quiz.count({
 		where: {
-			ModuleItem: {
+			moduleItem: {
 				module: {
 					milestone: {
 						courseId: courseId
@@ -154,7 +154,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 	const totalScore = await prisma.question.aggregate({
 		where: {
 			quiz: {
-				ModuleItem: {
+				moduleItem: {
 					module: {
 						milestone: {
 							courseId: courseId
@@ -178,7 +178,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const totalWatchTime = await prisma.video.aggregate({
 		where: {
-			ModuleItem: {
+			moduleItem: {
 
 
 				module: {
@@ -285,7 +285,7 @@ const getInstructorOne = async (user: JwtPayload, courseId: string) => {
 	})
 	const totalLikes = await prisma.video.aggregate({
 		where: {
-			ModuleItem: {
+			moduleItem: {
 
 
 				module: {
@@ -304,7 +304,7 @@ const getInstructorOne = async (user: JwtPayload, courseId: string) => {
 
 	const totalDisLikes = await prisma.video.aggregate({
 		where: {
-			ModuleItem: {
+			moduleItem: {
 				module: {
 					milestone: {
 						courseId: courseId

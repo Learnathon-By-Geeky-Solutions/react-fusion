@@ -16,7 +16,7 @@ const createQuiz = async (payload: ICreateQuiz) => {
     }
     const result = await prisma.quiz.create({
         data: {
-            ModuleItem: {
+            moduleItem: {
                 create: {
                     moduleId: payload.moduleId,
                     order: nextOrder

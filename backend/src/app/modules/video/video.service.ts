@@ -9,7 +9,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             id: videoId
         },
         include: {
-            ModuleItem: {
+            moduleItem: {
                 include: {
                     module: {
                         include: {
@@ -80,7 +80,7 @@ const createVideo = async (payload: ICreateVideo) => {
     const result = await prisma.video.create({
         data: {
             ...payload.video,
-            ModuleItem: {
+            moduleItem: {
                 create: {
                     moduleId: payload.moduleId,
                     order: nextOrder

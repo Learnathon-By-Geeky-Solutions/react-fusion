@@ -149,7 +149,7 @@ model Module {
   milestoneId    String
   milestone      Milestone        @relation(fields: [milestoneId], references: [id])
   ModuleProgress ModuleProgress[]
-  ModuleItem     ModuleItem[]
+  moduleItems    ModuleItem[]
 }
 
 model ModuleItem {
@@ -168,7 +168,7 @@ model Quiz {
   questions    Question[]
   QuizProgress QuizProgress[]
   moudleItemId String         @unique
-  ModuleItem   ModuleItem?    @relation(fields: [moudleItemId], references: [id])
+  moduleItem   ModuleItem?    @relation(fields: [moudleItemId], references: [id])
 }
 
 model Question {
@@ -196,7 +196,7 @@ model Video {
   VideoProgress VideoProgress[]
 
   moudleItemId String      @unique
-  ModuleItem   ModuleItem? @relation(fields: [moudleItemId], references: [id])
+  moduleItem   ModuleItem? @relation(fields: [moudleItemId], references: [id])
 }
 
 model Comment {

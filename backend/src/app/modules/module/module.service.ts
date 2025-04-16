@@ -39,7 +39,7 @@ const getModule = async (moduleId: string) => {
 			id: moduleId
 		},
 		include: {
-			ModuleItem: {
+			moduleItems: {
 				include: {
 					video: {
 						select: {
