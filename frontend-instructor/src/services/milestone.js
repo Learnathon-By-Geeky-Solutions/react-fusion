@@ -5,7 +5,7 @@ export async function addMilestone(params) {
     const result = await fetch(`${BACKEND}/milestone/`, {
       method: 'POST',
       headers: {
-        Authorization: params.token,
+        Authorization: params.instructor.token,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(params.data)
@@ -26,7 +26,7 @@ export async function updateMilestone(params) {
       {
         method: 'PUT',
         headers: {
-          Authorization: params.token,
+          Authorization: params.instructor.token,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(params.data)
@@ -48,7 +48,7 @@ export async function deleteMilestone(params) {
       {
         method: 'DELETE',
         headers: {
-          Authorization: params.token
+          Authorization: params.instructor.token
         }
       }
     );
@@ -68,7 +68,7 @@ export async function checkMilestone(params) {
       {
         method: 'GET',
         headers: {
-          Authorization: params.token
+          Authorization: params.instructor.token
         }
       }
     );

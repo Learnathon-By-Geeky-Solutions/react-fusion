@@ -27,9 +27,7 @@ const CourseForm = ({ initialValues = null, onSuccess, isEdit = false }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const params = { data: values };
-
-      const result = await fetchData(isEdit ? updateCourse : addCourse, params);
+      const result = await fetchData(isEdit ? updateCourse : addCourse, values);
 
       if (result.success) {
         resetForm();

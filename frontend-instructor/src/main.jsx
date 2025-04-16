@@ -11,6 +11,7 @@ import MyCourses from './components/mycourses/MyCourses';
 import CourseAnalytics from './components/analytics/Analytics';
 import CourseDetails from './components/courseDetails/CourseDetails';
 import CreateCourse from './components/courses/CreateCourse';
+import CreateMilestone from './components/courses/CreateMilestone';
 
 const routes = createBrowserRouter([
   {
@@ -40,11 +41,15 @@ const routes = createBrowserRouter([
       },
       {
         path: '/courses/:courseId',
-        element: <CourseDetails></CourseDetails>
+        element: <CourseDetails />
       },
       {
         path: 'create-course',
         element: <CreateCourse />
+      },
+      {
+        path: 'create-milestone/:courseId',
+        element: <CreateMilestone />
       }
     ]
   }

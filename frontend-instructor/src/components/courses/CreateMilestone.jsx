@@ -1,7 +1,7 @@
 // src/pages/Courses/CreateMilestone.jsx
 import React from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import MilestoneForm from '@/components/courseManagement/MilestoneForm';
+import MilestoneForm from '@/src/components/courseManagement/MilestoneForm';
 
 const CreateMilestone = () => {
   const { courseId } = useParams();

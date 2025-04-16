@@ -7,8 +7,8 @@ const CreateCourse = () => {
   const navigate = useNavigate();
 
   const handleSuccess = (result) => {
-    if (result && result.courseId) {
-      navigate(`/courses/${result.courseId}`);
+    if (result.success && result.data.id) {
+      navigate(`/create-milestone/${result.data.id}`);
     } else {
       navigate('/courses');
     }

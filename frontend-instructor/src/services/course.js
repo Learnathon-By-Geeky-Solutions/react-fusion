@@ -5,7 +5,7 @@ export async function addCourse(params) {
     const result = await fetch(`${BACKEND}/course/`, {
       method: 'POST',
       headers: {
-        Authorization: params.token,
+        Authorization: params.instructor.token,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(params.data)
@@ -24,7 +24,7 @@ export async function updateCourse(params) {
     const result = await fetch(`${BACKEND}/course/`, {
       method: 'POST',
       headers: {
-        Authorization: params.token,
+        Authorization: params.instructor.token,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(params.data)
@@ -43,7 +43,7 @@ export async function deleteCourse(params) {
     const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
       method: 'DELETE',
       headers: {
-        Authorization: params.token
+        Authorization: params.instructor.token
       }
     });
 
@@ -62,7 +62,7 @@ export async function checkEnrollmentCourse(params) {
       {
         method: 'GET',
         headers: {
-          Authorization: params.token
+          Authorization: params.instructor.token
         }
       }
     );
