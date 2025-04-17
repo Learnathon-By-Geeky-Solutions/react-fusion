@@ -16,5 +16,6 @@ router.post("/module", auth(UserRole.STUDENT), validateRequest(progressValidatio
 
 router.post("/milestone", auth(UserRole.STUDENT), validateRequest(progressValidationSchema.milestoneUpdateSchema), accessValidation("milestone"), progressController.updateMilestone)
 
+router.post("/course", auth(UserRole.STUDENT), validateRequest(progressValidationSchema.CourseUpdateSchema), accessValidation("course"), progressController.updateCourse)
 
 export const progressRoutes = router;

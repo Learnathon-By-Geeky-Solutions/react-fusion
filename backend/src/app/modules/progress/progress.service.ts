@@ -1,8 +1,9 @@
-import httpStatus from "http-status"
+import httpStatus, { PROXY_AUTHENTICATION_REQUIRED } from "http-status"
 import ApiError from "../../../errors/ApiError"
 import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
-import { IMilestoneUpdate, IModuleUpdate, IQuizUpdate, IVideoUpdate } from "./progress.interface"
+import { ICourseUpdate, IMilestoneUpdate, IModuleUpdate, IQuizUpdate, IVideoUpdate } from "./progress.interface"
+import { progressController } from "./progress.controller"
 
 
 const checkPreviousItemCompletion = async (moduleId: string, order: number, progressId: string) => {
@@ -281,9 +282,13 @@ const updateMilestone = async (user: JwtPayload, payload: IMilestoneUpdate) => {
 	const completedModules = await prisma.moduleProgress.count({
 		where: {
 			courseProgressId: progressData.id,
-			isCompleted: true
+			isCompleted: true,
+			module: {
+				milestoneId: payload.milestoneId
+			}
 		}
 	})
+
 	if (totalModules !== completedModules) {
 		throw new ApiError(httpStatus.FORBIDDEN, "All Modules Are Not Completed")
 
@@ -308,4 +313,60 @@ const updateMilestone = async (user: JwtPayload, payload: IMilestoneUpdate) => {
 	return result
 }
 
-export const progressService = { updateVideo, updateQuiz, updateModule, updateMilestone }
+
+const updateCourse = async (user: JwtPayload, payload: ICourseUpdate) => {
+	const totalMilestones = await prisma.milestone.count({
+		where: {
+			courseId: payload.courseId
+		}
+	})
+
+	const progressData = await prisma.courseProgress.findUnique({
+		where: {
+			studentId_courseId: {
+				studentId: user.userId,
+				courseId: payload.courseId
+			}
+		},
+	})
+	if (!progressData) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
+	}
+
+	const completedMilestones = await prisma.milestoneProgress.count({
+		where: {
+			courseProgressId: progressData.id,
+			isCompleted: true
+		}
+	})
+
+
+	if (totalMilestones !== completedMilestones) {
+		throw new ApiError(httpStatus.FORBIDDEN, "All Milestones Are Not Completed")
+
+	}
+
+	const result = await prisma.courseProgress.upsert({
+		where: {
+			studentId_courseId: {
+				courseId: payload.courseId,
+				studentId: user.userId
+			}
+		},
+		update: {
+			isCompleted: payload.isCompleted,
+			progress: payload.progress
+		},
+		create: {
+			studentId: user.userId,
+			courseId: payload.courseId,
+			isCompleted: payload.isCompleted,
+			progress: payload.progress
+		}
+	})
+
+	return result
+}
+
+
+export const progressService = { updateVideo, updateQuiz, updateModule, updateMilestone, updateCourse }

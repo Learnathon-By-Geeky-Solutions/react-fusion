@@ -50,4 +50,13 @@ const updateMilestone = catchAsync(async (req, res, next) => {
 })
 
 
-export const progressController = { updateVideo, updateQuiz, updateModule, updateMilestone }
+const updateCourse = catchAsync(async (req, res, next) => {
+	const result = await progressService.updateCourse(req.user as JwtPayload, req.body);
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: 'Course Progress Updated Successfully',
+		data: result
+	})
+})
+export const progressController = { updateVideo, updateQuiz, updateModule, updateMilestone, updateCourse }
