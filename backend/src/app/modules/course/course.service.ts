@@ -84,7 +84,7 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
             contains: payload.filters?.title,
         },
         isDeleted: false,
-        isPublished: !(process.env.NODE_ENV === 'development')
+        isPublished: (process.env.NODE_ENV !== 'development')
     }
     let sortBy = [] as any
     if (payload?.sortBy) {
