@@ -87,7 +87,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const completedQuizzes = await prisma.quizProgress.count({
 		where: {
-			ModuleItemProgress: {
+			moduleItemProgress: {
 				courseProgressId: progressId,
 				isCompleted: true
 			}
@@ -157,7 +157,7 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 	})
 	const userScore = await prisma.quizProgress.aggregate({
 		where: {
-			ModuleItemProgress: {
+			moduleItemProgress: {
 				courseProgressId: progressId,
 			}
 		},
