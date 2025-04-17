@@ -51,12 +51,19 @@ const updateVideo = async (videoId: string, payload: IUpdateVideo) => {
 
 
 const deleteVideo = async (videoId: string) => {
-    const result = await prisma.video.update({
-        where: {
-            id: videoId
-        }, data: {
-            isDeleted: true
-        }
+    const result = await prisma.$transaction(async (tx) => {
+        const video = await tx.video.delete({
+            where: {
+                id: videoId
+            }
+        })
+
+        const deletedModuleItem = await tx.moduleItem.delete({
+            where: {
+                id: video.moudleItemId
+            }
+        })
+        return deletedModuleItem
     })
     return result
 }
