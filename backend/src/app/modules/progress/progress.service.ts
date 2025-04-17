@@ -1,9 +1,8 @@
-import httpStatus, { PROXY_AUTHENTICATION_REQUIRED } from "http-status"
+import httpStatus from "http-status"
 import ApiError from "../../../errors/ApiError"
 import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
 import { ICourseUpdate, IMilestoneUpdate, IModuleUpdate, IQuizUpdate, IVideoUpdate } from "./progress.interface"
-import { progressController } from "./progress.controller"
 
 
 const checkPreviousItemCompletion = async (moduleId: string, order: number, progressId: string) => {
