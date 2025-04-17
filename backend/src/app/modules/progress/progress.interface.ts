@@ -22,3 +22,10 @@ export interface IMilestoneUpdate {
 	milestoneId: string,
 	isCompleted: boolean,
 }
+
+
+export interface ICourseUpdate {
+	courseId: string,
+	isCompleted: boolean,
+	progress: number
+}

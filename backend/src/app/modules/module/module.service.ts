@@ -39,17 +39,20 @@ const getModule = async (moduleId: string) => {
 			id: moduleId
 		},
 		include: {
-			videos: {
-				select: {
-					id: true,
-				}
-			},
-			quizes: true
+			moduleItems: {
+				include: {
+					video: {
+						select: {
+							id: true,
+						}
+					},
+					quiz: true
+				},
+			}
 		}
 	})
 	return result
 }
-
 
 
 export const moduleService = { createModule, updateModule, deleteModule, getModule }

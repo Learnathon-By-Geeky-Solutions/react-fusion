@@ -136,17 +136,20 @@ const getSingleCourse = async (id: string) => {
                 include: {
                     modules: {
                         include: {
-                            videos: {
-                                where: { isDeleted: false },
-                                select: {
-                                    id: true,
-                                    moduleId: true,
-                                    title: true,
-                                }
-                            },
-                            quizes: {
-                                select: {
-                                    id: true,
+                            moduleItems: {
+                                include: {
+                                    video: {
+                                        where: { isDeleted: false },
+                                        select: {
+                                            id: true,
+                                            title: true,
+                                        }
+                                    },
+                                    quiz: {
+                                        select: {
+                                            id: true,
+                                        }
+                                    }
                                 }
                             }
                         }
