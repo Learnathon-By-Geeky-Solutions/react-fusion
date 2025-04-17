@@ -71,7 +71,6 @@ const createVideo = async (payload: ICreateVideo) => {
             order: true
         }
     })
-    console.log(orderNo._max)
     let nextOrder = 1
     if (orderNo._max.order) {
         nextOrder += orderNo._max.order
