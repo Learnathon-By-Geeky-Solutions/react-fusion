@@ -159,7 +159,7 @@ model ModuleItem {
   order    Int
   video    Video?
   quiz     Quiz?
-  Progress ModuelItemProgress[]
+  Progress ModuleItemProgress[]
 
   @@unique([moduleId, order])
 }
@@ -279,7 +279,7 @@ model CourseProgress {
   isCompleted        Boolean              @default(false)
   progress           Float // Overall progress in the course (calculated)
   lastUpdated        DateTime             @default(now())
-  ModuleItemProgress ModuelItemProgress[]
+  ModuleItemProgress ModuleItemProgress[]
   ModuleProgress     ModuleProgress[]
   MilestoneProgress  MilestoneProgress[]
 
@@ -313,7 +313,7 @@ model ModuleProgress {
   @@map("module_progress")
 }
 
-model ModuelItemProgress {
+model ModuleItemProgress {
   id               String         @id @default(uuid())
   courseProgressId String
   courseProgress   CourseProgress @relation(fields: [courseProgressId], references: [id])
@@ -329,7 +329,7 @@ model ModuelItemProgress {
 model VideoProgress {
   id                   String             @id @default(uuid())
   moduleItemProgressId String             @unique
-  ModuleItemProgress   ModuelItemProgress @relation(fields: [moduleItemProgressId], references: [id])
+  ModuleItemProgress   ModuleItemProgress @relation(fields: [moduleItemProgressId], references: [id])
   videoId              String
   video                Video              @relation(fields: [videoId], references: [id])
   timeWatched          Float // Time watched in seconds (if partial progress is tracked)
@@ -341,7 +341,7 @@ model VideoProgress {
 model QuizProgress {
   id                   String             @id @default(uuid())
   moduleItemProgressId String             @unique
-  ModuleItemProgress   ModuelItemProgress @relation(fields: [moduleItemProgressId], references: [id])
+  moduleItemProgress   ModuleItemProgress @relation(fields: [moduleItemProgressId], references: [id])
   quizId               String
   quiz                 Quiz               @relation(fields: [quizId], references: [id])
   score                Float // Score obtained on the quiz

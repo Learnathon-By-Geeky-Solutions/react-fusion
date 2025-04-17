@@ -16,7 +16,7 @@ const checkPreviousItemCompletion = async (moduleId: string, order: number, prog
 		}
 	})
 
-	const prevProgress = await prisma.moduelItemProgress.findUnique({
+	const prevProgress = await prisma.moduleItemProgress.findUnique({
 		where: {
 			courseProgressId_moduleItemId: {
 				courseProgressId: progressId,
@@ -70,7 +70,7 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 
 	}
 
-	const result = await prisma.moduelItemProgress.upsert({
+	const result = await prisma.moduleItemProgress.upsert({
 		where: {
 			courseProgressId_moduleItemId: {
 				moduleItemId: video.moudleItemId,
@@ -145,7 +145,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 	}
 
 
-	const result = await prisma.moduelItemProgress.upsert({
+	const result = await prisma.moduleItemProgress.upsert({
 		where: {
 			courseProgressId_moduleItemId: {
 				moduleItemId: quiz.moudleItemId,
