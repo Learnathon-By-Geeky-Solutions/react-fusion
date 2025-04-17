@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import useAuth from '@/src/context/authContext';
-import getAllCourses from '@/src/services/getCourse';
+import { getCourseById } from '@/src/services/getCourse';
+import { dashboardService } from '@/src/services/dashboard';
 import { noimage } from '../../assets';
 import useApi from '@/src/hooks/useApi';
 
@@ -15,8 +16,8 @@ export default function CourseDashboard() {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const data = await fetchData(getAllCourses, {});
-        setCourses(data.data);
+        const res = await fetchData(dashboardService.getAnalytics, {});
+        const data = await fetchData(getCourseById, {});
       } catch (err) {
         console.error('Error fetching courses:', err);
         setError('Failed to load courses. Please try again later.');
