@@ -11,13 +11,11 @@ import MyCourses from './components/mycourses/MyCourses';
 import CourseAnalytics from './components/analytics/Analytics';
 import CourseDetails from './components/courseDetails/CourseDetails';
 import CreateCourse from './components/courses/CreateCourse';
-// import CreateMilestone from './components/courses/CreateMilestone';
-// import CreateModule from './components/courses/CreateModule';
 import CourseList from './components/courses/CourseList';
 import CreateMilestone from './components/courses/CreateMilestone';
 import CreateModule from './components/courses/CreateModule';
-import EditMilestone from './components/courses/EditMilestone';
 import ContentPage from './components/courses/CreateContent';
+import EditCourse from './components/courses/EditCourse';
 
 const routes = createBrowserRouter([
   {
@@ -66,12 +64,12 @@ const routes = createBrowserRouter([
         element: <CreateModule />
       },
       {
-        path: '/milestone/:milestoneId/edit',
-        element: <EditMilestone />
-      },
-      {
         path: '/content/:moduleId',
         element: <ContentPage />
+      },
+      {
+        path: '/edit-course/:courseId',
+        element: <EditCourse />
       }
     ]
   }

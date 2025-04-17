@@ -1,3 +1,4 @@
+// src/components/courseManagement/ContentList.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
@@ -5,7 +6,12 @@ import { getCourseById } from '@/src/services/getCourse';
 import { checkMilestone } from '@/src/services/milestone';
 import { checkModule } from '@/src/services/module';
 
-const ContentList = ({ moduleId, refreshTrigger }) => {
+const ContentList = ({
+  moduleId,
+  refreshTrigger,
+  onEditItem,
+  onDeleteItem
+}) => {
   const [moduleItems, setModuleItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moduleTitle, setModuleTitle] = useState('');
@@ -65,12 +71,6 @@ const ContentList = ({ moduleId, refreshTrigger }) => {
     loadContent();
   }, [refreshTrigger]);
 
-  const handleRemove = (id, type) => {
-    // Implementation for removing items would go here
-    console.log(`Remove ${type} with id: ${id}`);
-    // You would call an API endpoint here
-  };
-
   // Count quizzes for numbering
   const getQuizNumber = (index) => {
     let quizCount = 0;
@@ -113,21 +113,15 @@ const ContentList = ({ moduleId, refreshTrigger }) => {
             )}
 
             <div className='flex space-x-2'>
-              <Link
-                to={
-                  item.video
-                    ? `/video/${item.video.id}/edit`
-                    : `/quiz/${item.quiz.id}/edit`
-                }
+              <button
+                onClick={() => onEditItem(item)}
                 className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
               >
                 Edit
-              </Link>
+              </button>
 
               <button
-                onClick={() =>
-                  handleRemove(item.id, item.video ? 'video' : 'quiz')
-                }
+                onClick={() => onDeleteItem(item)}
                 className='px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
               >
                 Remove

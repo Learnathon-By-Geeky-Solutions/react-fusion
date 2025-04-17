@@ -3,10 +3,12 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import useApi from '@/src/hooks/useApi';
+import { useParams } from 'react-router-dom';
 import { addCourse, updateCourse } from '@/src/services/course';
 
 const CourseForm = ({ initialValues = null, onSuccess, isEdit = false }) => {
   const { fetchData } = useApi();
+  const { courseId } = useParams();
   const defaultValues = {
     title: '',
     description: '',
@@ -27,11 +29,21 @@ const CourseForm = ({ initialValues = null, onSuccess, isEdit = false }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const result = await fetchData(isEdit ? updateCourse : addCourse, values);
+      const payload = isEdit
+        ? { courseData: values, courseId: courseId }
+        : values;
+      const result = await fetchData(
+        isEdit ? updateCourse : addCourse,
+        payload
+      );
 
       if (result.success) {
-        resetForm();
-        if (onSuccess) onSuccess(result);
+        if (isEdit) {
+          alert('Course updated successfully');
+        } else {
+          resetForm();
+          if (onSuccess) onSuccess(result);
+        }
       } else {
         alert('Error: ' + (result.message || 'Could not save course'));
       }

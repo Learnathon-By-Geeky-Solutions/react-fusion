@@ -23,7 +23,7 @@ export async function addQuiz(params) {
 
 export async function checkQuiz(params) {
   try {
-    const result = await fetch(`${BACKEND}/quiz/check/${params.data.videoId}`, {
+    const result = await fetch(`${BACKEND}/quiz/check/${params.data.quizId}`, {
       method: 'POST',
       headers: {
         Authorization: params.instructor.token,
@@ -42,7 +42,7 @@ export async function checkQuiz(params) {
 
 export async function updateQuiz(params) {
   try {
-    const result = await fetch(`${BACKEND}/quiz/${params.data.videoId}`, {
+    const result = await fetch(`${BACKEND}/quiz/${params.data.quizId}`, {
       method: 'PUT',
       headers: {
         Authorization: params.instructor.token,
@@ -60,8 +60,9 @@ export async function updateQuiz(params) {
 }
 
 export async function deleteQuiz(params) {
+  console.log('Delete params', params);
   try {
-    const result = await fetch(`${BACKEND}/quiz/${params.data.videoId}`, {
+    const result = await fetch(`${BACKEND}/quiz/${params.data.quizId}`, {
       method: 'DELETE',
       headers: {
         Authorization: params.instructor.token
@@ -69,6 +70,7 @@ export async function deleteQuiz(params) {
     });
 
     const data = await result.json();
+    console.log('Delete data', data);
     return data;
   } catch (error) {
     console.error('Error delete quiz:', error);
@@ -76,9 +78,9 @@ export async function deleteQuiz(params) {
   }
 }
 
-export async function getVideo(params) {
+export async function getQuiz(params) {
   try {
-    const result = await fetch(`${BACKEND}/quiz/${params.videoId}`, {
+    const result = await fetch(`${BACKEND}/quiz/${params.quizId}`, {
       method: 'GET',
       headers: {
         Authorization: params.instructor.token

@@ -29,7 +29,7 @@ export async function updateMilestone(params) {
           Authorization: params.instructor.token,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(params.data)
+        body: JSON.stringify(params.data.milestone)
       }
     );
 

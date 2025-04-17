@@ -2,187 +2,126 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className='bg-gradient-to-b from-gray-800 to-gray-900 text-white py-12 px-4 mt-10'>
-      <div className='mx-auto max-w-[1280px]'>
-        {/* Top Section with Logo and Links */}
-        <div className='flex flex-col md:flex-row justify-between items-center mb-8'>
-          <div className='mb-6 md:mb-0'>
-            <div className='text-2xl font-bold uppercase tracking-wide mb-2'>
-              <span className='text-blue-400'>Edu</span>
-              <span className='text-amber-100'>Nexus</span>
-            </div>
-            <p className='text-gray-400 text-sm max-w-xs'>
-              Empowering educators and students with innovative learning
-              solutions.
+    <div className='bg-gray-800 text-white py-12 px-4'>
+      <div className='container mx-auto max-w-6xl'>
+        <div className='grid md:grid-cols-4 gap-8'>
+          <div>
+            <h3 className='text-xl font-bold mb-4'>EduNexus</h3>
+            <p className='text-gray-300'>
+              Connecting Minds, Empowering Futures.
             </p>
           </div>
+          <div>
+            <h4 className='font-bold mb-4'>Links</h4>
+            <ul className='space-y-2 text-gray-300'>
+              <li>
+                <a href='/' className='hover:text-white'>
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href='/about' className='hover:text-white'>
+                  About
+                </a>
+              </li>
+              <li>
+                <a href='/contact' className='hover:text-white'>
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className='font-bold mb-4'>Resources</h4>
+            <ul className='space-y-2 text-gray-300'>
+              <li>
+                <a href='#' className='hover:text-white'>
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a href='#' className='hover:text-white'>
+                  Help Center
+                </a>
+              </li>
+              <li>
+                <a href='#' className='hover:text-white'>
+                  Tutorials
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className='font-bold mb-4'>Connect</h4>
+            <div className='flex space-x-4 justify-center'>
+              {/* Facebook */}
+              <a
+                href='#'
+                className='text-xl hover:text-blue-600'
+                aria-label='Facebook'
+              >
+                <svg
+                  fill='currentColor'
+                  className='w-6 h-6'
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M22.675 0h-21.35C.595 0 0 .595 0 1.326v21.348C0 23.404.595 24 1.326 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.098 2.795.142v3.24l-1.918.001c-1.504 0-1.794.715-1.794 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.405 24 24 23.405 24 22.674V1.326C24 .595 23.405 0 22.675 0z' />
+                </svg>
+              </a>
 
-          <div className='grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-4 text-sm'>
-            <Link to='/about' className='hover:text-blue-400 transition-colors'>
-              About
-            </Link>
-            <Link
-              to='/contact'
-              className='hover:text-blue-400 transition-colors'
-            >
-              Contact
-            </Link>
-            <Link
-              to='/privacy-policy'
-              className='hover:text-blue-400 transition-colors'
-            >
-              Privacy Policy
-            </Link>
-            <Link to='/terms' className='hover:text-blue-400 transition-colors'>
-              Terms
-            </Link>
+              {/* LinkedIn */}
+              <a
+                href='#'
+                className='text-xl hover:text-blue-500'
+                aria-label='LinkedIn'
+              >
+                <svg
+                  fill='currentColor'
+                  className='w-6 h-6'
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M22.23 0H1.77C.792 0 0 .774 0 1.729v20.542C0 23.225.792 24 1.77 24h20.46c.978 0 1.77-.775 1.77-1.729V1.729C24 .774 23.208 0 22.23 0zM7.12 20.452H3.56V9.018h3.56v11.434zM5.34 7.433a2.066 2.066 0 110-4.132 2.066 2.066 0 010 4.132zm15.11 13.019h-3.56v-5.569c0-1.328-.027-3.037-1.85-3.037-1.85 0-2.134 1.445-2.134 2.938v5.668H9.346V9.018h3.417v1.561h.049c.476-.9 1.635-1.85 3.363-1.85 3.594 0 4.256 2.364 4.256 5.438v6.285z' />
+                </svg>
+              </a>
+
+              {/* Instagram */}
+              <a
+                href='#'
+                className='text-xl hover:text-pink-500'
+                aria-label='Instagram'
+              >
+                <svg
+                  fill='currentColor'
+                  className='w-6 h-6'
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M12 2.163c3.204 0 3.584.012 4.849.07 1.366.062 2.633.333 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.265.07 1.645.07 4.849s-.012 3.584-.07 4.849c-.062 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.265.058-1.645.07-4.849.07s-3.584-.012-4.849-.07c-1.366-.062-2.633-.333-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.647 2.163 15.267 2.163 12s.012-3.584.07-4.849c.062-1.366.333-2.633 1.308-3.608.975-.975 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.012 7.052.07 5.726.129 4.387.369 3.261 1.495 2.135 2.621 1.895 3.96 1.836 5.286.778 6.566.766 6.975.766 12c0 5.025.012 5.434.07 6.714.059 1.326.299 2.665 1.425 3.791 1.126 1.126 2.465 1.366 3.791 1.425 1.28.058 1.689.07 6.714.07s5.434-.012 6.714-.07c1.326-.059 2.665-.299 3.791-1.425 1.126-1.126 1.366-2.465 1.425-3.791.058-1.28.07-1.689.07-6.714s-.012-5.434-.07-6.714c-.059-1.326-.299-2.665-1.425-3.791C20.279.369 18.94.129 17.614.07 16.334.012 15.925 0 12 0zM12 5.838A6.162 6.162 0 005.838 12 6.162 6.162 0 0012 18.162 6.162 6.162 0 0018.162 12 6.162 6.162 0 0012 5.838zm0 10.162A3.999 3.999 0 018 12a3.999 3.999 0 014-4 3.999 3.999 0 014 4 3.999 3.999 0 01-4 4zm6.406-11.845a1.44 1.44 0 110 2.88 1.44 1.44 0 010-2.88z' />
+                </svg>
+              </a>
+
+              {/* GitHub */}
+              <a
+                href='#'
+                className='text-xl hover:text-black'
+                aria-label='GitHub'
+              >
+                <svg
+                  fill='currentColor'
+                  className='w-6 h-6'
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M12 .297c-6.63 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.6.113.793-.258.793-.577v-2.168c-3.338.724-4.033-1.416-4.033-1.416-.546-1.385-1.333-1.754-1.333-1.754-1.089-.745.084-.729.084-.729 1.205.084 1.839 1.236 1.839 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.775.418-1.305.76-1.605-2.665-.304-5.466-1.332-5.466-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.301 1.23a11.52 11.52 0 013.003-.404c1.018.005 2.042.137 3.003.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.653.243 2.874.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.803 5.625-5.475 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12' />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
-
-        {/* Divider */}
-        <div className='border-t border-gray-700 my-6'></div>
-
-        {/* Bottom Section with Social Icons and Copyright */}
-        <div className='flex flex-col md:flex-row justify-between items-center'>
-          <div className='text-gray-400 text-sm mb-4 md:mb-0'>
-            © {currentYear} EduNexus. All Rights Reserved.
-          </div>
-
-          <div className='flex gap-4'>
-            <a
-              href='https://www.facebook.com'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='hover:opacity-80 transition-opacity'
-            >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='32'
-                height='32'
-                viewBox='0 0 48 48'
-                className='transition-transform transform hover:scale-110'
-              >
-                <path
-                  fill='#039be5'
-                  d='M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z'
-                ></path>
-                <path
-                  fill='#fff'
-                  d='M26.572,29.036h4.917l0.772-4.995h-5.69v-2.73c0-2.075,0.678-3.915,2.619-3.915h3.119v-4.359c-0.548-0.074-1.707-0.236-3.897-0.236c-4.573,0-7.254,2.415-7.254,7.917v3.323h-4.701v4.995h4.701v13.729C22.089,42.905,23.032,43,24,43c0.875,0,1.729-0.08,2.572-0.194V29.036z'
-                ></path>
-              </svg>
-            </a>
-            <a
-              href='https://www.linkedin.com'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='hover:opacity-80 transition-opacity'
-            >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='32'
-                height='32'
-                viewBox='0 0 48 48'
-                className='transition-transform transform hover:scale-110'
-              >
-                <path
-                  fill='#0288D1'
-                  d='M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5V37z'
-                ></path>
-                <path
-                  fill='#FFF'
-                  d='M12 19H17V36H12zM14.485 17h-.028C12.965 17 12 15.888 12 14.499 12 13.08 12.995 12 14.514 12c1.521 0 2.458 1.08 2.486 2.499C17 15.887 16.035 17 14.485 17zM36 36h-5v-9.099c0-2.198-1.225-3.698-3.192-3.698-1.501 0-2.313 1.012-2.707 1.99C24.957 25.543 25 26.511 25 27v9h-5V19h5v2.616C25.721 20.5 26.85 19 29.738 19c3.578 0 6.261 2.25 6.261 7.274L36 36 36 36z'
-                ></path>
-              </svg>
-            </a>
-            <a
-              href='https://twitter.com'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='hover:opacity-80 transition-opacity'
-            >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='32'
-                height='32'
-                viewBox='0 0 48 48'
-                className='transition-transform transform hover:scale-110'
-              >
-                <path
-                  fill='#03A9F4'
-                  d='M42,12.429c-1.323,0.586-2.746,0.977-4.247,1.162c1.526-0.906,2.7-2.351,3.251-4.058c-1.428,0.837-3.01,1.452-4.693,1.776C34.967,9.884,33.05,9,30.926,9c-4.08,0-7.387,3.278-7.387,7.32c0,0.572,0.067,1.129,0.193,1.67c-6.138-0.308-11.582-3.226-15.224-7.654c-0.64,1.082-1,2.349-1,3.686c0,2.541,1.301,4.778,3.285,6.096c-1.211-0.037-2.351-0.374-3.349-0.914c0,0.022,0,0.055,0,0.086c0,3.551,2.547,6.508,5.923,7.181c-0.617,0.169-1.269,0.263-1.941,0.263c-0.477,0-0.942-0.054-1.392-0.135c0.94,2.902,3.667,5.023,6.898,5.086c-2.528,1.96-5.712,3.134-9.174,3.134c-0.598,0-1.183-0.034-1.761-0.104C9.268,36.786,13.152,38,17.321,38c13.585,0,21.017-11.156,21.017-20.834c0-0.317-0.01-0.633-0.025-0.945C39.763,15.197,41.013,13.905,42,12.429'
-                ></path>
-              </svg>
-            </a>
-            <a
-              href='https://www.instagram.com'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='hover:opacity-80 transition-opacity'
-            >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='32'
-                height='32'
-                viewBox='0 0 48 48'
-                className='transition-transform transform hover:scale-110'
-              >
-                <radialGradient
-                  id='yOrnnhliCrdS2gy~4tD8ma_Xy10Jcu1L2Su_gr1'
-                  cx='19.38'
-                  cy='42.035'
-                  r='44.899'
-                  gradientUnits='userSpaceOnUse'
-                >
-                  <stop offset='0' stopColor='#fd5'></stop>
-                  <stop offset='.328' stopColor='#ff543f'></stop>
-                  <stop offset='.348' stopColor='#fc5245'></stop>
-                  <stop offset='.504' stopColor='#e64771'></stop>
-                  <stop offset='.643' stopColor='#d53e91'></stop>
-                  <stop offset='.761' stopColor='#cc39a4'></stop>
-                  <stop offset='.841' stopColor='#c837ab'></stop>
-                </radialGradient>
-                <path
-                  fill='url(#yOrnnhliCrdS2gy~4tD8ma_Xy10Jcu1L2Su_gr1)'
-                  d='M34.017,41.99l-20,0.019c-4.4,0.004-8.003-3.592-8.008-7.992l-0.019-20c-0.004-4.4,3.592-8.003,7.992-8.008l20-0.019c4.4-0.004,8.003,3.592,8.008,7.992l0.019,20C42.014,38.383,38.417,41.986,34.017,41.99z'
-                ></path>
-                <radialGradient
-                  id='yOrnnhliCrdS2gy~4tD8mb_Xy10Jcu1L2Su_gr2'
-                  cx='11.786'
-                  cy='5.54'
-                  r='29.813'
-                  gradientTransform='matrix(1 0 0 .6663 0 1.849)'
-                  gradientUnits='userSpaceOnUse'
-                >
-                  <stop offset='0' stopColor='#4168c9'></stop>
-                  <stop
-                    offset='.999'
-                    stopColor='#4168c9'
-                    stopOpacity='0'
-                  ></stop>
-                </radialGradient>
-                <path
-                  fill='url(#yOrnnhliCrdS2gy~4tD8mb_Xy10Jcu1L2Su_gr2)'
-                  d='M34.017,41.99l-20,0.019c-4.4,0.004-8.003-3.592-8.008-7.992l-0.019-20c-0.004-4.4,3.592-8.003,7.992-8.008l20-0.019c4.4-0.004,8.003,3.592,8.008,7.992l0.019,20C42.014,38.383,38.417,41.986,34.017,41.99z'
-                ></path>
-                <path
-                  fill='#fff'
-                  d='M24,31c-3.859,0-7-3.14-7-7s3.141-7,7-7s7,3.14,7,7S27.859,31,24,31z M24,19c-2.757,0-5,2.243-5,5s2.243,5,5,5s5-2.243,5-5S26.757,19,24,19z'
-                ></path>
-                <circle cx='31.5' cy='16.5' r='1.5' fill='#fff'></circle>
-                <path
-                  fill='#fff'
-                  d='M30,37H18c-3.859,0-7-3.14-7-7V18c0-3.86,3.141-7,7-7h12c3.859,0,7,3.14,7,7v12C37,33.86,33.859,37,30,37z M18,13c-2.757,0-5,2.243-5,5v12c0,2.757,2.243,5,5,5h12c2.757,0,5-2.243,5-5V18c0-2.757-2.243-5-5-5H18z'
-                ></path>
-              </svg>
-            </a>
-          </div>
+        <div className='border-t border-gray-700 mt-8 pt-8 text-center text-gray-400'>
+          <p>© {new Date().getFullYear()} EduNexus. All rights reserved.</p>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 

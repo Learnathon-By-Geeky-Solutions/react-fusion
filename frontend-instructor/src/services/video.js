@@ -41,6 +41,7 @@ export async function updateVideo(params) {
 }
 
 export async function deleteVideo(params) {
+  console.log('video params', params);
   try {
     const result = await fetch(`${BACKEND}/video/${params.data.videoId}`, {
       method: 'DELETE',
@@ -50,6 +51,7 @@ export async function deleteVideo(params) {
     });
 
     const data = await result.json();
+    console.log('video data', data);
     return data;
   } catch (error) {
     console.error('Error delete video:', error);

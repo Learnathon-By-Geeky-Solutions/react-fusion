@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+// src/components/courseManagement/QuizForm.jsx
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import useApi from '@/src/hooks/useApi';
 import { addQuiz } from '@/src/services/quiz';
 
-const QuizForm = ({ moduleId, onSuccess }) => {
+const QuizForm = ({
+  moduleId,
+  onSuccess,
+  quizData = null,
+  isEditing = false,
+  quizId = null,
+  updateFunction = null
+}) => {
   const { fetchData } = useApi();
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [editingIndex, setEditingIndex] = useState(-1);
 
   const initialValues = {
-    questions: []
+    questions:
+      quizData && quizData.questions
+        ? quizData.questions.map((q) => ({
+            question: q.question || '',
+            options: q.options || ['', '', '', ''],
+            answer: q.answer || '',
+            points: q.points || 5
+          }))
+        : []
   };
 
   const questionSchema = Yup.object({
@@ -48,17 +64,30 @@ const QuizForm = ({ moduleId, onSuccess }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const params = {
-        moduleId,
         questions: values.questions.map((q) => ({
           ...q,
           points: parseInt(q.points, 10)
         }))
       };
 
-      const result = await fetchData(addQuiz, params);
+      let result;
+
+      if (isEditing && quizId && updateFunction) {
+        // Update existing quiz
+        result = await fetchData(updateFunction, {
+          quizId: quizId,
+          quizData: params
+        });
+      } else {
+        // Add new quiz
+        result = await fetchData(addQuiz, {
+          moduleId,
+          ...params
+        });
+      }
 
       if (result.success) {
-        resetForm();
+        if (!isEditing) resetForm();
         if (onSuccess) onSuccess(result);
       } else {
         alert('Error: ' + (result.message || 'Could not save quiz'));
@@ -90,11 +119,14 @@ const QuizForm = ({ moduleId, onSuccess }) => {
 
   return (
     <div className='bg-white p-6 rounded-lg shadow-md'>
-      <h2 className='text-xl font-semibold mb-4'>Add New Quiz</h2>
+      <h2 className='text-xl font-semibold mb-4'>
+        {isEditing ? 'Edit Quiz' : 'Add New Quiz'}
+      </h2>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        enableReinitialize
       >
         {({ values, isSubmitting, errors, touched, setFieldValue }) => (
           <Form className='space-y-6'>
@@ -422,7 +454,11 @@ const QuizForm = ({ moduleId, onSuccess }) => {
                   disabled={isSubmitting}
                   className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300'
                 >
-                  {isSubmitting ? 'Saving...' : 'Add Quiz'}
+                  {isSubmitting
+                    ? 'Saving...'
+                    : isEditing
+                    ? 'Update Quiz'
+                    : 'Add Quiz'}
                 </button>
               </div>
             )}
