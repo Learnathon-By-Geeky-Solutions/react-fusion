@@ -9,9 +9,14 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             id: videoId
         },
         include: {
-            module: {
+            moduleItem: {
                 include: {
-                    milestone: true
+                    module: {
+                        include: {
+                            milestone: true
+                        }
+                    },
+
                 }
             },
             notes: {
@@ -58,12 +63,31 @@ const deleteVideo = async (videoId: string) => {
 
 
 const createVideo = async (payload: ICreateVideo) => {
-    const result = await prisma.video.create({
-        data: {
-            moduleId: payload.moduleId,
-            ...payload.video
-        }
+    const result = await prisma.$transaction(async (tx) => {
+        const orderNo = await prisma.moduleItem.aggregate({
+            where: {
+                moduleId: payload.moduleId
+            },
+            _max: {
+                order: true
+            }
+        })
+
+        const nextOrder = (orderNo._max?.order ?? 0) + 1
+
+        return tx.video.create({
+            data: {
+                ...payload.video,
+                moduleItem: {
+                    create: {
+                        moduleId: payload.moduleId,
+                        order: nextOrder
+                    }
+                }
+            }
+        })
     })
+
     return result
 }
 

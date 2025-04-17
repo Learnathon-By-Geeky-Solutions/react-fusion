@@ -8,7 +8,6 @@ const createMilestone = async (payload: ICreateMilestone) => {
 			...payload.milestone
 		},
 	})
-	console.log('🚀 payload : ', payload)
 	return result
 }
 
