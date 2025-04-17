@@ -1,17 +1,44 @@
 // src/components/ContentManagement/ContentPage.jsx
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import VideoForm from '@/src/components/courseManagement/VideoForm';
 import QuizForm from '@/src/components/courseManagement/QuizForm';
 import ContentList from '../courseManagement/ContentList';
+import useApi from '@/src/hooks/useApi';
+import { checkModule } from '@/src/services/module';
 
 const ContentPage = () => {
   const { moduleId } = useParams();
   const [activeForm, setActiveForm] = useState('video');
   const [refreshList, setRefreshList] = useState(0);
+  const [milestoneId, setMilestoneId] = useState('');
+  const { fetchData } = useApi();
+
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        // First, find the module data to get the milestoneId
+        const moduleResult = await fetchData(checkModule, { moduleId });
+        setMilestoneId(moduleResult.data.milestoneId);
+      } catch (error) {
+        console.error('Error loading milestoneId:', error);
+      } finally {
+      }
+    };
+
+    loadContent();
+  }, []);
 
   return (
     <div className='max-w-6xl container mx-auto p-6'>
+      <div className='mb-8'>
+        <Link
+          to={`/module/${milestoneId}`}
+          className='text-indigo-600 hover:text-indigo-800'
+        >
+          &larr; Back to Module
+        </Link>
+      </div>
       <h1 className='text-2xl font-bold mb-6'>Add Content to Module</h1>
 
       <div className='flex space-x-4 mb-6'>

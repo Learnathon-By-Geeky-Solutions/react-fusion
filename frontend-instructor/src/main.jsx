@@ -50,7 +50,7 @@ const routes = createBrowserRouter([
         element: <CourseDetails />
       },
       {
-        path: 'create-course',
+        path: '/create-course',
         element: <CreateCourse />
       },
       {
