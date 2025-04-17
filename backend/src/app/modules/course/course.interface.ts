@@ -3,6 +3,7 @@ export interface ICreateCourse {
     description: string;
     price: number,
     thumbnail: string,
+    isPublished?: boolean;
 };
 
 export type IUpdateCourse = Partial<ICreateCourse>

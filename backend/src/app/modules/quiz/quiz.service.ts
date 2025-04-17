@@ -1,6 +1,8 @@
 import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
 import { ICheckQuiz, ICreateQuiz, IUpdateQuiz } from "./quiz.interface"
+
+
 const createQuiz = async (payload: ICreateQuiz) => {
     const orderNo = await prisma.moduleItem.aggregate({
         where: {
@@ -92,8 +94,13 @@ const deleteQuiz = async (quizId: string) => {
                 id: quizId
             }
         })
+        const deletedModuleItem = await prisma.moduleItem.delete({
+            where: {
+                id: deletedQuiz.moudleItemId
+            },
+        })
 
-        return deletedQuiz
+        return deletedModuleItem
     })
     return result
 }

@@ -58,7 +58,6 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
                             orderBy: { order: 'asc' },
                             include: {
                                 video: {
-                                    where: { isDeleted: false },
                                     select: {
                                         id: true,
                                         title: true,
@@ -78,13 +77,17 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
         } : false,
     }
 
-    let whereTerms = {
+    let whereTerms: any = {
         instructorId: payload.filters?.instructorId,
         title: {
             contains: payload.filters?.title,
         },
         isDeleted: false,
-        isPublished: (process.env.NODE_ENV !== 'development')
+        isPublished: true
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+        delete whereTerms.isPublished
     }
     let sortBy = [] as any
     if (payload?.sortBy) {
@@ -150,7 +153,6 @@ const getSingleCourse = async (id: string) => {
                                 orderBy: { order: 'asc' },
                                 include: {
                                     video: {
-                                        where: { isDeleted: false },
                                         select: {
                                             id: true,
                                             title: true,
