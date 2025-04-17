@@ -63,29 +63,29 @@ const deleteVideo = async (videoId: string) => {
 
 
 const createVideo = async (payload: ICreateVideo) => {
-    const orderNo = await prisma.moduleItem.aggregate({
-        where: {
-            moduleId: payload.moduleId
-        },
-        _max: {
-            order: true
-        }
-    })
-    let nextOrder = 1
-    if (orderNo._max.order) {
-        nextOrder += orderNo._max.order
-    }
+    const result = await prisma.$transaction(async (tx) => {
+        const orderNo = await prisma.moduleItem.aggregate({
+            where: {
+                moduleId: payload.moduleId
+            },
+            _max: {
+                order: true
+            }
+        })
 
-    const result = await prisma.video.create({
-        data: {
-            ...payload.video,
-            moduleItem: {
-                create: {
-                    moduleId: payload.moduleId,
-                    order: nextOrder
+        const nextOrder = (orderNo._max?.order ?? 0) + 1
+
+        return tx.video.create({
+            data: {
+                ...payload.video,
+                moduleItem: {
+                    create: {
+                        moduleId: payload.moduleId,
+                        order: nextOrder
+                    }
                 }
             }
-        }
+        })
     })
 
     return result
