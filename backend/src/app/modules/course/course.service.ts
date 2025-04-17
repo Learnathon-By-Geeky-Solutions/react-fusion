@@ -49,34 +49,42 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
     const includeTerms: any = {
         instructor: payload.items.instructors,
         milestones: items.milestones === true ? {
+            orderBy: { order: 'asc' },
             include: {
                 modules: items.modules === true ? {
+                    orderBy: { order: 'asc' },
                     include: {
-                        quizes: items.quizes === true ? {
-                            select: {
-                                id: true
+                        moduleItems: items.moduleItems === true ? {
+                            orderBy: { order: 'asc' },
+                            include: {
+                                video: {
+                                    where: { isDeleted: false },
+                                    select: {
+                                        id: true,
+                                        title: true,
+                                    }
+                                },
+                                quiz: {
+                                    select: {
+                                        id: true,
+                                    }
+                                }
                             }
-                        } : false,
-                        videos: items.videos === true ? {
-                            where: { isDeleted: false },
-                            select: {
-                                id: true,
-                                moduleId: true,
-                                title: true
-                            }
-                        } : false,
+
+                        } : false
                     },
                 } : false,
             },
         } : false,
     }
+
     let whereTerms = {
         instructorId: payload.filters?.instructorId,
         title: {
             contains: payload.filters?.title,
         },
         isDeleted: false,
-        isPublished: true
+        isPublished: (process.env.NODE_ENV !== 'development')
     }
     let sortBy = [] as any
     if (payload?.sortBy) {
@@ -133,10 +141,13 @@ const getSingleCourse = async (id: string) => {
                 }
             },
             milestones: {
+                orderBy: { order: 'asc' },
                 include: {
                     modules: {
+                        orderBy: { order: 'asc' },
                         include: {
                             moduleItems: {
+                                orderBy: { order: 'asc' },
                                 include: {
                                     video: {
                                         where: { isDeleted: false },

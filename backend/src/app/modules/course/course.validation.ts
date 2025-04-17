@@ -19,8 +19,7 @@ const getCourseValidataion = z.object({
             instructors: z.boolean(),
             milestones: z.boolean(),
             modules: z.boolean(),
-            quizes: z.boolean(),
-            videos: z.boolean()
+            moduleItems: z.boolean()
         }),
         filters: z.object({
             instructorId: z.string().optional(),
