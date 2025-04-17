@@ -78,14 +78,13 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
         } : false,
     }
 
-    const node_env = process.env.NODE_ENV
     let whereTerms = {
         instructorId: payload.filters?.instructorId,
         title: {
             contains: payload.filters?.title,
         },
         isDeleted: false,
-        isPublished: node_env === 'development' ? false : true
+        isPublished: !(process.env.NODE_ENV === 'development')
     }
     let sortBy = [] as any
     if (payload?.sortBy) {
@@ -142,10 +141,13 @@ const getSingleCourse = async (id: string) => {
                 }
             },
             milestones: {
+                orderBy: { order: 'asc' },
                 include: {
                     modules: {
+                        orderBy: { order: 'asc' },
                         include: {
                             moduleItems: {
+                                orderBy: { order: 'asc' },
                                 include: {
                                     video: {
                                         where: { isDeleted: false },
