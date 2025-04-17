@@ -12,41 +12,29 @@ const checkPreviousItemCompletion = async (moduleId: string, order: number, prog
 				moduleId: moduleId,
 				order: order - 1
 			}
-		},
-		include: {
-			quiz: true,
-			video: true
+			,
 		}
 	})
-	if (prevItem?.video) {
-		const prevVideoProgress = await prisma.videoProgress.findUnique({
-			where: {
-				courseProgressId_videoId: {
-					courseProgressId: progressId,
-					videoId: prevItem?.video?.id ?? ""
-				}
+
+	const prevProgress = await prisma.moduelItemProgress.findUnique({
+		where: {
+			courseProgressId_moduleItemId: {
+				courseProgressId: progressId,
+				moduleItemId: prevItem?.id ?? ""
 			}
-		})
-		if (!prevVideoProgress?.isCompleted) {
-			throw new ApiError(httpStatus.FORBIDDEN, "Previous Video Not Completed")
 		}
+	})
+
+
+	if (!prevProgress || !prevProgress.isCompleted) {
+		throw new ApiError(httpStatus.FORBIDDEN, "Previous naim Not Completed")
 
 	}
-	else if (prevItem?.quiz) {
-		const prevQuizProgress = await prisma.quizProgress.findUnique({
-			where: {
-				courseProgressId_quizId: {
-					courseProgressId: progressId,
-					quizId: prevItem?.quiz?.id ?? ""
-				}
-			}
-		})
 
-		if (!prevQuizProgress?.isCompleted) {
-			throw new ApiError(httpStatus.FORBIDDEN, "Previous Quiz Not Completed")
-		}
-	}
+
 }
+
+
 const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 	const video = await prisma.video.findUnique({
 		where: {
@@ -73,7 +61,7 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 			}
 		},
 	})
-	if (!progressData) {
+	if (!progressData || !video) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
 	}
 
@@ -82,26 +70,42 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 
 	}
 
-	const result = await prisma.videoProgress.upsert({
+	const result = await prisma.moduelItemProgress.upsert({
 		where: {
-			courseProgressId_videoId: {
-				courseProgressId: progressData.id,
-				videoId: payload.videoId
+			courseProgressId_moduleItemId: {
+				moduleItemId: video.moudleItemId,
+				courseProgressId: progressData.id
+			}
+		},
+		update: {
+			isCompleted: payload.isCompleted,
+			VideoProgress: {
+				create: {
+					videoId: payload.videoId,
+					timeWatched: payload.timeWatched
+				},
+				update: {
+					timeWatched: payload.timeWatched
+				}
 			}
 		},
 		create: {
 			courseProgressId: progressData.id,
-			videoId: payload.videoId,
+			moduleItemId: video.moudleItemId,
 			isCompleted: payload.isCompleted,
-			timeWatched: payload.timeWatched
-		},
-		update: {
-			isCompleted: payload.isCompleted,
-			timeWatched: payload.timeWatched
+			VideoProgress: {
+				create: {
+					videoId: payload.videoId,
+					timeWatched: payload.timeWatched
+				}
+			}
+
 		}
+
 	})
 	return result
 }
+
 
 const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 	const quiz = await prisma.quiz.findUnique({
@@ -131,7 +135,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 			}
 		}
 	})
-	if (!progressData) {
+	if (!progressData || !quiz) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
 	}
 
@@ -140,23 +144,41 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		await checkPreviousItemCompletion(quiz?.moduleItem?.moduleId, quiz?.moduleItem?.order, progressData.id)
 	}
 
-	const result = await prisma.quizProgress.upsert({
+
+	const result = await prisma.moduelItemProgress.upsert({
 		where: {
-			courseProgressId_quizId: {
-				courseProgressId: progressData.id,
-				quizId: payload.quizId
+			courseProgressId_moduleItemId: {
+				moduleItemId: quiz.moudleItemId,
+				courseProgressId: progressData.id
+			}
+		},
+		update: {
+			isCompleted: payload.isCompleted,
+			QuizProgress: {
+				create: {
+					score: payload.score,
+					quizId: payload.quizId,
+
+				},
+				update: {
+					score: payload.score
+				}
 			}
 		},
 		create: {
 			courseProgressId: progressData.id,
-			quizId: payload.quizId,
+			moduleItemId: quiz.moudleItemId,
 			isCompleted: payload.isCompleted,
-			score: payload.score
-		},
-		update: {
-			isCompleted: payload.isCompleted,
-			score: payload.score
+			QuizProgress: {
+				create: {
+					score: payload.score,
+					quizId: payload.quizId
+				}
+
+			}
+
 		}
+
 	})
 	return result
 }
@@ -186,39 +208,25 @@ const updateModule = async (user: JwtPayload, payload: IModuleUpdate) => {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
 	}
 
+	const totalModuleItems = await prisma.moduleItem.count({
+		where: {
+			moduleId: payload.moduleId
+		}
 
-	const totalVideos = await prisma.video.count({
-		where: {
-			moduleItem: {
-				moduleId: payload.moduleId
-			},
-			isDeleted: false
-		}
 	})
-	const completedVideos = await prisma.videoProgress.count({
+	const completeModuleItems = await prisma.moduleItem.count({
 		where: {
-			courseProgressId: progressData.id,
-			isCompleted: true
+			moduleId: payload.moduleId,
+			Progress: {
+				some: {
+					courseProgressId: progressData.id,
+					isCompleted: true
+				}
+			}
 		}
 	})
 
-	const totalQuizzes = await prisma.quiz.count({
-		where: {
-			moduleItem: {
-				moduleId: payload.moduleId
-			},
-		}
-	})
-	const completedQuizzes = await prisma.quizProgress.count({
-		where: {
-			courseProgressId: progressData.id,
-			isCompleted: true
-		}
-	})
-	if (totalVideos !== completedVideos) {
-		throw new ApiError(httpStatus.FORBIDDEN, "All Module Items Are Not Completed")
-	}
-	if (totalQuizzes !== completedQuizzes) {
+	if (totalModuleItems !== completeModuleItems) {
 		throw new ApiError(httpStatus.FORBIDDEN, "All Module Items Are Not Completed")
 	}
 

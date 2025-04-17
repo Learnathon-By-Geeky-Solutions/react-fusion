@@ -36,8 +36,12 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 			}
 		},
 		include: {
-			VideoProgress: true,
-			QuizProgress: true,
+			ModuleItemProgress: {
+				include: {
+					VideoProgress: true,
+					QuizProgress: true
+				}
+			},
 			ModuleProgress: true,
 			MilestoneProgress: true,
 			course: true
@@ -62,18 +66,10 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const completedVideos = await prisma.videoProgress.count({
 		where: {
-			AND: [
-				{
-					courseProgressId: {
-						equals: progressId
-					}
-				},
-				{
-					isCompleted: {
-						equals: true
-					}
-				}
-			]
+			ModuleItemProgress: {
+				courseProgressId: progressId,
+				isCompleted: true
+			},
 		}
 	})
 
@@ -91,18 +87,10 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const completedQuizzes = await prisma.quizProgress.count({
 		where: {
-			AND: [
-				{
-					courseProgressId: {
-						equals: progressId
-					}
-				},
-				{
-					isCompleted: {
-						equals: true
-					}
-				}
-			]
+			ModuleItemProgress: {
+				courseProgressId: progressId,
+				isCompleted: true
+			}
 		}
 	})
 	const totalModules = await prisma.module.count({
@@ -169,7 +157,9 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 	})
 	const userScore = await prisma.quizProgress.aggregate({
 		where: {
-			courseProgressId: progressId
+			ModuleItemProgress: {
+				courseProgressId: progressId,
+			}
 		},
 		_sum: {
 			score: true
@@ -196,7 +186,9 @@ const getStudentOne = async (user: JwtPayload, courseId: string) => {
 
 	const userWatchTime = await prisma.videoProgress.aggregate({
 		where: {
-			courseProgressId: progressId
+			ModuleItemProgress: {
+				courseProgressId: progressId
+			}
 		},
 		_sum: {
 			timeWatched: true
