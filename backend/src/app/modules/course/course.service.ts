@@ -150,7 +150,6 @@ const getSingleCourse = async (id: string) => {
                                 orderBy: { order: 'asc' },
                                 include: {
                                     video: {
-                                        where: { isDeleted: false },
                                         select: {
                                             id: true,
                                             title: true,

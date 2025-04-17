@@ -9,16 +9,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             id: videoId
         },
         include: {
-            moduleItem: {
-                include: {
-                    module: {
-                        include: {
-                            milestone: true
-                        }
-                    },
-
-                }
-            },
+            moduleItem: true,
             notes: {
                 where: {
                     userId: user.userId
@@ -26,13 +17,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             },
             comments: true
         }
-
-
     })
-    if (video?.isDeleted) {
-        video.url = ""
-        video.comments = []
-    }
     return video
 }
 

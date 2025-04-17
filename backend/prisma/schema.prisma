@@ -189,7 +189,6 @@ model Video {
   title         String
   url           String
   length        Float // Length in seconds
-  isDeleted     Boolean         @default(false)
   comments      Comment[]
   notes         Note[]
   likeCount     Int             @default(0)

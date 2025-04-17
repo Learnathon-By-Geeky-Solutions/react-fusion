@@ -6,6 +6,7 @@ const createCourseValidation = z.object({
         description: z.string(),
         price: z.number(),
         thumbnail: z.string(),
+        isPublished: z.boolean().optional(),
     })
 })
 

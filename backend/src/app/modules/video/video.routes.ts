@@ -8,7 +8,7 @@ import accessValidation from '../../middlewares/accessValidation'
 
 const router = express.Router()
 
-router.get('/:videoId', auth(UserRole.STUDENT), accessValidation('video'), videoController.getVideo)
+router.get('/:videoId', auth(UserRole.STUDENT, UserRole.INSTRUCTOR), accessValidation('video'), videoController.getVideo)
 
 router.post("/", auth(UserRole.INSTRUCTOR), validateRequest(videoValidationSchema.createVideoValidation), accessValidation('module'), videoController.createVideo)
 
