@@ -3,29 +3,22 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import useApi from '@/src/hooks/useApi';
-import { addVideo } from '@/src/services/video';
+import { addVideo, updateVideo } from '@/src/services/video';
 
 const VideoForm = ({
   moduleId,
   onSuccess,
   videoData = null,
   isEditing = false,
-  videoId = null,
-  updateFunction = null
+  videoId = null
 }) => {
   const { fetchData } = useApi();
 
-  const initialValues = videoData
-    ? {
-        title: videoData.title || '',
-        url: videoData.url || '',
-        length: videoData.length || ''
-      }
-    : {
-        title: '',
-        url: '',
-        length: ''
-      };
+  const initialValues = {
+    title: videoData?.title || '',
+    url: videoData?.url || '',
+    length: videoData?.length || ''
+  };
 
   const validationSchema = Yup.object({
     title: Yup.string().required('Title is required'),
@@ -46,14 +39,12 @@ const VideoForm = ({
 
       let result;
 
-      if (isEditing && videoId && updateFunction) {
-        // Update existing video
-        result = await fetchData(updateFunction, {
+      if (isEditing) {
+        result = await fetchData(updateVideo, {
           videoId: videoId,
           videoData: videoParams
         });
       } else {
-        // Add new video
         result = await fetchData(addVideo, {
           moduleId,
           video: videoParams

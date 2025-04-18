@@ -76,12 +76,18 @@ const CreateMilestone = () => {
 
   return (
     <div className='max-w-6xl mx-auto py-8 px-4'>
-      <div className='mb-8'>
+      <div className='flex justify-between mb-8'>
         <Link
           to={`/edit-course/${courseId}`}
           className='text-indigo-600 hover:text-indigo-800'
         >
           &larr; Back to Course
+        </Link>
+        <Link
+          to={`/courses/${courseId}`}
+          className='text-indigo-600 hover:text-indigo-800'
+        >
+          Preview and Submit &rarr;
         </Link>
       </div>
 

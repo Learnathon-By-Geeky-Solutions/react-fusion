@@ -104,12 +104,18 @@ const CreateModule = () => {
 
   return (
     <div className='max-w-6xl mx-auto py-8 px-4'>
-      <div className='mb-8'>
+      <div className='flex justify-between items-center mb-8'>
         <Link
           to={`/courses/${courseId}/milestones`}
           className='text-indigo-600 hover:text-indigo-800'
         >
           &larr; Back to Milestone
+        </Link>
+        <Link
+          to={`/courses/${courseId}`}
+          className='text-indigo-600 hover:text-indigo-800'
+        >
+          Preview and Submit &rarr;
         </Link>
       </div>
 

@@ -1,7 +1,6 @@
 import { BACKEND } from '../constants';
 
 async function getAllCourses(params) {
-  console.log('Fetching courses...', params);
   const items = {
     items: {
       instructors: true,
@@ -21,7 +20,6 @@ async function getAllCourses(params) {
     body: JSON.stringify(items)
   });
   const data = await result.json();
-  console.log('Fetched courses:', data);
   return data;
 }
 

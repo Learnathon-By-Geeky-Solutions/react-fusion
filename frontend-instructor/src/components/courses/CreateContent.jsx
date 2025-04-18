@@ -5,8 +5,8 @@ import VideoForm from '@/src/components/courseManagement/VideoForm';
 import QuizForm from '@/src/components/courseManagement/QuizForm';
 import useApi from '@/src/hooks/useApi';
 import { checkModule } from '@/src/services/module';
-import { updateVideo, deleteVideo } from '@/src/services/video';
-import { updateQuiz, deleteQuiz } from '@/src/services/quiz';
+import { deleteVideo, checkVideo } from '@/src/services/video';
+import { deleteQuiz, getQuiz } from '@/src/services/quiz';
 import { getCourseById } from '@/src/services/getCourse';
 import { checkMilestone } from '@/src/services/milestone';
 
@@ -21,6 +21,9 @@ const CreateContent = () => {
   const [moduleItems, setModuleItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moduleTitle, setModuleTitle] = useState('');
+  const [fetchedItemData, setFetchedItemData] = useState(null);
+  const [isLoadingItemData, setIsLoadingItemData] = useState(false);
+  const [courseId, setCourseId] = useState('');
   const { fetchData } = useApi();
 
   useEffect(() => {
@@ -35,6 +38,7 @@ const CreateContent = () => {
 
         const courseId = milestoneResult.data.courseId;
         setMilestoneId(moduleResult.data.milestoneId);
+        setCourseId(courseId);
 
         const result = await fetchData(getCourseById, { courseId });
         console.log('Result ', result);
@@ -79,11 +83,35 @@ const CreateContent = () => {
   const handleFormClose = () => {
     setActiveForm(null);
     setEditingItem(null);
+    setFetchedItemData(null);
   };
 
-  const handleEditItem = (item) => {
+  const handleEditItem = async (item) => {
+    setIsLoadingItemData(true);
     setEditingItem(item);
-    setActiveForm(item.video ? 'video' : 'quiz');
+
+    try {
+      let result;
+      if (item.video) {
+        result = await fetchData(checkVideo, { videoId: item.video.id });
+        setActiveForm('video');
+      } else if (item.quiz) {
+        result = await fetchData(getQuiz, { quizId: item.quiz.id });
+        setActiveForm('quiz');
+      }
+
+      if (result && result.success) {
+        setFetchedItemData(result.data);
+      } else {
+        console.error('Failed to fetch item data:', result?.message);
+        alert('Error: Could not load item data for editing');
+      }
+    } catch (error) {
+      console.error('Error fetching item data:', error);
+      alert('Error: Could not load item data for editing');
+    } finally {
+      setIsLoadingItemData(false);
+    }
   };
 
   const handleDeleteItem = (item) => {
@@ -94,10 +122,11 @@ const CreateContent = () => {
   const handleFormSuccess = () => {
     setActiveForm(null);
     setEditingItem(null);
+    setFetchedItemData(null);
     setRefreshList((prev) => prev + 1);
-    alert(
-      editingItem ? 'Item updated successfully!' : 'Item added successfully!'
-    );
+    if (editingItem) {
+      alert('Item updated successfully!');
+    }
   };
 
   const confirmDelete = async () => {
@@ -132,7 +161,6 @@ const CreateContent = () => {
     }
   };
 
-  // Count quizzes for numbering
   const getQuizNumber = (index) => {
     let quizCount = 0;
     for (let i = 0; i <= index; i++) {
@@ -145,12 +173,18 @@ const CreateContent = () => {
 
   return (
     <div className='max-w-6xl container mx-auto p-6'>
-      <div className='mb-8'>
+      <div className='flex justify-between mb-8'>
         <Link
           to={`/module/${milestoneId}`}
           className='text-indigo-600 hover:text-indigo-800'
         >
           &larr; Back to Module
+        </Link>
+        <Link
+          to={`/courses/${courseId}`}
+          className='text-indigo-600 hover:text-indigo-800'
+        >
+          Preview and Submit &rarr;
         </Link>
       </div>
       <h1 className='text-2xl font-bold mb-6'>Content Management</h1>
@@ -159,6 +193,7 @@ const CreateContent = () => {
         <button
           onClick={() => {
             setEditingItem(null);
+            setFetchedItemData(null);
             setActiveForm('video');
           }}
           className='px-4 py-2 font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
@@ -169,6 +204,7 @@ const CreateContent = () => {
         <button
           onClick={() => {
             setEditingItem(null);
+            setFetchedItemData(null);
             setActiveForm('quiz');
           }}
           className='px-4 py-2 font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
@@ -244,23 +280,23 @@ const CreateContent = () => {
               </button>
             </div>
             <div className='p-6 max-h-[80vh] overflow-y-auto'>
-              {activeForm === 'video' ? (
+              {isLoadingItemData ? (
+                <div className='text-center py-4'>Loading data...</div>
+              ) : activeForm === 'video' ? (
                 <VideoForm
                   moduleId={moduleId}
                   onSuccess={handleFormSuccess}
-                  videoData={editingItem?.video}
+                  videoData={fetchedItemData}
                   isEditing={!!editingItem}
                   videoId={editingItem?.video?.id}
-                  updateFunction={updateVideo}
                 />
               ) : (
                 <QuizForm
                   moduleId={moduleId}
                   onSuccess={handleFormSuccess}
-                  quizData={editingItem?.quiz}
+                  quizData={fetchedItemData}
                   isEditing={!!editingItem}
                   quizId={editingItem?.quiz?.id}
-                  updateFunction={updateQuiz}
                 />
               )}
             </div>

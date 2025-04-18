@@ -1,7 +1,6 @@
 import { BACKEND } from '../constants';
 
 export async function addVideo(params) {
-  console.log('params', params);
   try {
     const result = await fetch(`${BACKEND}/video/`, {
       method: 'POST',
@@ -13,7 +12,6 @@ export async function addVideo(params) {
     });
 
     const data = await result.json();
-    console.log('data', data);
     return data;
   } catch (error) {
     console.error('Error adding video:', error);
@@ -29,7 +27,7 @@ export async function updateVideo(params) {
         Authorization: params.instructor.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(params.data)
+      body: JSON.stringify(params.data.videoData)
     });
 
     const data = await result.json();
@@ -41,7 +39,6 @@ export async function updateVideo(params) {
 }
 
 export async function deleteVideo(params) {
-  console.log('video params', params);
   try {
     const result = await fetch(`${BACKEND}/video/${params.data.videoId}`, {
       method: 'DELETE',
@@ -51,7 +48,6 @@ export async function deleteVideo(params) {
     });
 
     const data = await result.json();
-    console.log('video data', data);
     return data;
   } catch (error) {
     console.error('Error delete video:', error);
@@ -61,7 +57,7 @@ export async function deleteVideo(params) {
 
 export async function checkVideo(params) {
   try {
-    const result = await fetch(`${BACKEND}/video/${params.videoId}`, {
+    const result = await fetch(`${BACKEND}/video/${params.data.videoId}`, {
       method: 'GET',
       headers: {
         Authorization: params.instructor.token

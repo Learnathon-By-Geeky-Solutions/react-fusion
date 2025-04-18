@@ -3,19 +3,20 @@ import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import useApi from '@/src/hooks/useApi';
-import { addQuiz } from '@/src/services/quiz';
+import { addQuiz, updateQuiz } from '@/src/services/quiz';
 
 const QuizForm = ({
   moduleId,
   onSuccess,
   quizData = null,
   isEditing = false,
-  quizId = null,
-  updateFunction = null
+  quizId = null
 }) => {
   const { fetchData } = useApi();
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [editingIndex, setEditingIndex] = useState(-1);
+  const [newOptions, setNewOptions] = useState(['', '', '', '']);
+  const [error, setError] = useState('');
 
   const initialValues = {
     questions:
@@ -33,12 +34,17 @@ const QuizForm = ({
     question: Yup.string().required('Question is required'),
     options: Yup.array()
       .of(Yup.string().required('Option is required'))
-      .length(4, 'Exactly 4 options are required')
       .test(
-        'unique-options',
-        'Options must be unique',
-        (options) => options && new Set(options).size === options.length
-      ),
+        'has-four-options',
+        'Exactly 4 non-empty options are required',
+        (options) =>
+          options && options.filter((o) => o.trim() !== '').length === 4
+      )
+      .test('unique-options', 'Options must be unique', (options) => {
+        if (!options) return false;
+        const nonEmptyOptions = options.filter((o) => o.trim() !== '');
+        return new Set(nonEmptyOptions).size === nonEmptyOptions.length;
+      }),
     answer: Yup.string()
       .required('Answer is required')
       .test(
@@ -62,6 +68,9 @@ const QuizForm = ({
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    console.log('Submitting quiz form:', values);
+    setError('');
+
     try {
       const params = {
         questions: values.questions.map((q) => ({
@@ -72,14 +81,13 @@ const QuizForm = ({
 
       let result;
 
-      if (isEditing && quizId && updateFunction) {
-        // Update existing quiz
-        result = await fetchData(updateFunction, {
+      if (isEditing) {
+        console.log('Updating quiz with ID:', quizId);
+        result = await fetchData(updateQuiz, {
           quizId: quizId,
           quizData: params
         });
       } else {
-        // Add new quiz
         result = await fetchData(addQuiz, {
           moduleId,
           ...params
@@ -90,31 +98,47 @@ const QuizForm = ({
         if (!isEditing) resetForm();
         if (onSuccess) onSuccess(result);
       } else {
-        alert('Error: ' + (result.message || 'Could not save quiz'));
+        setError('Error: ' + (result.message || 'Could not save quiz'));
       }
     } catch (error) {
       console.error('Error submitting quiz form:', error);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleAddQuestion = (question) => {
-    // Ensure question has exactly 4 options
-    const newQuestion = {
-      ...question,
-      options:
-        question.options.length === 4
-          ? question.options
-          : [
-              question.options[0] || '',
-              question.options[1] || '',
-              question.options[2] || '',
-              question.options[3] || ''
-            ]
-    };
+  const handleAddQuestion = (questionData) => {
+    if (!questionData.question) {
+      alert('Question text is required');
+      return null;
+    }
 
-    return newQuestion;
+    const filteredOptions = questionData.options.filter(
+      (opt) => opt.trim() !== ''
+    );
+    if (filteredOptions.length !== 4) {
+      alert('Exactly 4 non-empty options are required');
+      return null;
+    }
+
+    if (new Set(filteredOptions).size !== filteredOptions.length) {
+      alert('All options must be unique');
+      return null;
+    }
+
+    return {
+      question: questionData.question,
+      options: filteredOptions,
+      answer: questionData.answer,
+      points: parseInt(questionData.points, 10) || 5
+    };
+  };
+
+  const handleOptionChange = (index, value) => {
+    const updatedOptions = [...newOptions];
+    updatedOptions[index] = value;
+    setNewOptions(updatedOptions);
   };
 
   return (
@@ -122,14 +146,31 @@ const QuizForm = ({
       <h2 className='text-xl font-semibold mb-4'>
         {isEditing ? 'Edit Quiz' : 'Add New Quiz'}
       </h2>
+
+      {error && (
+        <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4'>
+          {error}
+        </div>
+      )}
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
         enableReinitialize
+        validateOnChange={false}
+        validateOnBlur={true}
       >
         {({ values, isSubmitting, errors, touched, setFieldValue }) => (
           <Form className='space-y-6'>
+            {/* Debug information - remove in production */}
+            {Object.keys(errors).length > 0 && (
+              <div className='bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4'>
+                <p className='font-bold'>Validation Errors:</p>
+                <pre>{JSON.stringify(errors, null, 2)}</pre>
+              </div>
+            )}
+
             <FieldArray name='questions'>
               {({ remove, push }) => (
                 <div>
@@ -317,6 +358,10 @@ const QuizForm = ({
                                 id={`option-${index}`}
                                 className='flex-1 px-4 py-2 border border-gray-300 rounded-md'
                                 placeholder={`Option ${index + 1}`}
+                                value={newOptions[index]}
+                                onChange={(e) =>
+                                  handleOptionChange(index, e.target.value)
+                                }
                               />
                             </div>
                           ))}
@@ -331,18 +376,13 @@ const QuizForm = ({
                             className='w-full px-4 py-2 border border-gray-300 rounded-md'
                           >
                             <option value=''>Select correct answer</option>
-                            <option value='option-0'>
-                              Option from field 1
-                            </option>
-                            <option value='option-1'>
-                              Option from field 2
-                            </option>
-                            <option value='option-2'>
-                              Option from field 3
-                            </option>
-                            <option value='option-3'>
-                              Option from field 4
-                            </option>
+                            {newOptions.map((option, index) =>
+                              option ? (
+                                <option key={index} value={option}>
+                                  {option}
+                                </option>
+                              ) : null
+                            )}
                           </select>
                         </div>
 
@@ -352,19 +392,22 @@ const QuizForm = ({
                           </label>
                           <input
                             type='number'
-                            id='points'
+                            id='question-points'
                             min='1'
+                            defaultValue='5'
                             className='w-full px-4 py-2 border border-gray-300 rounded-md'
                             placeholder='Points for this question'
-                            defaultValue='5'
                           />
                         </div>
 
-                        <div className='flex justify-end space-x-3'>
+                        <div className='flex justify-end space-x-2'>
                           <button
                             type='button'
-                            className='px-4 py-2 bg-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
-                            onClick={() => setShowQuestionForm(false)}
+                            className='px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+                            onClick={() => {
+                              setShowQuestionForm(false);
+                              setNewOptions(['', '', '', '']);
+                            }}
                           >
                             Cancel
                           </button>
@@ -372,55 +415,27 @@ const QuizForm = ({
                             type='button'
                             className='px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
                             onClick={() => {
-                              const questionEl =
+                              const questionElement =
                                 document.getElementById('new-question');
-                              const option0El =
-                                document.getElementById('option-0');
-                              const option1El =
-                                document.getElementById('option-1');
-                              const option2El =
-                                document.getElementById('option-2');
-                              const option3El =
-                                document.getElementById('option-3');
-                              const answerEl =
+                              const pointsElement =
+                                document.getElementById('question-points');
+                              const answerElement =
                                 document.getElementById('correct-answer');
-                              const pointsEl =
-                                document.getElementById('points');
 
-                              const options = [
-                                option0El.value,
-                                option1El.value,
-                                option2El.value,
-                                option3El.value
-                              ];
+                              const newQuestion = {
+                                question: questionElement.value,
+                                options: newOptions,
+                                answer: answerElement.value,
+                                points: parseInt(pointsElement.value, 10) || 5
+                              };
 
-                              // Get the actual answer value based on selection
-                              let answerValue = '';
-                              if (answerEl.value === 'option-0')
-                                answerValue = option0El.value;
-                              if (answerEl.value === 'option-1')
-                                answerValue = option1El.value;
-                              if (answerEl.value === 'option-2')
-                                answerValue = option2El.value;
-                              if (answerEl.value === 'option-3')
-                                answerValue = option3El.value;
-
-                              push({
-                                question: questionEl.value,
-                                options: options,
-                                answer: answerValue,
-                                points: pointsEl.value
-                              });
-                              setShowQuestionForm(false);
-
-                              // Clear the form fields
-                              questionEl.value = '';
-                              option0El.value = '';
-                              option1El.value = '';
-                              option2El.value = '';
-                              option3El.value = '';
-                              answerEl.value = '';
-                              pointsEl.value = '5';
+                              const validatedQuestion =
+                                handleAddQuestion(newQuestion);
+                              if (validatedQuestion) {
+                                push(validatedQuestion);
+                                setShowQuestionForm(false);
+                                setNewOptions(['', '', '', '']);
+                              }
                             }}
                           >
                             Add Question
@@ -429,39 +444,42 @@ const QuizForm = ({
                       </div>
                     </div>
                   ) : (
-                    <button
-                      type='button'
-                      className='px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                      onClick={() => setShowQuestionForm(true)}
-                    >
-                      Add Question
-                    </button>
+                    <div className='my-4'>
+                      <button
+                        type='button'
+                        className='px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                        onClick={() => setShowQuestionForm(true)}
+                      >
+                        Add New Question
+                      </button>
+                    </div>
                   )}
 
-                  {errors.questions && touched.questions && (
-                    <div className='mt-2 text-red-600 text-sm'>
+                  {values.questions.length > 0 && (
+                    <div className='flex justify-end pt-4'>
+                      <button
+                        type='submit'
+                        disabled={isSubmitting}
+                        className='px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300'
+                      >
+                        {isSubmitting
+                          ? 'Saving...'
+                          : isEditing
+                          ? 'Update Quiz'
+                          : 'Save Quiz'}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Show form-level validation errors */}
+                  {typeof errors.questions === 'string' && (
+                    <div className='mt-4 text-red-600 text-sm'>
                       {errors.questions}
                     </div>
                   )}
                 </div>
               )}
             </FieldArray>
-
-            {values.questions.length > 0 && (
-              <div className='flex justify-end'>
-                <button
-                  type='submit'
-                  disabled={isSubmitting}
-                  className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300'
-                >
-                  {isSubmitting
-                    ? 'Saving...'
-                    : isEditing
-                    ? 'Update Quiz'
-                    : 'Add Quiz'}
-                </button>
-              </div>
-            )}
           </Form>
         )}
       </Formik>

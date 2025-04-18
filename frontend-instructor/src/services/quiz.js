@@ -1,7 +1,6 @@
 import { BACKEND } from '../constants';
 
 export async function addQuiz(params) {
-  console.log('params', params);
   try {
     const result = await fetch(`${BACKEND}/quiz/`, {
       method: 'POST',
@@ -13,7 +12,6 @@ export async function addQuiz(params) {
     });
 
     const data = await result.json();
-    console.log('data', data);
     return data;
   } catch (error) {
     console.error('Error adding quiz:', error);
@@ -41,6 +39,7 @@ export async function checkQuiz(params) {
 }
 
 export async function updateQuiz(params) {
+  console.log('Update params', params);
   try {
     const result = await fetch(`${BACKEND}/quiz/${params.data.quizId}`, {
       method: 'PUT',
@@ -48,10 +47,11 @@ export async function updateQuiz(params) {
         Authorization: params.instructor.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(params.data)
+      body: JSON.stringify(params.data.quizData)
     });
 
     const data = await result.json();
+    console.log('Update data', data);
     return data;
   } catch (error) {
     console.error('Error updating quiz:', error);
@@ -80,7 +80,7 @@ export async function deleteQuiz(params) {
 
 export async function getQuiz(params) {
   try {
-    const result = await fetch(`${BACKEND}/quiz/${params.quizId}`, {
+    const result = await fetch(`${BACKEND}/quiz/${params.data.quizId}`, {
       method: 'GET',
       headers: {
         Authorization: params.instructor.token
