@@ -10,7 +10,6 @@ import SignUp from './components/signup/SignUp';
 import MyCourses from './components/mycourses/MyCourses';
 import CourseAnalytics from './components/analytics/Analytics';
 import CreateCourse from './components/coursesCreate/CreateCourse';
-import CourseList from './components/coursesCreate/CourseList';
 import CreateMilestone from './components/coursesCreate/CreateMilestone';
 import CreateModule from './components/coursesCreate/CreateModule';
 import ContentPage from './components/coursesCreate/CreateContent';
