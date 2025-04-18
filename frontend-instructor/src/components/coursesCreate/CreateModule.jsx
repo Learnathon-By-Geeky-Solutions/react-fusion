@@ -14,12 +14,15 @@ const CreateModule = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingModule, setEditingModule] = useState(null);
   const { fetchData } = useApi();
+  const [milestoneTitle, setMilestoneTitle] = useState('');
 
   const loadModules = async () => {
     setLoading(true);
     try {
       const result_1 = await fetchData(checkMilestone, { milestoneId });
+      console.log('Result:', result_1);
       setCourseId(result_1.data.courseId);
+      setMilestoneTitle(result_1.data.title);
 
       const result = await fetchData(getCourseById, {
         courseId: result_1.data.courseId
@@ -116,7 +119,9 @@ const CreateModule = () => {
       </div>
 
       <div className='flex justify-between items-center mb-8'>
-        <h1 className='text-3xl font-bold'>Manage Modules</h1>
+        <h1 className='text-3xl font-bold'>
+          Manage Modules for {milestoneTitle || '...'}
+        </h1>
         <button
           onClick={handleAddClick}
           className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'

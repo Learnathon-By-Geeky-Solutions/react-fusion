@@ -182,7 +182,9 @@ const CreateContent = () => {
           Preview and Submit &rarr;
         </Link>
       </div>
-      <h1 className='text-2xl font-bold mb-6'>Content Management</h1>
+      <h1 className='text-3xl font-bold mb-6'>
+        Manage Contents for {moduleTitle || '...'}
+      </h1>
 
       <div className='flex space-x-4 mb-6'>
         <button
@@ -218,9 +220,6 @@ const CreateContent = () => {
           </div>
         ) : (
           <>
-            <h2 className='text-2xl font-bold mb-4'>
-              Content for {moduleTitle}
-            </h2>
             <div className='space-y-4'>
               {moduleItems.map((item, index) => (
                 <div
