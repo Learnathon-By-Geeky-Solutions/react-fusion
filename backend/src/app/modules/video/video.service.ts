@@ -9,16 +9,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             id: videoId
         },
         include: {
-            moduleItem: {
-                include: {
-                    module: {
-                        include: {
-                            milestone: true
-                        }
-                    },
-
-                }
-            },
+            moduleItem: true,
             notes: {
                 where: {
                     userId: user.userId
@@ -26,13 +17,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             },
             comments: true
         }
-
-
     })
-    if (video?.isDeleted) {
-        video.url = ""
-        video.comments = []
-    }
     return video
 }
 
@@ -51,12 +36,19 @@ const updateVideo = async (videoId: string, payload: IUpdateVideo) => {
 
 
 const deleteVideo = async (videoId: string) => {
-    const result = await prisma.video.update({
-        where: {
-            id: videoId
-        }, data: {
-            isDeleted: true
-        }
+    const result = await prisma.$transaction(async (tx) => {
+        const video = await tx.video.delete({
+            where: {
+                id: videoId
+            }
+        })
+
+        const deletedModuleItem = await tx.moduleItem.delete({
+            where: {
+                id: video.moudleItemId
+            }
+        })
+        return deletedModuleItem
     })
     return result
 }

@@ -138,6 +138,7 @@ model Milestone {
   description       String
   courseId          String
   course            Course              @relation(fields: [courseId], references: [id])
+  order             Int
   modules           Module[]
   MilestoneProgress MilestoneProgress[]
 }
@@ -146,6 +147,7 @@ model Module {
   id             String           @id @default(uuid())
   title          String
   description    String
+  order          Int
   milestoneId    String
   milestone      Milestone        @relation(fields: [milestoneId], references: [id])
   ModuleProgress ModuleProgress[]
@@ -187,7 +189,6 @@ model Video {
   title         String
   url           String
   length        Float // Length in seconds
-  isDeleted     Boolean         @default(false)
   comments      Comment[]
   notes         Note[]
   likeCount     Int             @default(0)
