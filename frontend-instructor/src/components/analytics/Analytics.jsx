@@ -5,69 +5,108 @@ import { useParams } from 'react-router-dom';
 
 export default function CourseAnalytics() {
   const { fetchData } = useApi();
+  const { courseId } = useParams();
   const [courseData, setCourseData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const getAnalytics = async () => {
-      const data = await fetchData(analyticsService.getAnalyticsByCourse, {
-        courseId: courseId
-      });
-      setCourseData(data.data);
+      try {
+        setIsLoading(true);
+        const data = await fetchData(analyticsService.getAnalyticsByCourse, {
+          courseId: courseId
+        });
+        setCourseData(data.data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    try {
-      getAnalytics();
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-  const { courseId } = useParams();
-  return (
-    <div className='px-4'>
-      <div className='border-2 borgray-200 rounded-lg p-4 my-4 flex justify-between items-center'>
-        <div>
-          <h1 className='text-5xl font-bold'>{courseData.title}</h1>
-          <p className='text-gray-500'>{courseData.description}</p>
-        </div>
-        <div className='w-1/5'>
-          <img
-            src='https://2ality.com/2011/10/logo-js/js.jpg'
-            alt='course-banner'
-          />
-        </div>
-      </div>
-      <div className='border-2 borgray-200 rounded-lg p-4 my-4'>
-        <div className='flex mt-4'>
-          <div className='w-1/3 p-4 border-2 border-gray-300 rounded-xl flex justify-between items-center'>
-            <h1 className='text-xl'>Price</h1>
-            <h1 className='text-xl'>{courseData?.price}</h1>
-          </div>
-          <div className='w-1/3 p-4 border-2 border-gray-300 rounded-xl flex justify-between items-center mx-4'>
-            <h1 className='text-xl'>Rating</h1>
-            <h1 className='text-xl'>{courseData?.rating | 0} ⭐</h1>
-          </div>
-          <div className='w-1/3 p-4 border-2 border-gray-300 rounded-xl flex justify-between items-center'>
-            <h1 className='text-xl'>Total Enrollments</h1>
-            <h1 className='text-xl'>{courseData?.totalEnrollments}</h1>
-          </div>
-        </div>
 
-        <div className='flex mt-4'>
-          <div className='w-1/3 p-4 border-2 border-gray-300 rounded-xl flex justify-between items-center'>
-            <h1 className='text-xl'>Total Likes</h1>
-            <h1 className='text-xl'>{courseData?.totalLikes} </h1>
-          </div>
-          <div className='w-1/3 p-4 border-2 border-gray-300 rounded-xl flex justify-between items-center mx-4'>
-            <h1 className='text-xl'>Total Dislikes</h1>
-            <h1 className='text-xl'>{courseData?.totalDisLikes} </h1>
-          </div>
-          <div className='w-1/3 p-4 border-2 border-gray-300 rounded-xl flex justify-between items-center'>
-            <h1 className='text-xl'>Total Revenue</h1>
-            <h1 className='text-xl'>
-              {parseFloat(courseData?.price) *
-                parseInt(courseData?.totalEnrollments)}
-            </h1>
-          </div>
+    getAnalytics();
+  }, []);
+
+  return (
+    <div className='px-4 py-6 mx-auto max-w-7xl'>
+      {isLoading ? (
+        <div className='flex justify-center items-center h-64'>
+          <div className='text-xl text-gray-500'>Loading course data...</div>
         </div>
-      </div>
+      ) : (
+        <>
+          <div className='bg-white shadow-md rounded-lg p-6 my-4 flex justify-between items-center border border-gray-200'>
+            <div className='flex-1'>
+              <h1 className='text-4xl font-bold text-gray-800 mb-2'>
+                {courseData.title}
+              </h1>
+              <p className='text-gray-600 text-lg'>{courseData.description}</p>
+            </div>
+          </div>
+
+          <div className='bg-white shadow-md rounded-lg p-6 my-6'>
+            <h2 className='text-2xl font-semibold text-gray-700 mb-4'>
+              Course Analytics
+            </h2>
+
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'>
+              <div className='bg-blue-50 p-5 rounded-xl shadow-sm flex justify-between items-center border border-blue-100'>
+                <h3 className='text-xl font-medium text-gray-700'>Price</h3>
+                <span className='text-xl font-bold text-blue-600'>
+                  ${courseData?.price}
+                </span>
+              </div>
+
+              <div className='bg-amber-50 p-5 rounded-xl shadow-sm flex justify-between items-center border border-amber-100'>
+                <h3 className='text-xl font-medium text-gray-700'>Rating</h3>
+                <span className='text-xl font-bold text-amber-600'>
+                  {courseData?.rating || 0} ⭐
+                </span>
+              </div>
+
+              <div className='bg-green-50 p-5 rounded-xl shadow-sm flex justify-between items-center border border-green-100'>
+                <h3 className='text-xl font-medium text-gray-700'>
+                  Total Enrollments
+                </h3>
+                <span className='text-xl font-bold text-green-600'>
+                  {courseData?.totalEnrollments || 0}
+                </span>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+              <div className='bg-indigo-50 p-5 rounded-xl shadow-sm flex justify-between items-center border border-indigo-100'>
+                <h3 className='text-xl font-medium text-gray-700'>
+                  Total Likes
+                </h3>
+                <span className='text-xl font-bold text-indigo-600'>
+                  {courseData?.totalLikes || 0}
+                </span>
+              </div>
+
+              <div className='bg-red-50 p-5 rounded-xl shadow-sm flex justify-between items-center border border-red-100'>
+                <h3 className='text-xl font-medium text-gray-700'>
+                  Total Dislikes
+                </h3>
+                <span className='text-xl font-bold text-red-600'>
+                  {courseData?.totalDisLikes || 0}
+                </span>
+              </div>
+
+              <div className='bg-purple-50 p-5 rounded-xl shadow-sm flex justify-between items-center border border-purple-100'>
+                <h3 className='text-xl font-medium text-gray-700'>
+                  Total Revenue
+                </h3>
+                <span className='text-xl font-bold text-purple-600'>
+                  $
+                  {parseFloat(courseData?.price || 0) *
+                    parseInt(courseData?.totalEnrollments || 0)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -39,7 +39,6 @@ export async function checkQuiz(params) {
 }
 
 export async function updateQuiz(params) {
-  console.log('Update params', params);
   try {
     const result = await fetch(`${BACKEND}/quiz/${params.data.quizId}`, {
       method: 'PUT',
@@ -51,7 +50,6 @@ export async function updateQuiz(params) {
     });
 
     const data = await result.json();
-    console.log('Update data', data);
     return data;
   } catch (error) {
     console.error('Error updating quiz:', error);
@@ -60,7 +58,6 @@ export async function updateQuiz(params) {
 }
 
 export async function deleteQuiz(params) {
-  console.log('Delete params', params);
   try {
     const result = await fetch(`${BACKEND}/quiz/${params.data.quizId}`, {
       method: 'DELETE',
@@ -70,7 +67,6 @@ export async function deleteQuiz(params) {
     });
 
     const data = await result.json();
-    console.log('Delete data', data);
     return data;
   } catch (error) {
     console.error('Error delete quiz:', error);

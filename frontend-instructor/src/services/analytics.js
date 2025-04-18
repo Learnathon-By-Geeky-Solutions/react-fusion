@@ -1,7 +1,6 @@
 import { BACKEND } from '../constants';
 
 const getAnalyticsByCourse = async (params) => {
-  console.log('🚀 params : ', params);
   const response = await fetch(
     `${BACKEND}/analytics/instructor/${params.data.courseId}`,
     {

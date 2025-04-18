@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
     <div className='bg-gray-800 text-white py-12 px-4'>
-      <div className='container mx-auto max-w-6xl'>
-        <div className='grid md:grid-cols-4 gap-8'>
+      <div className='container mx-auto max-w-7xl'>
+        <div className='flex justify-between'>
           <div>
             <h3 className='text-xl font-bold mb-4'>EduNexus</h3>
             <p className='text-gray-300'>
@@ -13,48 +12,8 @@ const Footer = () => {
             </p>
           </div>
           <div>
-            <h4 className='font-bold mb-4'>Links</h4>
-            <ul className='space-y-2 text-gray-300'>
-              <li>
-                <a href='/' className='hover:text-white'>
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href='/about' className='hover:text-white'>
-                  About
-                </a>
-              </li>
-              <li>
-                <a href='/contact' className='hover:text-white'>
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className='font-bold mb-4'>Resources</h4>
-            <ul className='space-y-2 text-gray-300'>
-              <li>
-                <a href='#' className='hover:text-white'>
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href='#' className='hover:text-white'>
-                  Help Center
-                </a>
-              </li>
-              <li>
-                <a href='#' className='hover:text-white'>
-                  Tutorials
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
             <h4 className='font-bold mb-4'>Connect</h4>
-            <div className='flex space-x-4 justify-center'>
+            <div className='flex space-x-4 justify-start'>
               {/* Facebook */}
               <a
                 href='#'

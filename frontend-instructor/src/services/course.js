@@ -20,7 +20,6 @@ export async function addCourse(params) {
 }
 
 export async function updateCourse(params) {
-  console.log('updateCourse', params);
   try {
     const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
       method: 'PUT',
@@ -32,7 +31,6 @@ export async function updateCourse(params) {
     });
 
     const data = await result.json();
-    console.log('updateCourse data', data);
     return data;
   } catch (error) {
     console.error('Error updating course:', error);
@@ -92,4 +90,37 @@ export async function getSingleCourse(params) {
     console.error('Error fetching enrollment data:', error);
     return { success: false };
   }
+}
+
+export async function getAllCourses(params) {
+  const items = {
+    items: {
+      instructors: true,
+      milestones: true,
+      modules: true,
+      quizes: true,
+      videos: true
+    }
+  };
+
+  const result = await fetch(`${BACKEND}/course/get-courses`, {
+    method: 'POST',
+    headers: {
+      Authorization: params.instructor.token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(items)
+  });
+  const data = await result.json();
+  return data;
+}
+
+export async function getCourseById(params) {
+  const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
+    headers: {
+      Authorization: params.instructor.token
+    }
+  });
+  const resJson = await result.json();
+  return resJson;
 }

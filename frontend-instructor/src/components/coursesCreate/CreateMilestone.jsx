@@ -1,115 +1,87 @@
-// src/pages/Modules/CreateModule.jsx
+// src/pages/Courses/CreateMilestone.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
-import { checkMilestone } from '@/src/services/milestone';
-import { checkModule, deleteModule } from '@/src/services/module';
-import { getCourseById } from '@/src/services/getCourse';
-import ModuleForm from '../../components/CourseManagement/ModuleForm';
+import { getCourseById } from '@/src/services/course';
+import { deleteMilestone } from '@/src/services/milestone';
+import MilestoneForm from '@/src/components/courseManagement/MilestoneForm';
 
-const CreateModule = () => {
-  const { milestoneId } = useParams();
-  const [modules, setModules] = useState([]);
+const CreateMilestone = () => {
+  const { courseId } = useParams();
+  const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [courseId, setCourseId] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [editingModule, setEditingModule] = useState(null);
+  const [editingMilestone, setEditingMilestone] = useState(null);
   const { fetchData } = useApi();
 
-  const loadModules = async () => {
+  const loadMilestones = async () => {
     setLoading(true);
     try {
-      // First get the courseId from milestone
-      const result_1 = await fetchData(checkMilestone, { milestoneId });
-      setCourseId(result_1.data.courseId);
-
-      // Then get the course data which includes milestones and modules
-      const result = await fetchData(getCourseById, {
-        courseId: result_1.data.courseId
-      });
+      const result = await fetchData(getCourseById, { courseId });
 
       if (result.success) {
-        // Find the specific milestone in the course data
-        const milestone = result.data.milestones.find(
-          (m) => m.id === milestoneId
-        );
-
-        if (milestone) {
-          setModules(milestone.modules || []);
-        } else {
-          console.error('Milestone not found in course data');
-          setModules([]);
-        }
+        setMilestones(result.data.milestones || []);
       } else {
-        console.error('Failed to load course data:', result.message);
+        console.error('Failed to load milestones:', result.message);
       }
     } catch (error) {
-      console.error('Error loading modules:', error);
+      console.error('Error loading milestones:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadModules();
-  }, [milestoneId]);
+    loadMilestones();
+  }, [courseId]);
 
   const handleAddClick = () => {
-    setEditingModule(null);
+    setEditingMilestone(null);
     setShowForm(true);
   };
 
-  const handleEditClick = async (moduleId) => {
-    try {
-      const result = await fetchData(checkModule, { moduleId });
-      if (result.success) {
-        setEditingModule({
-          moduleId: moduleId,
-          title: result.data.title,
-          description: result.data.description
-        });
-        setShowForm(true);
-      } else {
-        alert('Error: Could not fetch module details');
-      }
-    } catch (error) {
-      console.error('Error fetching module details:', error);
-    }
+  const handleEditClick = (milestone) => {
+    setEditingMilestone({
+      milestoneId: milestone.id,
+      title: milestone.title,
+      description: milestone.description
+    });
+    setShowForm(true);
   };
 
-  const handleDeleteClick = async (moduleId) => {
-    if (window.confirm('Are you sure you want to delete this module?')) {
+  const handleDeleteClick = async (milestoneId) => {
+    if (window.confirm('Are you sure you want to delete this milestone?')) {
       try {
-        const result = await fetchData(deleteModule, { moduleId });
+        const result = await fetchData(deleteMilestone, { milestoneId });
         if (result.success) {
-          loadModules();
+          loadMilestones();
         } else {
-          alert('Error: ' + (result.message || 'Could not delete module'));
+          alert('Error: ' + (result.message || 'Could not delete milestone'));
         }
       } catch (error) {
-        console.error('Error deleting module:', error);
+        console.error('Error deleting milestone:', error);
       }
     }
   };
 
   const handleFormSuccess = () => {
     setShowForm(false);
-    loadModules();
+    loadMilestones();
   };
 
   const handleFormClose = () => {
     setShowForm(false);
-    setEditingModule(null);
+    setEditingMilestone(null);
   };
 
   return (
     <div className='max-w-6xl mx-auto py-8 px-4'>
-      <div className='flex justify-between items-center mb-8'>
+      <div className='flex justify-between mb-8'>
         <Link
-          to={`/courses/${courseId}/milestones`}
+          to={`/edit-course/${courseId}`}
           className='text-indigo-600 hover:text-indigo-800'
         >
-          &larr; Back to Milestone
+          &larr; Back to Course
         </Link>
         <Link
           to={`/courses/${courseId}`}
@@ -120,47 +92,50 @@ const CreateModule = () => {
       </div>
 
       <div className='flex justify-between items-center mb-8'>
-        <h1 className='text-3xl font-bold'>Manage Modules for Milestone</h1>
+        <h1 className='text-3xl font-bold'>Manage Course Milestones</h1>
         <button
           onClick={handleAddClick}
           className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
         >
-          Add Module
+          Add Milestone
         </button>
       </div>
 
-      {/* Module List */}
+      {/* Milestone List */}
       <div className='mt-8'>
-        <h2 className='text-2xl font-bold mb-4'>Modules</h2>
+        <h2 className='text-2xl font-bold mb-4'>Course Milestones</h2>
         {loading ? (
-          <div className='text-center py-4'>Loading modules...</div>
-        ) : modules.length === 0 ? (
+          <div className='text-center py-4'>Loading milestones...</div>
+        ) : milestones.length === 0 ? (
           <div className='text-center py-4 bg-white p-6 rounded-lg shadow-md'>
-            No modules found. Click "Add Module" to create your first module.
+            No milestones found. Click "Add Milestone" to create your first
+            milestone.
           </div>
         ) : (
           <div className='space-y-4'>
-            {modules.map((module) => (
+            {milestones.map((milestone) => (
               <div
-                key={module.id}
+                key={milestone.id}
                 className='bg-white p-6 rounded-lg shadow-md flex justify-between items-center'
               >
-                <h3 className='text-xl font-semibold'>{module.title}</h3>
+                <div>
+                  <h3 className='text-xl font-semibold'>{milestone.title}</h3>
+                </div>
                 <div className='flex space-x-2'>
                   <Link
-                    to={`/content/${module.id}`}
+                    to={`/module/${milestone.id}`}
                     className='px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
                   >
-                    Contents
+                    Modules
                   </Link>
                   <button
-                    onClick={() => handleEditClick(module.id)}
+                    onClick={() => handleEditClick(milestone)}
                     className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteClick(module.id)}
+                    onClick={() => handleDeleteClick(milestone.id)}
                     className='px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
                   >
                     Delete
@@ -178,7 +153,7 @@ const CreateModule = () => {
           <div className='bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden'>
             <div className='flex justify-between items-center px-6 py-4 bg-gray-100'>
               <h2 className='text-xl font-semibold'>
-                {editingModule ? 'Edit Module' : 'Add New Module'}
+                {editingMilestone ? 'Edit Milestone' : 'Add New Milestone'}
               </h2>
               <button
                 onClick={handleFormClose}
@@ -188,12 +163,12 @@ const CreateModule = () => {
               </button>
             </div>
             <div className='p-6'>
-              <ModuleForm
-                milestoneId={milestoneId}
-                moduleId={editingModule?.moduleId}
-                initialValues={editingModule}
+              <MilestoneForm
+                courseId={courseId}
+                milestoneId={editingMilestone?.milestoneId}
+                initialValues={editingMilestone}
                 onSuccess={handleFormSuccess}
-                isEdit={!!editingModule}
+                isEdit={!!editingMilestone}
               />
             </div>
           </div>
@@ -203,4 +178,4 @@ const CreateModule = () => {
   );
 };
 
-export default CreateModule;
+export default CreateMilestone;

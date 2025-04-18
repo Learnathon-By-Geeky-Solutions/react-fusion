@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import useAuth from '@/src/context/authContext';
-import { getCourseById } from '@/src/services/getCourse';
+import { getCourseById } from '@/src/services/course';
 import { dashboardService } from '@/src/services/dashboard';
 import { noimage } from '../../assets';
 import useApi from '@/src/hooks/useApi';

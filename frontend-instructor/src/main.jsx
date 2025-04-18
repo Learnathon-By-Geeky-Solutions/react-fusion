@@ -9,13 +9,13 @@ import App from './App.jsx';
 import SignUp from './components/signup/SignUp';
 import MyCourses from './components/mycourses/MyCourses';
 import CourseAnalytics from './components/analytics/Analytics';
-import CourseDetails from './components/courseDetails/CourseDetails';
-import CreateCourse from './components/courses/CreateCourse';
-import CourseList from './components/courses/CourseList';
-import CreateMilestone from './components/courses/CreateMilestone';
-import CreateModule from './components/courses/CreateModule';
-import ContentPage from './components/courses/CreateContent';
-import EditCourse from './components/courses/EditCourse';
+import CreateCourse from './components/coursesCreate/CreateCourse';
+import CourseList from './components/coursesCreate/CourseList';
+import CreateMilestone from './components/coursesCreate/CreateMilestone';
+import CreateModule from './components/coursesCreate/CreateModule';
+import ContentPage from './components/coursesCreate/CreateContent';
+import EditCourse from './components/coursesCreate/EditCourse';
+import CoursePage from './components/coursePage/CoursePage';
 
 const routes = createBrowserRouter([
   {
@@ -45,7 +45,7 @@ const routes = createBrowserRouter([
       },
       {
         path: '/courses/:courseId',
-        element: <CourseDetails />
+        element: <CoursePage />
       },
       {
         path: '/create-course',

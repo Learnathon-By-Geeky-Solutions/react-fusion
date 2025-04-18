@@ -7,7 +7,7 @@ import useApi from '@/src/hooks/useApi';
 import { checkModule } from '@/src/services/module';
 import { deleteVideo, checkVideo } from '@/src/services/video';
 import { deleteQuiz, getQuiz } from '@/src/services/quiz';
-import { getCourseById } from '@/src/services/getCourse';
+import { getCourseById } from '@/src/services/course';
 import { checkMilestone } from '@/src/services/milestone';
 
 const CreateContent = () => {

@@ -12,7 +12,6 @@ export default function CourseDashboard() {
   const { fetchData } = useApi();
 
   useEffect(() => {
-    // Only run this once when component mounts and instructor is authenticated
     if (!isLoading && instructor?.authenticated && loading) {
       const fetchInstructorAnalytics = async () => {
         try {
