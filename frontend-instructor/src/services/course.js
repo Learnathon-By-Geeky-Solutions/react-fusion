@@ -92,14 +92,17 @@ export async function getSingleCourse(params) {
   }
 }
 
-export async function getAllCourses(params) {
+export async function getInstructorCourses(params) {
+  console.log('Instructor ID:', params);
   const items = {
     items: {
       instructors: true,
       milestones: true,
       modules: true,
-      quizes: true,
-      videos: true
+      moduleItems: true
+    },
+    filters: {
+      instructorId: params.data.instructorId
     }
   };
 
@@ -112,6 +115,7 @@ export async function getAllCourses(params) {
     body: JSON.stringify(items)
   });
   const data = await result.json();
+  console.log('Data:', data);
   return data;
 }
 

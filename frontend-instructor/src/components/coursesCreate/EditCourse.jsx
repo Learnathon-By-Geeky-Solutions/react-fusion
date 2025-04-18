@@ -1,4 +1,3 @@
-// src/pages/Courses/EditCourse.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';

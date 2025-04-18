@@ -1,4 +1,3 @@
-// src/pages/Courses/CreateMilestone.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
@@ -13,11 +12,13 @@ const CreateMilestone = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingMilestone, setEditingMilestone] = useState(null);
   const { fetchData } = useApi();
+  const [courseTitle, setCourseTitle] = useState('');
 
   const loadMilestones = async () => {
     setLoading(true);
     try {
       const result = await fetchData(getCourseById, { courseId });
+      setCourseTitle(result.data.title);
 
       if (result.success) {
         setMilestones(result.data.milestones || []);
@@ -92,7 +93,9 @@ const CreateMilestone = () => {
       </div>
 
       <div className='flex justify-between items-center mb-8'>
-        <h1 className='text-3xl font-bold'>Manage Course Milestones</h1>
+        <h1 className='text-3xl font-bold'>
+          Manage Milestones for {courseTitle || '...'}
+        </h1>
         <button
           onClick={handleAddClick}
           className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
@@ -103,7 +106,6 @@ const CreateMilestone = () => {
 
       {/* Milestone List */}
       <div className='mt-8'>
-        <h2 className='text-2xl font-bold mb-4'>Course Milestones</h2>
         {loading ? (
           <div className='text-center py-4'>Loading milestones...</div>
         ) : milestones.length === 0 ? (

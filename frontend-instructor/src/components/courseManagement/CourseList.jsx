@@ -1,5 +1,4 @@
-// src/components/CourseManagement/CourseList.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
 import { deleteCourse } from '@/src/services/course';

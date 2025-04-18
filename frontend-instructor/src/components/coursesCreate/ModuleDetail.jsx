@@ -1,4 +1,3 @@
-// src/pages/Courses/ModuleDetail.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
@@ -23,7 +22,6 @@ const ModuleDetail = () => {
   useEffect(() => {
     const fetchModuleContent = async () => {
       try {
-        // Fetch module details
         const moduleResult = await fetchData(
           (params) =>
             fetch(`${process.env.BACKEND}/module/${moduleId}`, {
@@ -38,7 +36,6 @@ const ModuleDetail = () => {
           setError('Could not fetch module details');
         }
 
-        // Fetch videos for this module
         const videosResult = await fetchData(
           (params) =>
             fetch(`${process.env.BACKEND}/module/${moduleId}/videos`, {
@@ -53,7 +50,6 @@ const ModuleDetail = () => {
           console.error('Could not fetch videos');
         }
 
-        // Check if quiz exists for this module
         const quizResult = await fetchData(getQuiz, { videoId: moduleId });
 
         if (quizResult.success) {

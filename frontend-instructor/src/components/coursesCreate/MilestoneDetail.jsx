@@ -1,4 +1,3 @@
-// src/pages/Courses/MilestoneDetail.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
@@ -18,7 +17,6 @@ const MilestoneDetail = () => {
   useEffect(() => {
     const fetchMilestoneDetails = async () => {
       try {
-        // Fetch milestone details
         const milestoneResult = await fetchData(
           (params) =>
             fetch(`${process.env.BACKEND}/milestone/${milestoneId}`, {
@@ -33,7 +31,6 @@ const MilestoneDetail = () => {
           setError('Could not fetch milestone details');
         }
 
-        // Fetch modules for this milestone
         const modulesResult = await fetchData(
           (params) =>
             fetch(`${process.env.BACKEND}/milestone/${milestoneId}/modules`, {

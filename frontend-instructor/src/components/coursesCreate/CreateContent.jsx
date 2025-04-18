@@ -1,4 +1,3 @@
-// src/components/ContentManagement/CreateContent.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import VideoForm from '@/src/components/courseManagement/VideoForm';
@@ -30,7 +29,6 @@ const CreateContent = () => {
     const loadContent = async () => {
       setLoading(true);
       try {
-        // First, find the module data to get the milestoneId
         const moduleResult = await fetchData(checkModule, { moduleId });
         const milestoneResult = await fetchData(checkMilestone, {
           milestoneId: moduleResult.data.milestoneId
@@ -41,10 +39,8 @@ const CreateContent = () => {
         setCourseId(courseId);
 
         const result = await fetchData(getCourseById, { courseId });
-        console.log('Result ', result);
 
         if (result.success) {
-          // Search through all milestones and modules to find the one with our moduleId
           const course = result.data;
           let foundModule = null;
 
@@ -59,9 +55,8 @@ const CreateContent = () => {
           if (foundModule) {
             setModuleTitle(foundModule.title);
 
-            // Set the combined array of module items
             const items = foundModule.moduleItems || [];
-            items.sort((a, b) => a.order - b.order); // Ensure items are in order
+            items.sort((a, b) => a.order - b.order);
             setModuleItems(items);
           } else {
             console.error('Module not found in course data');

@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import useAuth from '@/src/context/authContext';
 import useApi from '@/src/hooks/useApi';
 import { dashboardService } from '@/src/services/dashboard';
+import { getProfile } from '@/src/services/analytics';
 
 export default function CourseDashboard() {
   const { instructor, isLoading } = useAuth();
@@ -10,6 +11,7 @@ export default function CourseDashboard() {
   const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
   const { fetchData } = useApi();
+  const [userName, setUserName] = useState('Instructor');
 
   useEffect(() => {
     if (!isLoading && instructor?.authenticated && loading) {
@@ -17,6 +19,8 @@ export default function CourseDashboard() {
         try {
           const res = await fetchData(dashboardService.getAnalytics, {});
           setProfile(res.data);
+          const res_1 = await fetchData(getProfile, {});
+          setUserName(res_1.data.name);
         } catch (err) {
           setError('Failed to fetch instructor analytics');
         } finally {
@@ -64,7 +68,7 @@ export default function CourseDashboard() {
 
   return (
     <div className='bg-gray-50 min-h-screen py-8'>
-      <div className='max-w-[1280px] mx-auto px-4 sm:px-6'>
+      <div className='max-w-7xl mx-auto sm:px-6'>
         {loading ? (
           <div className='flex items-center justify-center h-64'>
             <div className='text-gray-600 text-lg'>
@@ -92,7 +96,7 @@ export default function CourseDashboard() {
             </div>
           </div>
         ) : error ? (
-          <div className='bg-red-50 border-l-4 border-red-500 p-4 rounded shadow'>
+          <div className='bg-red-50 border-l-4 border-red-500 py-4 rounded shadow'>
             <div className='flex'>
               <div className='flex-shrink-0'>
                 <svg
@@ -119,7 +123,7 @@ export default function CourseDashboard() {
               <h1 className='text-3xl font-bold text-gray-800'>
                 Welcome back,{' '}
                 <span className='text-blue-600'>
-                  {instructor.name || 'Instructor'}
+                  {userName || 'Instructor'}
                 </span>
               </h1>
               <p className='text-gray-600 mt-2'>

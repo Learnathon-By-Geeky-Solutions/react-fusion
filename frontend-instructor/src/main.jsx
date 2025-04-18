@@ -52,10 +52,6 @@ const routes = createBrowserRouter([
         element: <CreateCourse />
       },
       {
-        path: '/courses',
-        element: <CourseList />
-      },
-      {
         path: '/courses/:courseId/milestones',
         element: <CreateMilestone />
       },

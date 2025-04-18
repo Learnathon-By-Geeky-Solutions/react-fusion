@@ -56,7 +56,6 @@ export default function ModuleItem({
         }`}
       >
         {module.moduleItems?.map((item, itemIndex) => {
-          // Increment quiz count if this item is a quiz
           if (item.quiz) {
             quizCount++;
           }

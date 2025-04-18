@@ -1,4 +1,3 @@
-// src/pages/Courses/CourseDetail.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
@@ -18,7 +17,6 @@ const CourseDetail = () => {
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
-        // Fetch course details
         const courseResult = await fetchData(
           (params) =>
             fetch(`${process.env.BACKEND}/course/${courseId}`, {
@@ -33,7 +31,6 @@ const CourseDetail = () => {
           setError('Could not fetch course details');
         }
 
-        // Fetch milestones for this course
         const milestonesResult = await fetchData(
           (params) =>
             fetch(`${process.env.BACKEND}/course/${courseId}/milestones`, {

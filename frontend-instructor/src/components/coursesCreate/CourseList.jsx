@@ -1,4 +1,3 @@
-// src/pages/Courses/CourseList.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
@@ -13,7 +12,6 @@ const CourseList = () => {
   const fetchCourses = async () => {
     try {
       setLoading(true);
-      // Assuming there's a getCourses service function
       const result = await fetchData(
         (params) =>
           fetch(`${process.env.BACKEND}/courses`, {

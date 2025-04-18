@@ -48,7 +48,7 @@ export default function ContentItem({
           {isVideo
             ? item.video.title
             : isQuiz
-            ? `Quiz ${quizNumber}` // Using the new quizNumber prop
+            ? `Quiz ${quizNumber}`
             : `Content ${itemNumber}`}
         </span>
       </div>

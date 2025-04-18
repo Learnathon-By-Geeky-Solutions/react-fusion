@@ -1,4 +1,3 @@
-// src/components/CourseManagement/CourseForm.jsx
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -160,7 +159,7 @@ const CourseForm = ({ initialValues = null, onSuccess, isEdit = false }) => {
                 <img
                   src={values.thumbnail}
                   alt='Thumbnail preview'
-                  className='w-full max-h-40 object-cover rounded-md'
+                  className='w-full max-w-120 max-h-120 object-cover rounded-md'
                 />
               </div>
             )}

@@ -1,4 +1,3 @@
-// src/pages/Modules/CreateModule.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
@@ -19,17 +18,14 @@ const CreateModule = () => {
   const loadModules = async () => {
     setLoading(true);
     try {
-      // First get the courseId from milestone
       const result_1 = await fetchData(checkMilestone, { milestoneId });
       setCourseId(result_1.data.courseId);
 
-      // Then get the course data which includes milestones and modules
       const result = await fetchData(getCourseById, {
         courseId: result_1.data.courseId
       });
 
       if (result.success) {
-        // Find the specific milestone in the course data
         const milestone = result.data.milestones.find(
           (m) => m.id === milestoneId
         );
@@ -120,7 +116,7 @@ const CreateModule = () => {
       </div>
 
       <div className='flex justify-between items-center mb-8'>
-        <h1 className='text-3xl font-bold'>Manage Modules for Milestone</h1>
+        <h1 className='text-3xl font-bold'>Manage Modules</h1>
         <button
           onClick={handleAddClick}
           className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
@@ -131,7 +127,6 @@ const CreateModule = () => {
 
       {/* Module List */}
       <div className='mt-8'>
-        <h2 className='text-2xl font-bold mb-4'>Modules</h2>
         {loading ? (
           <div className='text-center py-4'>Loading modules...</div>
         ) : modules.length === 0 ? (

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { toast, Toaster } from 'sonner';
 import useInstructorAuth from '@/src/context/authContext';
@@ -19,7 +19,7 @@ export default function NavBar() {
   return (
     <>
       <div className='bg-white shadow-md py-4 w-full'>
-        <div className='container mx-auto max-w-6xl '>
+        <div className='container mx-auto max-w-7xl'>
           <div className='flex items-center justify-between'>
             {/* Logo */}
             <Link to='/' className='flex items-center space-x-2'>
