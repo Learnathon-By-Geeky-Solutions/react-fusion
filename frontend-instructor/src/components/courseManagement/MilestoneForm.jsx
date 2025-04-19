@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import useApi from '@/src/hooks/useApi';
@@ -55,6 +56,12 @@ const MilestoneForm = ({
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const getSubmitButtonText = (isSubmitting, isEdit) => {
+    if (isSubmitting) return 'Saving...';
+    if (isEdit) return 'Update Milestone';
+    return 'Add Milestone';
   };
 
   return (
@@ -122,17 +129,21 @@ const MilestoneForm = ({
               disabled={isSubmitting}
               className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300'
             >
-              {isSubmitting
-                ? 'Saving...'
-                : isEdit
-                ? 'Update Milestone'
-                : 'Add Milestone'}
+              {getSubmitButtonText(isSubmitting, isEdit)}
             </button>
           </div>
         </Form>
       )}
     </Formik>
   );
+};
+
+MilestoneForm.propTypes = {
+  courseId: PropTypes.string.isRequired,
+  milestoneId: PropTypes.string,
+  initialValues: PropTypes.object,
+  onSuccess: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool
 };
 
 export default MilestoneForm;

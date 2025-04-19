@@ -1,6 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import useApi from '@/src/hooks/useApi';
 import { addVideo, updateVideo } from '@/src/services/video';
 
@@ -61,6 +62,18 @@ const VideoForm = ({
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const getSubmitButtonText = (isSubmitting, isEditing) => {
+    if (isSubmitting) {
+      return 'Saving...';
+    }
+
+    if (isEditing) {
+      return 'Update Video';
+    }
+
+    return 'Add Video';
   };
 
   return (
@@ -146,11 +159,7 @@ const VideoForm = ({
                 disabled={isSubmitting}
                 className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300'
               >
-                {isSubmitting
-                  ? 'Saving...'
-                  : isEditing
-                  ? 'Update Video'
-                  : 'Add Video'}
+                {getSubmitButtonText(isSubmitting, isEditing)}
               </button>
             </div>
           </Form>
@@ -158,6 +167,14 @@ const VideoForm = ({
       </Formik>
     </div>
   );
+};
+
+VideoForm.propTypes = {
+  moduleId: PropTypes.string.isRequired,
+  onSuccess: PropTypes.func,
+  videoData: PropTypes.object,
+  isEditing: PropTypes.bool,
+  videoId: PropTypes.string
 };
 
 export default VideoForm;

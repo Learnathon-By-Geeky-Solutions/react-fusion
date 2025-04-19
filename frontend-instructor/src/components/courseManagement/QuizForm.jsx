@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import useApi from '@/src/hooks/useApi';
 import { addQuiz, updateQuiz } from '@/src/services/quiz';
 
@@ -140,6 +141,289 @@ const QuizForm = ({
     setNewOptions(updatedOptions);
   };
 
+  const renderQuestionForm = (push) => {
+    if (!showQuestionForm) return null;
+
+    return (
+      <div className='border border-gray-300 rounded-md p-4 mb-4'>
+        <h3 className='text-lg font-medium mb-3'>Add New Question</h3>
+        <div className='space-y-4'>
+          <div>
+            <label
+              htmlFor='new-question'
+              className='block text-sm font-medium text-gray-700 mb-1'
+            >
+              Question
+            </label>
+            <input
+              type='text'
+              id='new-question'
+              className='w-full px-4 py-2 border border-gray-300 rounded-md'
+              placeholder='Enter your question'
+            />
+          </div>
+
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>
+              Options (All 4 options are required)
+            </label>
+            {[0, 1, 2, 3].map((index) => (
+              <div
+                key={`new-option-${index}`}
+                className='flex items-center mb-2'
+              >
+                <input
+                  type='text'
+                  id={`option-${index}`}
+                  className='flex-1 px-4 py-2 border border-gray-300 rounded-md'
+                  placeholder={`Option ${index + 1}`}
+                  value={newOptions[index]}
+                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <label
+              htmlFor='correct-answer'
+              className='block text-sm font-medium text-gray-700 mb-1'
+            >
+              Correct Answer
+            </label>
+            <select
+              id='correct-answer'
+              className='w-full px-4 py-2 border border-gray-300 rounded-md'
+            >
+              <option value=''>Select correct answer</option>
+              {newOptions.map((option, index) =>
+                option ? (
+                  <option key={`answer-option-${index}`} value={option}>
+                    {option}
+                  </option>
+                ) : null
+              )}
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor='question-points'
+              className='block text-sm font-medium text-gray-700 mb-1'
+            >
+              Points
+            </label>
+            <input
+              type='number'
+              id='question-points'
+              min='1'
+              defaultValue='5'
+              className='w-full px-4 py-2 border border-gray-300 rounded-md'
+              placeholder='Points for this question'
+            />
+          </div>
+
+          <div className='flex justify-end space-x-2'>
+            <button
+              type='button'
+              className='px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+              onClick={() => {
+                setShowQuestionForm(false);
+                setNewOptions(['', '', '', '']);
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type='button'
+              className='px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+              onClick={() => {
+                const questionElement = document.getElementById('new-question');
+                const pointsElement =
+                  document.getElementById('question-points');
+                const answerElement = document.getElementById('correct-answer');
+
+                const newQuestion = {
+                  question: questionElement.value,
+                  options: newOptions,
+                  answer: answerElement.value,
+                  points: parseInt(pointsElement.value, 10) || 5
+                };
+
+                const validatedQuestion = handleAddQuestion(newQuestion);
+                if (validatedQuestion) {
+                  push(validatedQuestion);
+                  setShowQuestionForm(false);
+                  setNewOptions(['', '', '', '']);
+                }
+              }}
+            >
+              Add Question
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderQuestionItem = (question, index, remove) => {
+    if (editingIndex !== index) {
+      return (
+        <div className='flex justify-between items-center'>
+          <div className='flex-1'>
+            <h4 className='font-medium'>
+              Question {index + 1}: {question.question}
+            </h4>
+          </div>
+          <div className='flex space-x-2'>
+            <button
+              type='button'
+              className='text-blue-600 hover:text-blue-800'
+              onClick={() => setEditingIndex(index)}
+            >
+              Edit
+            </button>
+            <button
+              type='button'
+              className='text-red-600 hover:text-red-800'
+              onClick={() => remove(index)}
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div className='flex justify-between items-center mb-3'>
+          <h4 className='font-medium'>Question {index + 1}</h4>
+          <button
+            type='button'
+            className='text-red-600 hover:text-red-800'
+            onClick={() => {
+              remove(index);
+              setEditingIndex(-1);
+            }}
+          >
+            Remove
+          </button>
+        </div>
+
+        <div className='mb-3'>
+          <label
+            htmlFor={`questions.${index}.question`}
+            className='block text-sm font-medium text-gray-700 mb-1'
+          >
+            Question
+          </label>
+          <Field
+            id={`questions.${index}.question`}
+            name={`questions.${index}.question`}
+            type='text'
+            className='w-full px-4 py-2 border border-gray-300 rounded-md'
+          />
+          <ErrorMessage
+            name={`questions.${index}.question`}
+            component='div'
+            className='mt-1 text-red-600 text-sm'
+          />
+        </div>
+
+        <div className='mb-3'>
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
+            Options (All 4 options are required)
+          </label>
+          <div>
+            {[0, 1, 2, 3].map((optIndex) => (
+              <div
+                key={`edit-option-${index}-${optIndex}`}
+                className='flex items-center mb-2'
+              >
+                <Field
+                  id={`questions.${index}.options.${optIndex}`}
+                  name={`questions.${index}.options.${optIndex}`}
+                  type='text'
+                  className='flex-1 px-4 py-2 border border-gray-300 rounded-md'
+                  placeholder={`Option ${optIndex + 1}`}
+                />
+              </div>
+            ))}
+          </div>
+          <ErrorMessage
+            name={`questions.${index}.options`}
+            component='div'
+            className='mt-1 text-red-600 text-sm'
+          />
+        </div>
+
+        <div className='mb-3'>
+          <label
+            htmlFor={`questions.${index}.answer`}
+            className='block text-sm font-medium text-gray-700 mb-1'
+          >
+            Correct Answer
+          </label>
+          <Field
+            as='select'
+            id={`questions.${index}.answer`}
+            name={`questions.${index}.answer`}
+            className='w-full px-4 py-2 border border-gray-300 rounded-md'
+          >
+            <option value=''>Select correct answer</option>
+            {question.options &&
+              question.options.map(
+                (option, optIndex) =>
+                  option && (
+                    <option key={`answer-${index}-${optIndex}`} value={option}>
+                      {option}
+                    </option>
+                  )
+              )}
+          </Field>
+          <ErrorMessage
+            name={`questions.${index}.answer`}
+            component='div'
+            className='mt-1 text-red-600 text-sm'
+          />
+        </div>
+
+        <div className='mb-4'>
+          <label
+            htmlFor={`questions.${index}.points`}
+            className='block text-sm font-medium text-gray-700 mb-1'
+          >
+            Points
+          </label>
+          <Field
+            id={`questions.${index}.points`}
+            name={`questions.${index}.points`}
+            type='number'
+            min='1'
+            className='w-full px-4 py-2 border border-gray-300 rounded-md'
+            placeholder='Points for this question'
+          />
+          <ErrorMessage
+            name={`questions.${index}.points`}
+            component='div'
+            className='mt-1 text-red-600 text-sm'
+          />
+        </div>
+
+        <div className='flex justify-end'>
+          <button
+            type='button'
+            className='px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+            onClick={() => setEditingIndex(-1)}
+          >
+            Done
+          </button>
+        </div>
+      </>
+    );
+  };
+
   return (
     <div className='bg-white p-6 rounded-lg shadow-md'>
       <h2 className='text-xl font-semibold mb-4'>
@@ -178,271 +462,21 @@ const QuizForm = ({
                       <h3 className='text-lg font-medium mb-3'>Questions</h3>
                       {values.questions.map((question, index) => (
                         <div
-                          key={index}
+                          key={`question-${index}-${question.question.substring(
+                            0,
+                            10
+                          )}`}
                           className='border border-gray-300 rounded-md p-4 mb-4'
                         >
-                          {editingIndex === index ? (
-                            <>
-                              <div className='flex justify-between items-center mb-3'>
-                                <h4 className='font-medium'>
-                                  Question {index + 1}
-                                </h4>
-                                <button
-                                  type='button'
-                                  className='text-red-600 hover:text-red-800'
-                                  onClick={() => {
-                                    remove(index);
-                                    setEditingIndex(-1);
-                                  }}
-                                >
-                                  Remove
-                                </button>
-                              </div>
-
-                              <div className='mb-3'>
-                                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                                  Question
-                                </label>
-                                <Field
-                                  name={`questions.${index}.question`}
-                                  type='text'
-                                  className='w-full px-4 py-2 border border-gray-300 rounded-md'
-                                />
-                                <ErrorMessage
-                                  name={`questions.${index}.question`}
-                                  component='div'
-                                  className='mt-1 text-red-600 text-sm'
-                                />
-                              </div>
-
-                              <div className='mb-3'>
-                                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                                  Options (All 4 options are required)
-                                </label>
-                                <div>
-                                  {[0, 1, 2, 3].map((optIndex) => (
-                                    <div
-                                      key={optIndex}
-                                      className='flex items-center mb-2'
-                                    >
-                                      <Field
-                                        name={`questions.${index}.options.${optIndex}`}
-                                        type='text'
-                                        className='flex-1 px-4 py-2 border border-gray-300 rounded-md'
-                                        placeholder={`Option ${optIndex + 1}`}
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                                <ErrorMessage
-                                  name={`questions.${index}.options`}
-                                  component='div'
-                                  className='mt-1 text-red-600 text-sm'
-                                />
-                              </div>
-
-                              <div className='mb-3'>
-                                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                                  Correct Answer
-                                </label>
-                                <Field
-                                  as='select'
-                                  name={`questions.${index}.answer`}
-                                  className='w-full px-4 py-2 border border-gray-300 rounded-md'
-                                >
-                                  <option value=''>
-                                    Select correct answer
-                                  </option>
-                                  {question.options &&
-                                    question.options.map(
-                                      (option, optIndex) =>
-                                        option && (
-                                          <option key={optIndex} value={option}>
-                                            {option}
-                                          </option>
-                                        )
-                                    )}
-                                </Field>
-                                <ErrorMessage
-                                  name={`questions.${index}.answer`}
-                                  component='div'
-                                  className='mt-1 text-red-600 text-sm'
-                                />
-                              </div>
-
-                              <div className='mb-4'>
-                                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                                  Points
-                                </label>
-                                <Field
-                                  name={`questions.${index}.points`}
-                                  type='number'
-                                  min='1'
-                                  className='w-full px-4 py-2 border border-gray-300 rounded-md'
-                                  placeholder='Points for this question'
-                                />
-                                <ErrorMessage
-                                  name={`questions.${index}.points`}
-                                  component='div'
-                                  className='mt-1 text-red-600 text-sm'
-                                />
-                              </div>
-
-                              <div className='flex justify-end'>
-                                <button
-                                  type='button'
-                                  className='px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                                  onClick={() => setEditingIndex(-1)}
-                                >
-                                  Done
-                                </button>
-                              </div>
-                            </>
-                          ) : (
-                            <div className='flex justify-between items-center'>
-                              <div className='flex-1'>
-                                <h4 className='font-medium'>
-                                  Question {index + 1}: {question.question}
-                                </h4>
-                              </div>
-                              <div className='flex space-x-2'>
-                                <button
-                                  type='button'
-                                  className='text-blue-600 hover:text-blue-800'
-                                  onClick={() => setEditingIndex(index)}
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  type='button'
-                                  className='text-red-600 hover:text-red-800'
-                                  onClick={() => remove(index)}
-                                >
-                                  Remove
-                                </button>
-                              </div>
-                            </div>
-                          )}
+                          {renderQuestionItem(question, index, remove)}
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {showQuestionForm ? (
-                    <div className='border border-gray-300 rounded-md p-4 mb-4'>
-                      <h3 className='text-lg font-medium mb-3'>
-                        Add New Question
-                      </h3>
-                      <div className='space-y-4'>
-                        <div>
-                          <label className='block text-sm font-medium text-gray-700 mb-1'>
-                            Question
-                          </label>
-                          <input
-                            type='text'
-                            id='new-question'
-                            className='w-full px-4 py-2 border border-gray-300 rounded-md'
-                            placeholder='Enter your question'
-                          />
-                        </div>
+                  {renderQuestionForm(push)}
 
-                        <div>
-                          <label className='block text-sm font-medium text-gray-700 mb-1'>
-                            Options (All 4 options are required)
-                          </label>
-                          {[0, 1, 2, 3].map((index) => (
-                            <div key={index} className='flex items-center mb-2'>
-                              <input
-                                type='text'
-                                id={`option-${index}`}
-                                className='flex-1 px-4 py-2 border border-gray-300 rounded-md'
-                                placeholder={`Option ${index + 1}`}
-                                value={newOptions[index]}
-                                onChange={(e) =>
-                                  handleOptionChange(index, e.target.value)
-                                }
-                              />
-                            </div>
-                          ))}
-                        </div>
-
-                        <div>
-                          <label className='block text-sm font-medium text-gray-700 mb-1'>
-                            Correct Answer
-                          </label>
-                          <select
-                            id='correct-answer'
-                            className='w-full px-4 py-2 border border-gray-300 rounded-md'
-                          >
-                            <option value=''>Select correct answer</option>
-                            {newOptions.map((option, index) =>
-                              option ? (
-                                <option key={index} value={option}>
-                                  {option}
-                                </option>
-                              ) : null
-                            )}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className='block text-sm font-medium text-gray-700 mb-1'>
-                            Points
-                          </label>
-                          <input
-                            type='number'
-                            id='question-points'
-                            min='1'
-                            defaultValue='5'
-                            className='w-full px-4 py-2 border border-gray-300 rounded-md'
-                            placeholder='Points for this question'
-                          />
-                        </div>
-
-                        <div className='flex justify-end space-x-2'>
-                          <button
-                            type='button'
-                            className='px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
-                            onClick={() => {
-                              setShowQuestionForm(false);
-                              setNewOptions(['', '', '', '']);
-                            }}
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            type='button'
-                            className='px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                            onClick={() => {
-                              const questionElement =
-                                document.getElementById('new-question');
-                              const pointsElement =
-                                document.getElementById('question-points');
-                              const answerElement =
-                                document.getElementById('correct-answer');
-
-                              const newQuestion = {
-                                question: questionElement.value,
-                                options: newOptions,
-                                answer: answerElement.value,
-                                points: parseInt(pointsElement.value, 10) || 5
-                              };
-
-                              const validatedQuestion =
-                                handleAddQuestion(newQuestion);
-                              if (validatedQuestion) {
-                                push(validatedQuestion);
-                                setShowQuestionForm(false);
-                                setNewOptions(['', '', '', '']);
-                              }
-                            }}
-                          >
-                            Add Question
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
+                  {!showQuestionForm && (
                     <div className='my-4'>
                       <button
                         type='button'
@@ -484,6 +518,14 @@ const QuizForm = ({
       </Formik>
     </div>
   );
+};
+
+QuizForm.propTypes = {
+  moduleId: PropTypes.string.isRequired,
+  onSuccess: PropTypes.func,
+  quizData: PropTypes.object,
+  isEditing: PropTypes.bool,
+  quizId: PropTypes.string
 };
 
 export default QuizForm;

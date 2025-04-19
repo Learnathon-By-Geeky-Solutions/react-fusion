@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import useApi from '@/src/hooks/useApi';
@@ -182,6 +183,12 @@ const CourseForm = ({ initialValues = null, onSuccess, isEdit = false }) => {
       </Formik>
     </div>
   );
+};
+
+CourseForm.propTypes = {
+  initialValues: PropTypes.object,
+  onSuccess: PropTypes.func,
+  isEdit: PropTypes.bool
 };
 
 export default CourseForm;
