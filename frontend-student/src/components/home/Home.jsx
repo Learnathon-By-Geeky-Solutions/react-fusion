@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { image1, image2, image3, about, avatar } from '@/src/assets/index';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const carouselRef = useRef(null);
@@ -313,12 +314,11 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <button className='px-8 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition'>
-              Sign Up Now
-            </button>
-            <button className='px-8 py-3 bg-transparent border border-white text-white font-bold rounded-lg hover:bg-white/10 transition'>
-              Request Demo
-            </button>
+            <Link to='/signup'>
+              <button className='px-8 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition'>
+                Sign Up Now
+              </button>
+            </Link>
           </motion.div>
         </div>
       </section>
