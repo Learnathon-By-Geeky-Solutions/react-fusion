@@ -75,6 +75,56 @@ const CreateMilestone = () => {
     setEditingMilestone(null);
   };
 
+  const renderMilestoneContent = () => {
+    if (loading) {
+      return <div className='text-center py-4'>Loading milestones...</div>;
+    }
+
+    if (milestones.length === 0) {
+      return (
+        <div className='text-center py-4 bg-white p-6 rounded-lg shadow-md'>
+          No milestones found. Click "Add Milestone" to create your first
+          milestone.
+        </div>
+      );
+    }
+
+    return (
+      <div className='space-y-4'>
+        {milestones.map((milestone) => (
+          <div
+            key={milestone.id}
+            className='bg-white p-6 rounded-lg shadow-md flex justify-between items-center'
+          >
+            <div>
+              <h3 className='text-xl font-semibold'>{milestone.title}</h3>
+            </div>
+            <div className='flex space-x-2'>
+              <Link
+                to={`/module/${milestone.id}`}
+                className='px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+              >
+                Modules
+              </Link>
+              <button
+                onClick={() => handleEditClick(milestone)}
+                className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDeleteClick(milestone.id)}
+                className='px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className='max-w-6xl mx-auto py-8 px-4'>
       <div className='flex justify-between mb-8'>
@@ -105,49 +155,7 @@ const CreateMilestone = () => {
       </div>
 
       {/* Milestone List */}
-      <div className='mt-8'>
-        {loading ? (
-          <div className='text-center py-4'>Loading milestones...</div>
-        ) : milestones.length === 0 ? (
-          <div className='text-center py-4 bg-white p-6 rounded-lg shadow-md'>
-            No milestones found. Click "Add Milestone" to create your first
-            milestone.
-          </div>
-        ) : (
-          <div className='space-y-4'>
-            {milestones.map((milestone) => (
-              <div
-                key={milestone.id}
-                className='bg-white p-6 rounded-lg shadow-md flex justify-between items-center'
-              >
-                <div>
-                  <h3 className='text-xl font-semibold'>{milestone.title}</h3>
-                </div>
-                <div className='flex space-x-2'>
-                  <Link
-                    to={`/module/${milestone.id}`}
-                    className='px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-                  >
-                    Modules
-                  </Link>
-                  <button
-                    onClick={() => handleEditClick(milestone)}
-                    className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteClick(milestone.id)}
-                    className='px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <div className='mt-8'>{renderMilestoneContent()}</div>
 
       {/* Form Modal */}
       {showForm && (

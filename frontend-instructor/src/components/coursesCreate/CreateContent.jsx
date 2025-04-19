@@ -166,6 +166,90 @@ const CreateContent = () => {
     return quizCount;
   };
 
+  const renderContentList = () => {
+    if (loading) {
+      return <div className='text-center py-4'>Loading content...</div>;
+    }
+
+    if (moduleItems.length === 0) {
+      return (
+        <div className='text-center py-4'>
+          No content found. Add videos or quizzes using the buttons above.
+        </div>
+      );
+    }
+
+    return (
+      <div className='space-y-4'>
+        {moduleItems.map((item, index) => (
+          <div
+            key={item.id}
+            className='bg-white p-6 rounded-lg shadow-md flex justify-between items-center'
+          >
+            {renderItemTitle(item, index)}
+            <div className='flex space-x-2'>
+              <button
+                onClick={() => handleEditItem(item)}
+                className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={() => handleDeleteItem(item)}
+                className='px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderItemTitle = (item, index) => {
+    if (item.video) {
+      return <h4 className='text-lg font-medium'>{item.video.title}</h4>;
+    }
+    return <h4 className='text-lg font-medium'>Quiz {getQuizNumber(index)}</h4>;
+  };
+
+  const renderFormModalContent = () => {
+    if (isLoadingItemData) {
+      return <div className='text-center py-4'>Loading data...</div>;
+    }
+
+    if (activeForm === 'video') {
+      return (
+        <VideoForm
+          moduleId={moduleId}
+          onSuccess={handleFormSuccess}
+          videoData={fetchedItemData}
+          isEditing={!!editingItem}
+          videoId={editingItem?.video?.id}
+        />
+      );
+    }
+
+    return (
+      <QuizForm
+        moduleId={moduleId}
+        onSuccess={handleFormSuccess}
+        quizData={fetchedItemData}
+        isEditing={!!editingItem}
+        quizId={editingItem?.quiz?.id}
+      />
+    );
+  };
+
+  const getFormTitle = () => {
+    if (editingItem) {
+      return `Edit ${activeForm === 'video' ? 'Video' : 'Quiz'}`;
+    }
+    return `Add New ${activeForm === 'video' ? 'Video' : 'Quiz'}`;
+  };
+
   return (
     <div className='max-w-6xl container mx-auto p-6'>
       <div className='flex justify-between mb-8'>
@@ -211,59 +295,14 @@ const CreateContent = () => {
       </div>
 
       {/* Content List */}
-      <div className='mt-8'>
-        {loading ? (
-          <div className='text-center py-4'>Loading content...</div>
-        ) : moduleItems.length === 0 ? (
-          <div className='text-center py-4'>
-            No content found. Add videos or quizzes using the buttons above.
-          </div>
-        ) : (
-          <div className='space-y-4'>
-            {moduleItems.map((item, index) => (
-              <div
-                key={item.id}
-                className='bg-white p-6 rounded-lg shadow-md flex justify-between items-center'
-              >
-                {item.video ? (
-                  <h4 className='text-lg font-medium'>{item.video.title}</h4>
-                ) : (
-                  <h4 className='text-lg font-medium'>
-                    Quiz {getQuizNumber(index)}
-                  </h4>
-                )}
-
-                <div className='flex space-x-2'>
-                  <button
-                    onClick={() => handleEditItem(item)}
-                    className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() => handleDeleteItem(item)}
-                    className='px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <div className='mt-8'>{renderContentList()}</div>
 
       {/* Form Modal */}
       {activeForm && (
         <div className='fixed inset-0 bg-black/75 flex items-center justify-center z-50'>
           <div className='bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 overflow-hidden'>
             <div className='flex justify-between items-center px-6 py-4 bg-gray-100'>
-              <h2 className='text-xl font-semibold'>
-                {editingItem
-                  ? `Edit ${activeForm === 'video' ? 'Video' : 'Quiz'}`
-                  : `Add New ${activeForm === 'video' ? 'Video' : 'Quiz'}`}
-              </h2>
+              <h2 className='text-xl font-semibold'>{getFormTitle()}</h2>
               <button
                 onClick={handleFormClose}
                 className='text-gray-500 hover:text-gray-700 focus:outline-none'
@@ -272,25 +311,7 @@ const CreateContent = () => {
               </button>
             </div>
             <div className='p-6 max-h-[80vh] overflow-y-auto'>
-              {isLoadingItemData ? (
-                <div className='text-center py-4'>Loading data...</div>
-              ) : activeForm === 'video' ? (
-                <VideoForm
-                  moduleId={moduleId}
-                  onSuccess={handleFormSuccess}
-                  videoData={fetchedItemData}
-                  isEditing={!!editingItem}
-                  videoId={editingItem?.video?.id}
-                />
-              ) : (
-                <QuizForm
-                  moduleId={moduleId}
-                  onSuccess={handleFormSuccess}
-                  quizData={fetchedItemData}
-                  isEditing={!!editingItem}
-                  quizId={editingItem?.quiz?.id}
-                />
-              )}
+              {renderFormModalContent()}
             </div>
           </div>
         </div>
