@@ -166,13 +166,24 @@ const CourseForm = ({ initialValues = null, onSuccess, isEdit = false }) => {
             )}
 
             <div className='flex justify-end'>
-              <button
-                type='submit'
-                disabled={isSubmitting}
-                className='px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300'
-              >
-                {buttonText}
-              </button>
+              {(() => {
+                let buttonText = 'Create Course';
+                if (isSubmitting) {
+                  buttonText = 'Saving...';
+                } else if (isEdit) {
+                  buttonText = 'Update Course';
+                }
+
+                return (
+                  <button
+                    type='submit'
+                    disabled={isSubmitting}
+                    className='px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300'
+                  >
+                    {buttonText}
+                  </button>
+                );
+              })()}
             </div>
           </Form>
         )}
