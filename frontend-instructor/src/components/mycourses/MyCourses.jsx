@@ -90,80 +90,77 @@ export default function CourseDashboard() {
           </Link>
         </div>
       ) : (
-        <>
-          <div className='grid gap-6 md:grid-cols-1'>
-            {courses.map((course) => (
-              <div
-                key={course.id}
-                className='bg-white shadow-md p-5 rounded-lg flex flex-col md:flex-row'
-              >
-                {/* Course Thumbnail */}
-                <div className='md:w-48 flex-shrink-0'>
-                  <img
-                    src={getThumbnail(course.thumbnail)}
-                    alt={course.title}
-                    className='w-full h-32 md:h-40 object-cover rounded-lg'
-                  />
+        <div className='grid gap-6 md:grid-cols-1'>
+          {courses.map((course) => (
+            <div
+              key={course.id}
+              className='bg-white shadow-md p-5 rounded-lg flex flex-col md:flex-row'
+            >
+              {/* Course Thumbnail */}
+              <div className='md:w-48 flex-shrink-0'>
+                <img
+                  src={getThumbnail(course.thumbnail)}
+                  alt={course.title}
+                  className='w-full h-32 md:h-40 object-cover rounded-lg'
+                />
+              </div>
+
+              {/* Course Details */}
+              <div className='mt-4 md:mt-0 md:ml-6 flex-1'>
+                <div className='flex flex-wrap justify-between items-start'>
+                  <h3 className='text-xl font-semibold text-gray-800'>
+                    {course.title}
+                  </h3>
+                  <div className='flex items-center gap-2'>
+                    <span
+                      className={`px-2 py-1 text-xs rounded-full ${
+                        course.isPublished
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}
+                    >
+                      {course.isPublished ? 'Published' : 'Draft'}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Course Details */}
-                <div className='mt-4 md:mt-0 md:ml-6 flex-1'>
-                  <div className='flex flex-wrap justify-between items-start'>
-                    <h3 className='text-xl font-semibold text-gray-800'>
-                      {course.title}
-                    </h3>
-                    <div className='flex items-center gap-2'>
-                      <span
-                        className={`px-2 py-1 text-xs rounded-full ${
-                          course.isPublished
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}
-                      >
-                        {course.isPublished ? 'Published' : 'Draft'}
-                      </span>
-                    </div>
-                  </div>
+                <div className='flex flex-wrap gap-4 mt-2'>
+                  <p className='text-gray-700'>
+                    <span className='font-medium'>Price:</span> $ {course.price}
+                  </p>
+                  <p className='text-yellow-600'>
+                    <span className='font-medium'>Rating:</span>{' '}
+                    {course.rating ? `${course.rating} ⭐` : 'Not rated yet'}
+                  </p>
+                </div>
 
-                  <div className='flex flex-wrap gap-4 mt-2'>
-                    <p className='text-gray-700'>
-                      <span className='font-medium'>Price:</span> ${' '}
-                      {course.price}
-                    </p>
-                    <p className='text-yellow-600'>
-                      <span className='font-medium'>Rating:</span>{' '}
-                      {course.rating ? `${course.rating} ⭐` : 'Not rated yet'}
-                    </p>
-                  </div>
+                {course.description && (
+                  <p className='text-gray-600 mt-2'>
+                    {truncateText(course.description, 60)}
+                  </p>
+                )}
 
-                  {course.description && (
-                    <p className='text-gray-600 mt-2'>
-                      {truncateText(course.description, 60)}
-                    </p>
-                  )}
-
-                  <div className='mt-4 flex flex-wrap gap-3'>
-                    <Link to={`/courses/${course.id}`}>
-                      <button className='px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition'>
-                        View Details
-                      </button>
-                    </Link>
-                    <Link to={`/edit-course/${course.id}`}>
-                      <button className='px-4 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition'>
-                        Edit Course
-                      </button>
-                    </Link>
-                    <Link to={`/analytics/${course.id}`}>
-                      <button className='px-4 bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition'>
-                        Analytics
-                      </button>
-                    </Link>
-                  </div>
+                <div className='mt-4 flex flex-wrap gap-3'>
+                  <Link to={`/courses/${course.id}`}>
+                    <button className='px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition'>
+                      View Details
+                    </button>
+                  </Link>
+                  <Link to={`/edit-course/${course.id}`}>
+                    <button className='px-4 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition'>
+                      Edit Course
+                    </button>
+                  </Link>
+                  <Link to={`/analytics/${course.id}`}>
+                    <button className='px-4 bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition'>
+                      Analytics
+                    </button>
+                  </Link>
                 </div>
               </div>
-            ))}
-          </div>
-        </>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

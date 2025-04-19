@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { getQuiz } from '@/src/services/quiz';
 import useApi from '@/src/hooks/useApi';
 
@@ -83,7 +82,3 @@ export default function QuizSection(quizId) {
     </div>
   );
 }
-
-QuizSection.propTypes = {
-  quiz: PropTypes.string.isRequired
-};

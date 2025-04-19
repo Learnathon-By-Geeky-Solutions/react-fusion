@@ -25,11 +25,7 @@ export default function NavBar() {
               <div className='w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-lg font-bold'>
                 E
               </div>
-              <span
-                className={`text-lg font-bold ${
-                  location.pathname !== '/' ? 'text-blue-600' : 'text-blue-600'
-                }`}
-              >
+              <span className={'text-lg font-bold text-blue-600'}>
                 EduNexus
               </span>
             </Link>
