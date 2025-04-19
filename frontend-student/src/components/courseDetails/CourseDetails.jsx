@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import getSingleCourse from '@/src/services/singleCourse';
-import { buyCourse } from '@/src/services/buyCourse';
+import { buyCourse } from '@/src/services/course';
 import { noimage } from '../../assets';
 import useApi from '@/src/hooks/useApi';
 import { nanoid } from 'nanoid';
@@ -300,7 +300,7 @@ export default function CourseDetails() {
                 <div className='flex items-center justify-between mb-4'>
                   <h3 className='text-2xl font-bold text-gray-900'>Price</h3>
                   <p className='text-3xl font-bold text-blue-600'>
-                    ৳ {course.price}
+                    $ {course.price}
                   </p>
                 </div>
                 <button
@@ -518,7 +518,7 @@ export default function CourseDetails() {
               />
               <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end'>
                 <div className='p-4 text-white'>
-                  <div className='text-3xl font-bold'>৳ {course.price}</div>
+                  <div className='text-3xl font-bold'>$ {course.price}</div>
                 </div>
               </div>
             </div>
