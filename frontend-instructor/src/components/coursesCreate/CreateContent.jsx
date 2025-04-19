@@ -219,40 +219,38 @@ const CreateContent = () => {
             No content found. Add videos or quizzes using the buttons above.
           </div>
         ) : (
-          <>
-            <div className='space-y-4'>
-              {moduleItems.map((item, index) => (
-                <div
-                  key={item.id}
-                  className='bg-white p-6 rounded-lg shadow-md flex justify-between items-center'
-                >
-                  {item.video ? (
-                    <h4 className='text-lg font-medium'>{item.video.title}</h4>
-                  ) : (
-                    <h4 className='text-lg font-medium'>
-                      Quiz {getQuizNumber(index)}
-                    </h4>
-                  )}
+          <div className='space-y-4'>
+            {moduleItems.map((item, index) => (
+              <div
+                key={item.id}
+                className='bg-white p-6 rounded-lg shadow-md flex justify-between items-center'
+              >
+                {item.video ? (
+                  <h4 className='text-lg font-medium'>{item.video.title}</h4>
+                ) : (
+                  <h4 className='text-lg font-medium'>
+                    Quiz {getQuizNumber(index)}
+                  </h4>
+                )}
 
-                  <div className='flex space-x-2'>
-                    <button
-                      onClick={() => handleEditItem(item)}
-                      className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
-                    >
-                      Edit
-                    </button>
+                <div className='flex space-x-2'>
+                  <button
+                    onClick={() => handleEditItem(item)}
+                    className='px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+                  >
+                    Edit
+                  </button>
 
-                    <button
-                      onClick={() => handleDeleteItem(item)}
-                      className='px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
-                    >
-                      Remove
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleDeleteItem(item)}
+                    className='px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+                  >
+                    Remove
+                  </button>
                 </div>
-              ))}
-            </div>
-          </>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
