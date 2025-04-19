@@ -171,11 +171,7 @@ const CourseForm = ({ initialValues = null, onSuccess, isEdit = false }) => {
                 disabled={isSubmitting}
                 className='px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300'
               >
-                {isSubmitting
-                  ? 'Saving...'
-                  : isEdit
-                  ? 'Update Course'
-                  : 'Create Course'}
+                {buttonText}
               </button>
             </div>
           </Form>

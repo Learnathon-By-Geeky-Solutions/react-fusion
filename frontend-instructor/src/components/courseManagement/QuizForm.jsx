@@ -164,7 +164,10 @@ const QuizForm = ({
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-gray-700 mb-1'>
+            <label
+              htmlFor='Options'
+              className='block text-sm font-medium text-gray-700 mb-1'
+            >
               Options (All 4 options are required)
             </label>
             {[0, 1, 2, 3].map((index) => (
@@ -332,7 +335,10 @@ const QuizForm = ({
         </div>
 
         <div className='mb-3'>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
+          <label
+            htmlFor='options'
+            className='block text-sm font-medium text-gray-700 mb-1'
+          >
             Options (All 4 options are required)
           </label>
           <div>
