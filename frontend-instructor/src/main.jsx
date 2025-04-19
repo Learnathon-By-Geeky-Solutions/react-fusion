@@ -8,9 +8,13 @@ import { AuthProvider } from './context/authContext';
 import App from './App.jsx';
 import SignUp from './components/signup/SignUp';
 import MyCourses from './components/mycourses/MyCourses';
-import AddCourse from './components/addCourse/addCourse';
 import CourseAnalytics from './components/analytics/Analytics';
-import CourseDetails from './components/courseDetails/CourseDetails';
+import CreateCourse from './components/coursesCreate/CreateCourse';
+import CreateMilestone from './components/coursesCreate/CreateMilestone';
+import CreateModule from './components/coursesCreate/CreateModule';
+import ContentPage from './components/coursesCreate/CreateContent';
+import EditCourse from './components/coursesCreate/EditCourse';
+import CoursePage from './components/coursePage/CoursePage';
 
 const routes = createBrowserRouter([
   {
@@ -35,16 +39,32 @@ const routes = createBrowserRouter([
         element: <MyCourses />
       },
       {
-        path: '/add-courses',
-        element: <AddCourse />
-      },
-      {
         path: '/analytics/:courseId',
-        element: <CourseAnalytics></CourseAnalytics>
+        element: <CourseAnalytics />
       },
       {
         path: '/courses/:courseId',
-        element: <CourseDetails></CourseDetails>
+        element: <CoursePage />
+      },
+      {
+        path: '/create-course',
+        element: <CreateCourse />
+      },
+      {
+        path: '/courses/:courseId/milestones',
+        element: <CreateMilestone />
+      },
+      {
+        path: '/module/:milestoneId',
+        element: <CreateModule />
+      },
+      {
+        path: '/content/:moduleId',
+        element: <ContentPage />
+      },
+      {
+        path: '/edit-course/:courseId',
+        element: <EditCourse />
       }
     ]
   }
