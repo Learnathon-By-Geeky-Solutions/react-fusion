@@ -1,9 +1,9 @@
 import React from 'react';
 import { saim, naim, aboutBanner } from '@/src/assets/index';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const AboutUs = () => {
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -736,18 +736,11 @@ const AboutUs = () => {
               education.
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <a
-                href='#'
-                className='px-8 py-4 rounded-full bg-white text-blue-600 font-medium hover:bg-blue-50 transition duration-300 text-lg'
-              >
-                Start Your Free Trial
-              </a>
-              <a
-                href='#'
-                className='px-8 py-4 rounded-full bg-transparent text-white font-medium border border-white hover:bg-blue-700 transition duration-300 text-lg'
-              >
-                Schedule a Demo
-              </a>
+              <Link to='/signup'>
+                <button className='px-8 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition'>
+                  Sign Up Now
+                </button>
+              </Link>
             </div>
           </motion.div>
         </div>
