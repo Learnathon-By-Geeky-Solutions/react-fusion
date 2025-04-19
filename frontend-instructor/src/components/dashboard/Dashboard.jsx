@@ -22,7 +22,7 @@ export default function CourseDashboard() {
           const res_1 = await fetchData(getProfile, {});
           setUserName(res_1.data.name);
         } catch (err) {
-          setError('Failed to fetch instructor analytics');
+          setError('Failed to fetch instructor analytics', err);
         } finally {
           setLoading(false);
         }

@@ -16,7 +16,7 @@ const Footer = () => {
             <div className='flex space-x-4 justify-start'>
               {/* Facebook */}
               <a
-                href='#'
+                href='https://facebook.com'
                 className='text-xl hover:text-blue-600'
                 aria-label='Facebook'
               >
@@ -31,7 +31,7 @@ const Footer = () => {
 
               {/* LinkedIn */}
               <a
-                href='#'
+                href='https://linkedin.com'
                 className='text-xl hover:text-blue-500'
                 aria-label='LinkedIn'
               >
@@ -46,7 +46,7 @@ const Footer = () => {
 
               {/* Instagram */}
               <a
-                href='#'
+                href='https://instagram.com'
                 className='text-xl hover:text-pink-500'
                 aria-label='Instagram'
               >
@@ -61,7 +61,7 @@ const Footer = () => {
 
               {/* GitHub */}
               <a
-                href='#'
+                href='https://github.com'
                 className='text-xl hover:text-black'
                 aria-label='GitHub'
               >
