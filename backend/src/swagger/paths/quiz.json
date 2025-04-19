@@ -1,0 +1,251 @@
+{
+  "/quiz": {
+    "post": {
+      "summary": "Create Quiz",
+      "description": "Create a new quiz with questions and options.",
+      "tags": [
+        "Quiz Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "moduleId": {
+                  "type": "string",
+                  "example": "46fe6ba8-b1dc-45c5-973f-b55fcac7d506"
+                },
+                "questions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "question": {
+                        "type": "string",
+                        "example": "What is the capital of France?"
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example": "Paris"
+                        }
+                      },
+                      "answer": {
+                        "type": "string",
+                        "example": "Paris"
+                      },
+                      "points": {
+                        "type": "integer",
+                        "example": 10
+                      }
+                    }
+                  }
+                }
+              },
+              "required": [
+                "moduleId",
+                "questions"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Quiz successfully created."
+        },
+        "400": {
+          "description": "Invalid input data."
+        }
+      }
+    }
+  },
+  "/quiz/check/{id}": {
+    "post": {
+      "summary": "Check Quiz Answers",
+      "description": "Submit answers for a quiz and check the result.",
+      "tags": [
+        "Quiz Management"
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "The unique identifier of the quiz.",
+          "schema": {
+            "type": "string",
+            "example": "22b33f42-b666-4bac-9d3c-7c139b138cfb"
+          }
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "answers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "da376725-5e66-496f-a82e-6dd89b41d812"
+                      },
+                      "answer": {
+                        "type": "string",
+                        "example": "Paris"
+                      }
+                    }
+                  }
+                }
+              },
+              "required": [
+                "answers"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Successfully checked the quiz answers."
+        },
+        "400": {
+          "description": "Invalid answers submitted."
+        }
+      }
+    }
+  },
+  "/quiz/{id}": {
+    "get": {
+      "summary": "Get Quiz by ID",
+      "description": "Retrieve a quiz by its unique ID.",
+      "tags": [
+        "Quiz Management"
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "The unique identifier of the quiz.",
+          "schema": {
+            "type": "string",
+            "example": "22b33f42-b666-4bac-9d3c-7c139b138cfb"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully retrieved the quiz details."
+        },
+        "404": {
+          "description": "Quiz not found for the given id."
+        }
+      }
+    },
+    "put": {
+      "summary": "Update Quiz",
+      "description": "Update the details of an existing quiz.",
+      "tags": [
+        "Quiz Management"
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "The unique identifier of the quiz.",
+          "schema": {
+            "type": "string",
+            "example": "2728e0f6-5abe-47b0-a8b9-728d664bafda"
+          }
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "questions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "question": {
+                        "type": "string",
+                        "example": "What is the capital of France?"
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example": "Paris"
+                        }
+                      },
+                      "answer": {
+                        "type": "string",
+                        "example": "Paris"
+                      },
+                      "points": {
+                        "type": "integer",
+                        "example": 10
+                      }
+                    }
+                  }
+                }
+              },
+              "required": [
+                "questions"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Quiz successfully updated."
+        },
+        "400": {
+          "description": "Invalid input data."
+        },
+        "404": {
+          "description": "Quiz not found for the given id."
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete Quiz",
+      "description": "Delete a quiz by its unique ID.",
+      "tags": [
+        "Quiz Management"
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "The unique identifier of the quiz.",
+          "schema": {
+            "type": "string",
+            "example": "2728e0f6-5abe-47b0-a8b9-728d664bafda"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Quiz successfully deleted."
+        },
+        "404": {
+          "description": "Quiz not found for the given id."
+        }
+      }
+    }
+  }
+}

@@ -1,71 +1,45 @@
+import httpStatus from "http-status";
+import ApiError from "../../../errors/ApiError";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
-import { ICreateCourse, IMilestones } from "./course.interface";
+import { ICreateCourse, IUpdateCourse } from "./course.interface";
 
 const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
-    const courseData = {
-        title: payload.title,
-        description: payload.description,
-        price: payload.price,
-        thumbnail: payload.thumbnail,
-        instructorId: user.userId,
-        milestones: {
-            create: payload.milestones.map((milestone: IMilestones) => ({
-                title: milestone.title,
-                description: milestone.description,
-                modules: {
-                    create: milestone.modules.map(module => ({
-                        title: module.title,
-                        description: module.description,
-                        videos: {
-                            create: module.videos.map(video => ({
-                                title: video.title,
-                                likeCount: 0,
-                                dislikeCount: 0,
-                                url: video.url,
-                                length: video.length,
-                            }))
-                        },
-                        quizes: {
-                            create: module.quizes.map(quiz => ({
-                                questions: {
-                                    create: quiz.questions.map(ques => ({
-                                        question: ques.question,
-                                        options: ques.options,
-                                        answer: ques.answer,
-                                        points: ques.points
-                                    })),
-                                }
-                            }))
-                        }
-                    }))
-                }
-            }))
-        }
-    };
-
-    // Create the course with all related data in a single transaction
     const result = await prisma.course.create({
-        data: courseData,
-        include: {
-            milestones: {
-                include: {
-                    modules: {
-                        include: {
-                            videos: true,
-                            quizes: true
-                        }
-                    },
-
-                },
-            },
-            instructor: true
-
+        data: {
+            instructorId: user.userId,
+            title: payload.title,
+            description: payload.description,
+            thumbnail: payload.thumbnail,
+            price: payload.price
         }
     });
-
     return result;
+}
 
+const updateCourse = async (courseId: string, payload: IUpdateCourse) => {
+    const result = await prisma.course.update({
+        where: {
+            id: courseId,
+        },
+        data: {
+            ...payload
+        }
+    })
+    return result;
+}
+
+const deleteCourse = async (courseId: string) => {
+    const result = await prisma.course.update({
+        where: {
+            id: courseId,
+        },
+        data: {
+            isDeleted: true,
+            isPublished: false
+        }
+    })
+    return result;
 }
 
 
@@ -75,32 +49,45 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
     const includeTerms: any = {
         instructor: payload.items.instructors,
         milestones: items.milestones === true ? {
+            orderBy: { order: 'asc' },
             include: {
                 modules: items.modules === true ? {
+                    orderBy: { order: 'asc' },
                     include: {
-                        quizes: items.quizes === true ? {
-                            select: {
-                                id: true
+                        moduleItems: items.moduleItems === true ? {
+                            orderBy: { order: 'asc' },
+                            include: {
+                                video: {
+                                    select: {
+                                        id: true,
+                                        title: true,
+                                    }
+                                },
+                                quiz: {
+                                    select: {
+                                        id: true,
+                                    }
+                                }
                             }
-                        } : false,
-                        videos: items.videos === true ? {
-                            where: { isDeleted: false },
-                            select: {
-                                id: true,
-                                moduleId: true,
-                                title: true
-                            }
-                        } : false,
+
+                        } : false
                     },
                 } : false,
             },
         } : false,
     }
-    let whereTerms = {
+
+    let whereTerms: any = {
         instructorId: payload.filters?.instructorId,
         title: {
             contains: payload.filters?.title,
-        }
+        },
+        isDeleted: false,
+        isPublished: true
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+        delete whereTerms.isPublished
     }
     let sortBy = [] as any
     if (payload?.sortBy) {
@@ -147,7 +134,7 @@ const getSingleCourse = async (id: string) => {
         include: {
             instructor: {
                 select: {
-                    id: true,
+                    userId: true,
                     name: true,
                     image: true,
                     designation: true,
@@ -157,20 +144,25 @@ const getSingleCourse = async (id: string) => {
                 }
             },
             milestones: {
+                orderBy: { order: 'asc' },
                 include: {
                     modules: {
+                        orderBy: { order: 'asc' },
                         include: {
-                            videos: {
-                                where: { isDeleted: false },
-                                select: {
-                                    id: true,
-                                    moduleId: true,
-                                    title: true,
-                                }
-                            },
-                            quizes: {
-                                select: {
-                                    id: true,
+                            moduleItems: {
+                                orderBy: { order: 'asc' },
+                                include: {
+                                    video: {
+                                        select: {
+                                            id: true,
+                                            title: true,
+                                        }
+                                    },
+                                    quiz: {
+                                        select: {
+                                            id: true,
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -180,6 +172,10 @@ const getSingleCourse = async (id: string) => {
             },
         }
     })
+
+    if (!result || result?.isDeleted) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Resource not found');
+    }
     return result
 }
 
@@ -201,9 +197,11 @@ const checkEnrollment = async (courseId: string, user: JwtPayload) => {
 
 export const courseService = {
     createCourse,
+    updateCourse,
+    deleteCourse,
     getAllCourses,
     getSingleCourse,
-    checkEnrollment
+    checkEnrollment,
 }
 
 

@@ -11,7 +11,7 @@ const updateVideo = catchAsync(async (req, res, next) => {
 	sendResponse(res, {
 		success: true,
 		statusCode: httpStatus.OK,
-		message: 'Video Prgoress Updated Successfully',
+		message: 'Video Progress Updated Successfully',
 		data: result
 	})
 })
@@ -22,7 +22,7 @@ const updateQuiz = catchAsync(async (req, res, next) => {
 	sendResponse(res, {
 		success: true,
 		statusCode: httpStatus.OK,
-		message: 'Quiz Prgoress Updated Successfully',
+		message: 'Quiz Progress Updated Successfully',
 		data: result
 	})
 })
@@ -33,7 +33,7 @@ const updateModule = catchAsync(async (req, res, next) => {
 	sendResponse(res, {
 		success: true,
 		statusCode: httpStatus.OK,
-		message: 'Module Prgoress Updated Successfully',
+		message: 'Module Progress Updated Successfully',
 		data: result
 	})
 })
@@ -44,10 +44,19 @@ const updateMilestone = catchAsync(async (req, res, next) => {
 	sendResponse(res, {
 		success: true,
 		statusCode: httpStatus.OK,
-		message: 'Milestone Prgoress Updated Successfully',
+		message: 'Milestone Progress Updated Successfully',
 		data: result
 	})
 })
 
 
-export const progressController = { updateVideo, updateQuiz, updateModule, updateMilestone }
+const updateCourse = catchAsync(async (req, res, next) => {
+	const result = await progressService.updateCourse(req.user as JwtPayload, req.body);
+	sendResponse(res, {
+		success: true,
+		statusCode: httpStatus.OK,
+		message: 'Course Progress Updated Successfully',
+		data: result
+	})
+})
+export const progressController = { updateVideo, updateQuiz, updateModule, updateMilestone, updateCourse }

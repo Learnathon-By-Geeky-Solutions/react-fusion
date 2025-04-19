@@ -130,8 +130,6 @@ const createInstructor = async (payload: IInstructor, file: IUploadFile) => {
     }
   })
 
-  console.log(result);
-
   if (!result) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Instructor creation failed')
   }
@@ -298,7 +296,6 @@ const verifyUser = async (token: string, otp: number) => {
       }
 
     })
-    console.log(instructor);
     OTP = instructor.User.OTP
   }
 

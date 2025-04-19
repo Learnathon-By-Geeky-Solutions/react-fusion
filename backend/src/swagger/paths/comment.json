@@ -1,0 +1,123 @@
+{
+  "/comment/get-comments": {
+    "post": {
+      "summary": "Get Comments by Video ID",
+      "description": "Retrieve all comments associated with a specific video.",
+      "tags": [
+        "Comment Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videoId": {
+                  "type": "string",
+                  "example": "4f1ac6f5-db92-439c-9701-656756277b67"
+                }
+              },
+              "required": [
+                "videoId"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Comments retrieved successfully."
+        },
+        "400": {
+          "description": "Invalid request, videoId is required."
+        },
+        "404": {
+          "description": "No comments found for the provided videoId."
+        }
+      }
+    }
+  },
+  "/comment/create-comment": {
+    "post": {
+      "summary": "Create Comment",
+      "description": "Create a new comment for a specific video.",
+      "tags": [
+        "Comment Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videoId": {
+                  "type": "string",
+                  "example": "4f1ac6f5-db92-439c-9701-656756277b67"
+                },
+                "comment": {
+                  "type": "string",
+                  "example": "Hi there!"
+                }
+              },
+              "required": [
+                "videoId",
+                "comment"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Comment created successfully."
+        },
+        "400": {
+          "description": "Invalid request, videoId and comment are required."
+        }
+      }
+    }
+  },
+  "/comment/update-comment": {
+    "put": {
+      "summary": "Update Comment",
+      "description": "Update an existing comment for a specific video.",
+      "tags": [
+        "Comment Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "commentId": {
+                  "type": "string",
+                  "example": "4ca893c9-d9bf-442b-9470-407cd4532f27"
+                },
+                "comment": {
+                  "type": "string",
+                  "example": "Updated comment!"
+                }
+              },
+              "required": [
+                "commentId",
+                "comment"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Comment updated successfully."
+        },
+        "400": {
+          "description": "Invalid request, commentId and comment are required."
+        },
+        "404": {
+          "description": "Comment not found for the provided commentId."
+        }
+      }
+    }
+  }
+}

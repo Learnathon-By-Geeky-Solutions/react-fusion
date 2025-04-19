@@ -6,7 +6,7 @@ import routes from './app/routes';
 import cookieParser from 'cookie-parser';
 import { rateLimit } from 'express-rate-limit'
 import swaggerUi from 'swagger-ui-express'
-import swaggerDocument from './swagger.json';
+import swaggerDocument from './swagger';
 
 const app: Application = express();
 

@@ -1,0 +1,267 @@
+{
+  "/user/create-admin": {
+    "post": {
+      "summary": "Create Admin",
+      "description": "Creates an admin user.",
+      "tags": [
+        "User Management"
+      ],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "example": "ASD123!@#asd"
+                },
+                "admin": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "sunanrabbi1918@gmail.com"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Sunan Rabbi"
+                    },
+                    "contactNumber": {
+                      "type": "string",
+                      "example": "01875899096"
+                    }
+                  }
+                },
+                "file": {
+                  "type": "string",
+                  "format": "binary",
+                  "example": "/E:/Wallpaper/Mine/1673336035861.jpg"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Admin created successfully."
+        },
+        "400": {
+          "description": "Bad request."
+        }
+      }
+    }
+  },
+  "/user/create-instructor": {
+    "post": {
+      "summary": "Create Instructor",
+      "description": "Creates an instructor user.",
+      "tags": [
+        "User Management"
+      ],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "example": "test00"
+                },
+                "instructor": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "b@t.com"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Wasim"
+                    },
+                    "contactNumber": {
+                      "type": "string",
+                      "example": "01828382831"
+                    },
+                    "experience": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "MALE"
+                    },
+                    "qualification": {
+                      "type": "string",
+                      "example": "MASTERS"
+                    },
+                    "currentWorkingPlace": {
+                      "type": "string",
+                      "example": "XYZ University"
+                    },
+                    "designation": {
+                      "type": "string",
+                      "example": "Senior Lecturer"
+                    }
+                  }
+                },
+                "file": {
+                  "type": "string",
+                  "format": "binary",
+                  "example": "/E:/Wallpaper/2824298.jpg"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Instructor created successfully."
+        },
+        "400": {
+          "description": "Bad request."
+        }
+      }
+    }
+  },
+  "/user/create-student": {
+    "post": {
+      "summary": "Create Student",
+      "description": "Creates a student user.",
+      "tags": [
+        "User Management"
+      ],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "example": "test00"
+                },
+                "student": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "a@s.com"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Sunan Rabbi"
+                    },
+                    "contactNumber": {
+                      "type": "string",
+                      "example": "1122334455"
+                    },
+                    "currentInstitution": {
+                      "type": "string",
+                      "example": "ABC College"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "FEMALE"
+                    },
+                    "qualification": {
+                      "type": "string",
+                      "example": "BACHELORS"
+                    },
+                    "address": {
+                      "type": "string",
+                      "example": "123 Main Street, City, Country"
+                    }
+                  }
+                },
+                "file": {
+                  "type": "string",
+                  "format": "binary",
+                  "example": "/E:/Wallpaper/wallpaperflare.com_wallpaper.jpg"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Student created successfully."
+        },
+        "400": {
+          "description": "Bad request."
+        }
+      }
+    }
+  },
+  "/user/verify-user": {
+    "post": {
+      "summary": "Verify User",
+      "description": "Verify a user's identity with OTP.",
+      "tags": [
+        "User Management"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "otp": {
+                  "type": "string",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "User verified successfully."
+        },
+        "400": {
+          "description": "Invalid OTP."
+        }
+      }
+    }
+  },
+  "/user/profile": {
+    "get": {
+      "summary": "Get User Profile",
+      "operationId": "getUserProfile",
+      "tags": [
+        "User Management"
+      ],
+      "parameters": [
+        {
+          "name": "Authorization",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "Bearer your-access-token"
+          },
+          "description": "Bearer token for authorization"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully retrieved user profile"
+        },
+        "400": {
+          "description": "Bad request"
+        },
+        "401": {
+          "description": "Unauthorized, invalid token"
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  }
+}

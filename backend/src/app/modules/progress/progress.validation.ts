@@ -31,4 +31,11 @@ const milestoneUpdateSchema = z.object({
 	})
 })
 
-export const progressValidationSchema = { videoUpdateSchema, quizUpdateSchema, moduleUpdateSchema, milestoneUpdateSchema }
+const courseUpdateSchema = z.object({
+	body: z.object({
+		courseId: z.string(),
+		isCompleted: z.boolean(),
+		progress: z.number().nonnegative()
+	})
+})
+export const progressValidationSchema = { videoUpdateSchema, quizUpdateSchema, moduleUpdateSchema, milestoneUpdateSchema, courseUpdateSchema }

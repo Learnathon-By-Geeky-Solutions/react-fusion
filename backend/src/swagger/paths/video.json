@@ -1,0 +1,144 @@
+{
+  "/video/": {
+    "post": {
+      "tags": [
+        "Video Management"
+      ],
+      "summary": "Create a new video",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "moduleId",
+                "video"
+              ],
+              "properties": {
+                "moduleId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "video": {
+                  "type": "object",
+                  "required": [
+                    "title",
+                    "url",
+                    "length"
+                  ],
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "length": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Video created successfully"
+        }
+      }
+    }
+  },
+  "/video/{videoId}": {
+    "get": {
+      "tags": [
+        "Video Management"
+      ],
+      "summary": "Get a video by ID",
+      "parameters": [
+        {
+          "name": "videoId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Video retrieved successfully"
+        }
+      }
+    },
+    "put": {
+      "tags": [
+        "Video Management"
+      ],
+      "summary": "Update an existing video",
+      "parameters": [
+        {
+          "name": "videoId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "url"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Video updated successfully"
+        }
+      }
+    },
+    "delete": {
+      "tags": [
+        "Video Management"
+      ],
+      "summary": "Delete a video",
+      "parameters": [
+        {
+          "name": "videoId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Video deleted successfully"
+        }
+      }
+    }
+  }
+}

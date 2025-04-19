@@ -1,0 +1,172 @@
+{
+  "/progress/video": {
+    "post": {
+      "summary": "Update Video Progress",
+      "description": "Update the progress of a video watched by the user.",
+      "tags": [
+        "Progress Tracking"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "videoId": {
+                  "type": "string",
+                  "example": "8eca8ade-bd21-4b9f-a8f5-30cb5d4ec0aa"
+                },
+                "isCompleted": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "timeWatched": {
+                  "type": "number",
+                  "example": 1.5
+                }
+              },
+              "required": [
+                "videoId",
+                "isCompleted",
+                "timeWatched"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Video progress successfully updated."
+        },
+        "400": {
+          "description": "Invalid input data."
+        }
+      }
+    }
+  },
+  "/progress/quiz": {
+    "post": {
+      "summary": "Update Quiz Progress",
+      "description": "Update the progress of a quiz attempted by the user.",
+      "tags": [
+        "Progress Tracking"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "quizId": {
+                  "type": "string",
+                  "example": "6f9a2fee-efbc-4906-941a-bc6cc04a10d2"
+                },
+                "isCompleted": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "score": {
+                  "type": "number",
+                  "example": 1.5
+                }
+              },
+              "required": [
+                "quizId",
+                "isCompleted",
+                "score"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Quiz progress successfully updated."
+        },
+        "400": {
+          "description": "Invalid input data."
+        }
+      }
+    }
+  },
+  "/progress/module": {
+    "post": {
+      "summary": "Update Module Progress",
+      "description": "Update the progress of a module completed by the user.",
+      "tags": [
+        "Progress Tracking"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "moduleId": {
+                  "type": "string",
+                  "example": "946e37e4-5b14-4911-ae47-0ae2b70669e8"
+                },
+                "isCompleted": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "required": [
+                "moduleId",
+                "isCompleted"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Module progress successfully updated."
+        },
+        "400": {
+          "description": "Invalid input data."
+        }
+      }
+    }
+  },
+  "/progress/milestone": {
+    "post": {
+      "summary": "Update Milestone Progress",
+      "description": "Update the progress of a milestone reached by the user.",
+      "tags": [
+        "Progress Tracking"
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "milestoneId": {
+                  "type": "string",
+                  "example": "6066427a-51b1-4e05-8a10-29435041a675"
+                },
+                "isCompleted": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "required": [
+                "milestoneId",
+                "isCompleted"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Milestone progress successfully updated."
+        },
+        "400": {
+          "description": "Invalid input data."
+        }
+      }
+    }
+  }
+}

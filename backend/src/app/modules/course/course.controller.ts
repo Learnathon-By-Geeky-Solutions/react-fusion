@@ -7,7 +7,6 @@ import { verifyToken } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
 
 const createCourse = catchAsync(async (req, res, next) => {
-
     const result = await courseService.createCourse(req.user as JwtPayload, req.body)
     sendResponse(res, {
         success: true,
@@ -16,6 +15,28 @@ const createCourse = catchAsync(async (req, res, next) => {
         data: result
     })
 })
+
+const updateCourse = catchAsync(async (req, res, next) => {
+    const result = await courseService.updateCourse(req.params.courseId, req.body)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Course Updated Successfully!",
+        data: result
+    })
+})
+
+
+const deleteCourse = catchAsync(async (req, res, next) => {
+    const result = await courseService.deleteCourse(req.params.courseId)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Course Deleted Successfully!",
+        data: result
+    })
+})
+
 const getAllCourses = catchAsync(async (req, res, next) => {
     let result = null
     const filterEnroll = req.body.filters?.enrolled ?? null
@@ -54,4 +75,12 @@ const checkEnrollment = catchAsync(async (req, res, next) => {
     })
 
 })
-export const courseController = { createCourse, getAllCourses, getSingleCourse, checkEnrollment }
+
+export const courseController = {
+    createCourse,
+    updateCourse,
+    deleteCourse,
+    getAllCourses,
+    getSingleCourse,
+    checkEnrollment,
+}

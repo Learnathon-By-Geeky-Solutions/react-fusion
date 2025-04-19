@@ -1,0 +1,140 @@
+{
+  "/module/": {
+    "post": {
+      "tags": [
+        "Module Management"
+      ],
+      "summary": "Create a new module",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "milestoneId",
+                "module"
+              ],
+              "properties": {
+                "milestoneId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "module": {
+                  "type": "object",
+                  "required": [
+                    "title",
+                    "description"
+                  ],
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Module created successfully"
+        }
+      }
+    }
+  },
+  "/module/{moduleId}": {
+    "put": {
+      "tags": [
+        "Module Management"
+      ],
+      "summary": "Update an existing module",
+      "parameters": [
+        {
+          "name": "moduleId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "description"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Module updated successfully"
+        }
+      }
+    },
+    "get": {
+      "tags": [
+        "Module Management"
+      ],
+      "summary": "Get a module by ID",
+      "parameters": [
+        {
+          "name": "moduleId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Module retrieved successfully"
+        }
+      }
+    },
+    "delete": {
+      "tags": [
+        "Module Management"
+      ],
+      "summary": "Delete a module",
+      "parameters": [
+        {
+          "name": "moduleId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Module deleted successfully"
+        }
+      }
+    }
+  }
+}
