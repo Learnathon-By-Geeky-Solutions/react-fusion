@@ -141,6 +141,16 @@ const QuizForm = ({
     setNewOptions(updatedOptions);
   };
 
+  const getSubmitButtonText = (isSubmitting, isEditing) => {
+    if (isSubmitting) {
+      return 'Saving...';
+    } else if (isEditing) {
+      return 'Update Quiz';
+    } else {
+      return 'Save Quiz';
+    }
+  };
+
   const renderQuestionForm = (push) => {
     if (!showQuestionForm) return null;
 
@@ -501,11 +511,7 @@ const QuizForm = ({
                         disabled={isSubmitting}
                         className='px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300'
                       >
-                        {isSubmitting
-                          ? 'Saving...'
-                          : isEditing
-                          ? 'Update Quiz'
-                          : 'Save Quiz'}
+                        {getSubmitButtonText(isSubmitting, isEditing)}
                       </button>
                     </div>
                   )}

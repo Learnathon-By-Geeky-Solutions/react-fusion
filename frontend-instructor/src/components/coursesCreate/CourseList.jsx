@@ -41,6 +41,38 @@ const CourseList = () => {
     setCourses(courses.filter((course) => course.id !== courseId));
   };
 
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className='text-center py-10'>
+          <p className='text-gray-500'>Loading courses...</p>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className='text-center py-10 text-red-600'>
+          <p>{error}</p>
+          <button
+            onClick={fetchCourses}
+            className='mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700'
+          >
+            Try Again
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <CourseListComponent
+        courses={courses}
+        onDelete={handleDelete}
+        onRefresh={fetchCourses}
+      />
+    );
+  };
+
   return (
     <div className='max-w-6xl mx-auto py-8 px-4'>
       <div className='flex justify-between items-center mb-8'>
@@ -53,27 +85,7 @@ const CourseList = () => {
         </Link>
       </div>
 
-      {loading ? (
-        <div className='text-center py-10'>
-          <p className='text-gray-500'>Loading courses...</p>
-        </div>
-      ) : error ? (
-        <div className='text-center py-10 text-red-600'>
-          <p>{error}</p>
-          <button
-            onClick={fetchCourses}
-            className='mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700'
-          >
-            Try Again
-          </button>
-        </div>
-      ) : (
-        <CourseListComponent
-          courses={courses}
-          onDelete={handleDelete}
-          onRefresh={fetchCourses}
-        />
-      )}
+      {renderContent()}
     </div>
   );
 };

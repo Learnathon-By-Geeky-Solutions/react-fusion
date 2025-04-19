@@ -26,41 +26,42 @@ export default function CoursePage() {
   useEffect(() => {
     if (hasFetched.current) return;
     hasFetched.current = true;
-    async function fetchCourse() {
-      try {
-        const response = await fetchData(getSingleCourse, { courseId });
+    fetchCourseData();
+  }, []);
 
-        if (response.success) {
-          setCourse(response.data);
-          const firstMilestone = response.data.milestones?.[0];
-          const firstModule = firstMilestone?.modules?.[0];
-          if (firstMilestone) {
-            setOpenMilestones({ [firstMilestone.id]: true });
+  const fetchCourseData = async () => {
+    try {
+      const response = await fetchData(getSingleCourse, { courseId });
 
-            if (firstModule) {
-              setOpenModules({ [firstModule.id]: true });
-            }
-          }
+      if (response.success) {
+        setCourse(response.data);
+        const firstMilestone = response.data.milestones?.[0];
+        const firstModule = firstMilestone?.modules?.[0];
+        if (firstMilestone) {
+          setOpenMilestones({ [firstMilestone.id]: true });
 
-          if (firstModule?.moduleItems?.[0]) {
-            const firstItem = firstModule.moduleItems[0];
-
-            setSelectedItem({
-              ...firstItem,
-              milestoneNumber: 1,
-              moduleNumber: 1,
-              itemNumber: 1
-            });
+          if (firstModule) {
+            setOpenModules({ [firstModule.id]: true });
           }
         }
-      } catch (error) {
-        console.error('[CoursePage] Error fetching course details:', error);
-      } finally {
-        setLoading(false);
+
+        if (firstModule?.moduleItems?.[0]) {
+          const firstItem = firstModule.moduleItems[0];
+
+          setSelectedItem({
+            ...firstItem,
+            milestoneNumber: 1,
+            moduleNumber: 1,
+            itemNumber: 1
+          });
+        }
       }
+    } catch (error) {
+      console.error('[CoursePage] Error fetching course details:', error);
+    } finally {
+      setLoading(false);
     }
-    fetchCourse();
-  }, []);
+  };
 
   const toggleMilestone = (milestoneId) => {
     setOpenMilestones((prev) => {
@@ -133,6 +134,51 @@ export default function CoursePage() {
     }
   };
 
+  const calculateQuizIndex = () => {
+    if (!course || !selectedItem) return 0;
+
+    let quizIndex = 0;
+    for (const milestone of course.milestones || []) {
+      for (const module of milestone.modules || []) {
+        for (const item of module.moduleItems || []) {
+          if (item.quiz) quizIndex++;
+          if (item === selectedItem) return quizIndex;
+        }
+      }
+    }
+    return quizIndex;
+  };
+
+  const renderSelectedItemTitle = () => {
+    if (!selectedItem) return null;
+
+    const quizIndex = calculateQuizIndex();
+    return (
+      <h2 className='text-2xl font-bold mb-4'>
+        {selectedItem.milestoneNumber}.{selectedItem.moduleNumber}.
+        {selectedItem.itemNumber} -{' '}
+        {selectedItem.video?.title || `Quiz ${quizIndex}`}
+      </h2>
+    );
+  };
+
+  const renderSelectedItemContent = () => {
+    if (!selectedItem) return null;
+
+    return (
+      <>
+        {renderSelectedItemTitle()}
+        {selectedItem.video && (
+          <VideoSection
+            videoId={selectedItem.video.id}
+            title={selectedItem.video.title}
+          />
+        )}
+        {selectedItem.quiz && <QuizSection quiz={selectedItem.quiz.id} />}
+      </>
+    );
+  };
+
   if (loading) return <p className='text-center text-lg'>Loading course...</p>;
   if (!course)
     return <p className='text-center text-red-500'>Course not found.</p>;
@@ -203,40 +249,7 @@ export default function CoursePage() {
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-        <div className='md:col-span-2'>
-          {selectedItem && (
-            <>
-              {(() => {
-                let quizIndex = 0;
-                course.milestones?.forEach((milestone) => {
-                  milestone.modules?.forEach((module) => {
-                    module.moduleItems?.forEach((item) => {
-                      if (item.quiz) quizIndex++;
-                      if (item === selectedItem) return;
-                    });
-                  });
-                });
-
-                return (
-                  <h2 className='text-2xl font-bold mb-4'>
-                    {selectedItem.milestoneNumber}.{selectedItem.moduleNumber}.
-                    {selectedItem.itemNumber} -{' '}
-                    {selectedItem.video?.title || `Quiz ${quizIndex}`}
-                  </h2>
-                );
-              })()}
-
-              {selectedItem.video && (
-                <VideoSection
-                  videoId={selectedItem.video.id}
-                  title={selectedItem.video.title}
-                />
-              )}
-
-              {selectedItem.quiz && <QuizSection quiz={selectedItem.quiz.id} />}
-            </>
-          )}
-        </div>
+        <div className='md:col-span-2'>{renderSelectedItemContent()}</div>
 
         <CourseSidebar
           course={course}

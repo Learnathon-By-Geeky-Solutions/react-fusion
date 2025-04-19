@@ -13,6 +13,17 @@ export default function ContentItem({
   const isVideo = !!item.video;
   const isQuiz = !!item.quiz;
 
+  // Helper function to determine item title
+  const getItemTitle = () => {
+    if (isVideo) {
+      return item.video.title;
+    } else if (isQuiz) {
+      return `Quiz ${quizNumber}`;
+    } else {
+      return `Content ${itemNumber}`;
+    }
+  };
+
   return (
     <button
       onClick={onSelect}
@@ -44,13 +55,7 @@ export default function ContentItem({
           </svg>
         )}
         <span className='text-xs font-semibold mr-1.5'>{indexPath}</span>
-        <span>
-          {isVideo
-            ? item.video.title
-            : isQuiz
-            ? `Quiz ${quizNumber}`
-            : `Content ${itemNumber}`}
-        </span>
+        <span>{getItemTitle()}</span>
       </div>
     </button>
   );
@@ -69,5 +74,5 @@ ContentItem.propTypes = {
   onSelect: PropTypes.func.isRequired,
   indexPath: PropTypes.string.isRequired,
   itemNumber: PropTypes.number.isRequired,
-  quizNumber: PropTypes.number // Added prop type for quizNumber
+  quizNumber: PropTypes.number
 };
