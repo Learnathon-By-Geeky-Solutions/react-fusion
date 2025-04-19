@@ -7,7 +7,6 @@ export default function NavBar() {
   const { instructor, logOutInstructor } = useInstructorAuth();
   const location = useLocation();
   const isAuthenticated = instructor.authenticated;
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogOut = () => {
@@ -28,9 +27,7 @@ export default function NavBar() {
               </div>
               <span
                 className={`text-lg font-bold ${
-                  isScrolled || location.pathname !== '/'
-                    ? 'text-blue-600'
-                    : 'text-blue-600'
+                  location.pathname !== '/' ? 'text-blue-600' : 'text-blue-600'
                 }`}
               >
                 EduNexus
@@ -72,14 +69,12 @@ export default function NavBar() {
                 </>
               )}
               {!isAuthenticated && (
-                <>
-                  <Link
-                    to='/signup'
-                    className='px-4 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-sm'
-                  >
-                    Register
-                  </Link>
-                </>
+                <Link
+                  to='/signup'
+                  className='px-4 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-sm'
+                >
+                  Register
+                </Link>
               )}
             </div>
 
