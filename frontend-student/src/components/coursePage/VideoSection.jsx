@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { getYouTubeEmbedUrl } from './videoUtils';
 import { checkVideo } from '@/src/services/video';
 import { updateVideoProgress } from '@/src/services/progress';
 import useApi from '@/src/hooks/useApi';
@@ -15,7 +14,6 @@ export default function VideoSection({ videoId, title }) {
   const progressTimerRef = useRef(null);
   const { fetchData } = useApi();
 
-  // Fetch video data
   useEffect(() => {
     async function fetchVideoData() {
       try {
@@ -34,7 +32,6 @@ export default function VideoSection({ videoId, title }) {
       fetchVideoData();
     }
 
-    // Cleanup timer on unmount
     return () => {
       if (progressTimerRef.current) {
         clearInterval(progressTimerRef.current);
@@ -42,15 +39,12 @@ export default function VideoSection({ videoId, title }) {
     };
   }, [videoId]);
 
-  // Setup progress tracking
   useEffect(() => {
-    // Clear any existing timer
     if (progressTimerRef.current) {
       clearInterval(progressTimerRef.current);
       progressTimerRef.current = null;
     }
 
-    // Only set up timer if video is playing
     if (isPlaying) {
       progressTimerRef.current = setInterval(() => {
         // Get current time from player
@@ -73,7 +67,6 @@ export default function VideoSection({ videoId, title }) {
     };
   }, [isPlaying, videoId]);
 
-  // Update progress when video completes
   const handleVideoEnded = () => {
     setIsPlaying(false);
     if (videoDuration > 0) {
@@ -81,7 +74,6 @@ export default function VideoSection({ videoId, title }) {
     }
   };
 
-  // Function to update progress
   const updateProgress = async (timeWatched, isCompleted = false) => {
     try {
       await fetchData(updateVideoProgress, {
@@ -94,7 +86,6 @@ export default function VideoSection({ videoId, title }) {
     }
   };
 
-  // Handle player state changes
   const handlePlayerReady = () => {
     if (playerRef.current) {
       setVideoDuration(playerRef.current.getDuration());
@@ -107,7 +98,6 @@ export default function VideoSection({ videoId, title }) {
 
   const handlePause = () => {
     setIsPlaying(false);
-    // Update progress when paused
     if (playerRef.current) {
       const timeWatched = Math.floor(playerRef.current.getCurrentTime());
       updateProgress(timeWatched);
