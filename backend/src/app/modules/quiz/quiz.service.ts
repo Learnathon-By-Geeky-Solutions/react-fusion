@@ -1,9 +1,6 @@
-import { resolve } from "path"
 import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
 import { ICheckQuiz, ICreateQuiz, IUpdateQuiz } from "./quiz.interface"
-import { profile } from "console"
-import { resourceUsage } from "process"
 
 
 const createQuiz = async (payload: ICreateQuiz) => {
