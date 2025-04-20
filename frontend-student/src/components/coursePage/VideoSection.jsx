@@ -47,12 +47,10 @@ export default function VideoSection({ videoId, title }) {
 
     if (isPlaying) {
       progressTimerRef.current = setInterval(() => {
-        // Get current time from player
         if (playerRef.current) {
           const timeWatched = Math.floor(playerRef.current.getCurrentTime());
           setCurrentTime(timeWatched);
 
-          // Send progress update every 10 seconds
           if (timeWatched % 10 === 0 && timeWatched > 0) {
             updateProgress(timeWatched);
           }
