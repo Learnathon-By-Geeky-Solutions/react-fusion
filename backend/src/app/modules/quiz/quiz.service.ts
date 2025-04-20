@@ -88,10 +88,10 @@ const getQuiz = async (user: JwtPayload, quizId: string) => {
             }
         })
 
-        result.progress = quizProgress?.QuizProgress || null
+        result.progress = quizProgress?.QuizProgress ?? null
     }
 
-    delete result.moduleItem
+    delete result.moduleItem.module
     return result
 }
 
