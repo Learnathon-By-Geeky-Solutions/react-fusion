@@ -1,6 +1,8 @@
+import { resourceUsage } from "process";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import { ICreateVideo, IUpdateVideo } from "./video.interface";
+import { profile } from "console";
 
 
 const getVideo = async (user: JwtPayload, videoId: string) => {
@@ -9,16 +11,51 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             id: videoId
         },
         include: {
-            moduleItem: true,
             notes: {
                 where: {
                     userId: user.userId
                 }
             },
-            comments: true
+            comments: true,
+            moduleItem: {
+                include: {
+                    module: {
+                        include: {
+                            milestone: true
+                        }
+                    }
+                }
+            }
         }
     })
-    return video
+    let result: any = video
+    if (user.role === "STUDENT") {
+        const courseId = video?.moduleItem?.module.milestone.courseId
+        const progress = await prisma.courseProgress.findUnique({
+            where: {
+                studentId_courseId: {
+                    studentId: user.userId,
+                    courseId: courseId ?? ""
+                }
+            }
+        })
+        const videoProgress = await prisma.moduleItemProgress.findUnique({
+            where: {
+                courseProgressId_moduleItemId: {
+                    courseProgressId: progress?.id ?? "",
+                    moduleItemId: video?.moudleItemId ?? ""
+                }
+            },
+            include: {
+                VideoProgress: true
+            }
+
+        })
+
+        result.progress = videoProgress?.VideoProgress ?? null
+    }
+    delete result.moduleItem.module
+    return result
 }
 
 
