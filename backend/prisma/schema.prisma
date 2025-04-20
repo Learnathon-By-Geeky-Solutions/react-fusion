@@ -232,7 +232,7 @@ model DislikeUser {
 model Note {
   id      String  @id @default(uuid())
   userId  String
-  user    Student @relation(fields: [userId], references: [id])
+  user    Student @relation(fields: [userId], references: [userId])
   videoId String
   video   Video   @relation(fields: [videoId], references: [id])
   note    String
