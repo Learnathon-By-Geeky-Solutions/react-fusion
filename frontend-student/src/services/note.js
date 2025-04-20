@@ -1,7 +1,7 @@
 import { BACKEND } from '../constants';
 
-// Create Note  
 export async function createNote(payload) {
+  console.log('Creating note with payload:', payload.data);
   try {
     const result = await fetch(`${BACKEND}/note/create`, {
       method: 'POST',
@@ -9,10 +9,11 @@ export async function createNote(payload) {
         Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(JSON.parse(payload.data))
+      body: JSON.stringify(payload.data)
     });
 
     const data = await result.json();
+    console.log('Create note result:', data);
     return data;
   } catch (error) {
     console.error('Error creating note:', error);
@@ -20,7 +21,6 @@ export async function createNote(payload) {
   }
 }
 
-// Get Notes
 export async function getNote(payload) {
   try {
     const result = await fetch(`${BACKEND}/note/get`, {
@@ -29,7 +29,7 @@ export async function getNote(payload) {
         Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(JSON.parse(payload.data))
+      body: JSON.stringify(payload.data)
     });
 
     const data = await result.json();
@@ -40,7 +40,6 @@ export async function getNote(payload) {
   }
 }
 
-// Update Note
 export async function updateNote(payload) {
   try {
     const result = await fetch(`${BACKEND}/note/update`, {

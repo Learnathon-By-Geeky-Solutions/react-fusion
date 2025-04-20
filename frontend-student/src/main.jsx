@@ -60,7 +60,7 @@ const routes = createBrowserRouter([
         element: <CourseDetails />
       },
       {
-        path: '/enrolled/:id',
+        path: '/enrolled/:courseId',
         element: (
           <ProtectedRoute>
             <CoursePage />

@@ -27,8 +27,7 @@ export async function getEnrolledCourses(payload) {
       instructors: true,
       milestones: true,
       modules: true,
-      quizes: true,
-      videos: true
+      moduleItems: true
     },
     filters: {
       enrolled: true
@@ -67,11 +66,12 @@ export async function buyCourse(payload) {
 }
 
 export async function getSingleCourse(params) {
+  console.log('Param', params);
   try {
     const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
       method: 'GET',
       headers: {
-        Authorization: params.instructor.token
+        Authorization: params.user.token
       }
     });
 

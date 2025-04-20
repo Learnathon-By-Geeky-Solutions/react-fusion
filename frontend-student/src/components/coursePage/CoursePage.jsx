@@ -1,150 +1,169 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import getSingleCourse from '@/src/services/singleCourse';
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { getSingleCourse } from '@/src/services/course';
 import VideoSection from './VideoSection';
+import CourseSidebar from './CourseSidebar';
+import QuizSection from './QuizSection';
+import useApi from '@/src/hooks/useApi';
 import NotesSection from './NotesSection';
 import CommentsSection from './CommentsSection';
-import CourseSidebar from './CourseSidebar';
-import { enrollCheck } from '@/src/services/enrolled';
-import useApi from '@/src/hooks/useApi';
 
 export default function CoursePage() {
-  const { id } = useParams();
+  const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [openMilestones, setOpenMilestones] = useState({});
   const [openModules, setOpenModules] = useState({});
-  const [enrollment, setEnrollment] = useState(false);
-  const navigate = useNavigate(); // inside your component
   const { fetchData } = useApi();
-  let hasRun = false;
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    async function fetchCourse() {
-      if (hasRun) return;
-      hasRun = true;
-
-      try {
-        const enrollmentPayload = { courseId: id };
-        const enrollmentResponse = await fetchData(
-          enrollCheck,
-          enrollmentPayload
-        );
-        if (!enrollmentResponse.data.isEnrolled) {
-          setEnrollment(false);
-          console.log('Naim boleche');
-          alert(
-            'You are not enrolled in this course. Please enroll to access the content.'
-          );
-          navigate(`/courses/${id}`);
-          return;
-        } else {
-          setEnrollment(true);
-        }
-
-        const payload = { id };
-        const response = await fetchData(getSingleCourse, payload);
-        if (response.success) {
-          setCourse(response.data);
-
-          const firstMilestone = response.data.milestones?.[0];
-          const firstModule = firstMilestone?.modules?.[0];
-          const firstVideo = firstModule?.videos?.[0];
-
-          // Initialize first milestone and module as open
-          if (firstMilestone) {
-            setOpenMilestones({ [firstMilestone.id]: true });
-            if (firstModule) {
-              setOpenModules({ [firstModule.id]: true });
-            }
-          }
-
-          if (firstVideo) {
-            const videoWithNumbers = {
-              ...firstVideo,
-              milestoneNumber: 1,
-              moduleNumber: 1,
-              videoNumber: 1
-            };
-            setSelectedVideo(videoWithNumbers);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching course details:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchCourse();
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+    fetchCourseData();
   }, []);
 
+  const fetchCourseData = async () => {
+    try {
+      const response = await fetchData(getSingleCourse, { courseId });
+      console.log('CourseId', courseId);
+
+      if (response.success) {
+        setCourse(response.data);
+        const firstMilestone = response.data.milestones?.[0];
+        const firstModule = firstMilestone?.modules?.[0];
+        if (firstMilestone) {
+          setOpenMilestones({ [firstMilestone.id]: true });
+
+          if (firstModule) {
+            setOpenModules({ [firstModule.id]: true });
+          }
+        }
+
+        if (firstModule?.moduleItems?.[0]) {
+          const firstItem = firstModule.moduleItems[0];
+
+          setSelectedItem({
+            ...firstItem,
+            milestoneNumber: 1,
+            moduleNumber: 1,
+            itemNumber: 1
+          });
+        }
+      }
+    } catch (error) {
+      console.error('[CoursePage] Error fetching course details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleMilestone = (milestoneId) => {
-    setOpenMilestones((prev) => ({
-      ...prev,
-      [milestoneId]: !prev[milestoneId]
-    }));
+    setOpenMilestones((prev) => {
+      const newState = {
+        ...prev,
+        [milestoneId]: !prev[milestoneId]
+      };
+      return newState;
+    });
   };
 
   const toggleModule = (moduleId) => {
-    setOpenModules((prev) => ({
-      ...prev,
-      [moduleId]: !prev[moduleId]
-    }));
+    setOpenModules((prev) => {
+      const newState = {
+        ...prev,
+        [moduleId]: !prev[moduleId]
+      };
+      return newState;
+    });
   };
 
-  // Handle video selection
-  const handleVideoSelect = (
-    video,
+  const handleItemSelect = (
+    item,
     milestoneNumber,
     moduleNumber,
-    videoNumber
+    itemNumber
   ) => {
-    const videoWithNumbers = {
-      ...video,
+    const itemWithNumbers = {
+      ...item,
       milestoneNumber,
       moduleNumber,
-      videoNumber
+      itemNumber
     };
 
-    setSelectedVideo(videoWithNumbers);
+    setSelectedItem(itemWithNumbers);
   };
 
-  if (loading) return <p className='text-center text-lg'>Loading lecture...</p>;
+  const calculateQuizIndex = () => {
+    if (!course || !selectedItem) return 0;
+
+    let quizIndex = 0;
+    for (const milestone of course.milestones || []) {
+      for (const module of milestone.modules || []) {
+        for (const item of module.moduleItems || []) {
+          if (item.quiz) quizIndex++;
+          if (item === selectedItem) return quizIndex;
+        }
+      }
+    }
+    return quizIndex;
+  };
+
+  const renderSelectedItemTitle = () => {
+    if (!selectedItem) return null;
+
+    const quizIndex = calculateQuizIndex();
+    return (
+      <h2 className='text-2xl font-bold mb-4'>
+        {selectedItem.milestoneNumber}.{selectedItem.moduleNumber}.
+        {selectedItem.itemNumber} -{' '}
+        {selectedItem.video?.title || `Quiz ${quizIndex}`}
+      </h2>
+    );
+  };
+
+  const renderSelectedItemContent = () => {
+    if (!selectedItem) return null;
+
+    return (
+      <>
+        {renderSelectedItemTitle()}
+        {selectedItem.video && (
+          <>
+            <VideoSection
+              videoId={selectedItem.video.id}
+              title={selectedItem.video.title}
+            />
+            <NotesSection videoId={selectedItem.video.id} />
+
+            <CommentsSection videoId={selectedItem.video.id} />
+          </>
+        )}
+        {selectedItem.quiz && <QuizSection quiz={selectedItem.quiz.id} />}
+      </>
+    );
+  };
+
+  if (loading) return <p className='text-center text-lg'>Loading course...</p>;
   if (!course)
     return <p className='text-center text-red-500'>Course not found.</p>;
 
   return (
-    <div className='max-w-6xl mx-auto py-8 grid grid-cols-1 md:grid-cols-3 gap-12 mt-16'>
-      <div className='md:col-span-2'>
-        {selectedVideo && (
-          <>
-            <h1 className='text-2xl font-bold mb-4'>
-              {selectedVideo.milestoneNumber}.{selectedVideo.moduleNumber}.
-              {selectedVideo.videoNumber} - {selectedVideo.title}
-            </h1>
+    <div className='max-w-6xl mx-auto py-8 mt-16'>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+        <div className='md:col-span-2'>{renderSelectedItemContent()}</div>
 
-            <VideoSection
-              videoId={selectedVideo.id}
-              title={selectedVideo.title}
-            />
-
-            <NotesSection videoId={selectedVideo.id} />
-
-            <CommentsSection videoId={selectedVideo.id} />
-          </>
-        )}
+        <CourseSidebar
+          course={course}
+          selectedItem={selectedItem}
+          openMilestones={openMilestones}
+          openModules={openModules}
+          toggleMilestone={toggleMilestone}
+          toggleModule={toggleModule}
+          handleItemSelect={handleItemSelect}
+        />
       </div>
-
-      <CourseSidebar
-        course={course}
-        selectedVideo={selectedVideo}
-        openMilestones={openMilestones}
-        openModules={openModules}
-        toggleMilestone={toggleMilestone}
-        toggleModule={toggleModule}
-        handleVideoSelect={handleVideoSelect}
-      />
     </div>
   );
 }

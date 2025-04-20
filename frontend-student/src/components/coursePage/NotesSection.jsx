@@ -7,7 +7,7 @@ import {
   createNote,
   updateNote,
   deleteNote
-} from '@/src/services/notes';
+} from '@/src/services/note';
 
 export default function NotesSection({ videoId }) {
   const [note, setNote] = useState('');
@@ -26,9 +26,7 @@ export default function NotesSection({ videoId }) {
   const fetchNoteData = async () => {
     setIsLoading(true);
     try {
-      // Convert data to JSON string for API consumption
-      const payload = JSON.stringify({ videoId });
-      const response = await fetchData(getNote, payload);
+      const response = await fetchData(getNote, { videoId });
 
       if (response.success && response.data) {
         setSavedNote(response.data);
@@ -47,7 +45,7 @@ export default function NotesSection({ videoId }) {
 
   const handleSaveNote = async () => {
     if (!videoId || !note.trim()) return;
-    
+
     setIsLoading(true);
     try {
       let noteData = {
@@ -60,14 +58,11 @@ export default function NotesSection({ videoId }) {
         noteData.id = savedNote.id;
       }
 
-      // Convert data to JSON string for API consumption
-      const payload = JSON.stringify(noteData);
-      
       let response;
       if (savedNote && savedNote.id) {
-        response = await fetchData(updateNote, payload);
+        response = await fetchData(updateNote, noteData);
       } else {
-        response = await fetchData(createNote, payload);
+        response = await fetchData(createNote, noteData);
       }
 
       if (response.success) {
@@ -86,12 +81,12 @@ export default function NotesSection({ videoId }) {
 
   const handleDeleteNote = async () => {
     if (!videoId || !savedNote) return;
-    
+
     setIsLoading(true);
     try {
       // Convert data to JSON string for API consumption
       const payload = JSON.stringify({ videoId });
-      
+
       const response = await fetchData(deleteNote, payload);
 
       if (response.success) {
@@ -139,23 +134,23 @@ export default function NotesSection({ videoId }) {
   };
 
   return (
-    <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Notes</h2>
+    <div className='mt-6 p-4 bg-gray-100 rounded-lg'>
+      <div className='flex justify-between items-center'>
+        <h2 className='text-lg font-semibold'>Note</h2>
         {savedNote && !isEditing && (
-          <div className="flex gap-2">
+          <div className='flex gap-2'>
             <button
               onClick={() => setIsEditing(true)}
-              className="text-blue-500 hover:text-blue-700 transition"
-              title="Edit Note"
+              className='text-blue-500 hover:text-blue-700 transition'
+              title='Edit Note'
               disabled={isLoading}
             >
               ✏️ Edit
             </button>
             <button
               onClick={handleDeleteNote}
-              className="text-red-500 hover:text-red-700 transition"
-              title="Delete Note"
+              className='text-red-500 hover:text-red-700 transition'
+              title='Delete Note'
               disabled={isLoading}
             >
               🗑️ Remove
@@ -165,8 +160,8 @@ export default function NotesSection({ videoId }) {
       </div>
 
       {isLoading && (
-        <div className="flex justify-center my-4">
-          <div className="animate-pulse text-gray-400">Loading...</div>
+        <div className='flex justify-center my-4'>
+          <div className='animate-pulse text-gray-400'>Loading...</div>
         </div>
       )}
 
@@ -175,14 +170,14 @@ export default function NotesSection({ videoId }) {
           <textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="w-full mt-2 p-2 border rounded-lg min-h-[100px]"
-            placeholder="Take notes here..."
+            className='w-full mt-2 p-2 border rounded-lg min-h-[100px]'
+            placeholder='Take notes here...'
           />
-          <div className="flex justify-end gap-2 mt-2">
+          <div className='flex justify-end gap-2 mt-2'>
             {isEditing && (
               <button
                 onClick={handleCancel}
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
+                className='bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition'
               >
                 Cancel
               </button>
@@ -198,7 +193,7 @@ export default function NotesSection({ videoId }) {
         </>
       ) : (
         !isLoading && (
-          <div className="mt-2 p-3 bg-white rounded-lg min-h-[100px] whitespace-pre-wrap text-left">
+          <div className='mt-2 p-3 bg-white rounded-lg min-h-[100px] whitespace-pre-wrap text-left'>
             {savedNote?.note || 'No notes yet.'}
           </div>
         )
@@ -208,5 +203,5 @@ export default function NotesSection({ videoId }) {
 }
 
 NotesSection.propTypes = {
-  videoId: PropTypes.string.isRequired, 
+  videoId: PropTypes.string.isRequired
 };

@@ -1,6 +1,6 @@
 import React from 'react';
-import ModuleItem from './ModuleItem';
 import PropTypes from 'prop-types';
+import ModuleItem from './ModuleItem';
 
 export default function MilestoneItem({
   milestone,
@@ -9,8 +9,8 @@ export default function MilestoneItem({
   openModules,
   toggleMilestone,
   toggleModule,
-  handleVideoSelect,
-  selectedVideo
+  handleItemSelect,
+  selectedItem
 }) {
   const isOpen = openMilestones[milestone.id];
 
@@ -36,13 +36,20 @@ export default function MilestoneItem({
           stroke='currentColor'
           viewBox='0 0 24 24'
         >
-          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth='2'
+            d='M19 9l-7 7-7-7'
+          />
         </svg>
       </button>
 
       <div
         className={`mt-2 pl-2 transition-all duration-300 ${
-          isOpen ? 'max-h-full opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+          isOpen
+            ? 'max-h-full opacity-100'
+            : 'max-h-0 opacity-0 overflow-hidden'
         }`}
       >
         {milestone.modules.map((module, modIndex) => (
@@ -53,8 +60,8 @@ export default function MilestoneItem({
             modIndex={modIndex}
             openModules={openModules}
             toggleModule={toggleModule}
-            handleVideoSelect={handleVideoSelect}
-            selectedVideo={selectedVideo}
+            handleItemSelect={handleItemSelect}
+            selectedItem={selectedItem}
           />
         ))}
       </div>
@@ -68,9 +75,10 @@ MilestoneItem.propTypes = {
     title: PropTypes.string.isRequired,
     modules: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+          .isRequired,
         title: PropTypes.string,
-        videos: PropTypes.array
+        moduleItems: PropTypes.array
       })
     ).isRequired
   }).isRequired,
@@ -79,8 +87,6 @@ MilestoneItem.propTypes = {
   openModules: PropTypes.object.isRequired,
   toggleMilestone: PropTypes.func.isRequired,
   toggleModule: PropTypes.func.isRequired,
-  handleVideoSelect: PropTypes.func.isRequired,
-  selectedVideo: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  })
+  handleItemSelect: PropTypes.func.isRequired,
+  selectedItem: PropTypes.object
 };

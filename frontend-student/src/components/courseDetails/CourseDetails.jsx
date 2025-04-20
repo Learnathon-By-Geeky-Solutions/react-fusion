@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import getSingleCourse from '@/src/services/singleCourse';
+import { getSingleCourse } from '@/src/services/course';
 import { buyCourse } from '@/src/services/course';
 import { noimage } from '../../assets';
 import useApi from '@/src/hooks/useApi';
@@ -20,8 +20,7 @@ export default function CourseDetails() {
   useEffect(() => {
     async function fetchCourse() {
       try {
-        const payload = { id };
-        const response = await fetchData(getSingleCourse, payload);
+        const response = await fetchData(getSingleCourse, { courseId: id });
 
         if (response.success) {
           setCourse(response.data);

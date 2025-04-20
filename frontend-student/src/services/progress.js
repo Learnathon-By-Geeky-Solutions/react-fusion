@@ -38,7 +38,7 @@ export async function module(payload) {
   }
 }
 
-export async function quiz(payload) {
+export async function updateQuizProgress(payload) {
   try {
     const result = await fetch(`${BACKEND}/progress/quiz`, {
       method: 'POST',
@@ -57,7 +57,8 @@ export async function quiz(payload) {
   }
 }
 
-export async function video(payload) {
+export async function updateVideoProgress(payload) {
+  console.log('Updating video progress with payload:', payload);
   try {
     const result = await fetch(`${BACKEND}/progress/video`, {
       method: 'POST',

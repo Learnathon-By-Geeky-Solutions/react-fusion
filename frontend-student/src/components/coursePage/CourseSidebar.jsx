@@ -1,18 +1,18 @@
 import React from 'react';
-import MilestoneItem from './MilestoneItem';
 import PropTypes from 'prop-types';
+import MilestoneItem from './MilestoneItem';
 
 export default function CourseSidebar({
   course,
-  selectedVideo,
+  selectedItem,
   openMilestones,
   openModules,
   toggleMilestone,
   toggleModule,
-  handleVideoSelect
+  handleItemSelect
 }) {
   return (
-    <div className='md:col-span-1 bg-gray-50 p-4 rounded-lg shadow-lg border border-gray-200 max-h-screen overflow-y-auto'>
+    <div className='bg-gray-50 p-4 rounded-lg shadow-lg border border-gray-200 max-h-screen overflow-y-auto'>
       <h2 className='text-xl font-bold mb-4 text-gray-800 flex items-center'>
         <svg
           className='w-5 h-5 mr-2 text-blue-500'
@@ -35,8 +35,8 @@ export default function CourseSidebar({
             openModules={openModules}
             toggleMilestone={toggleMilestone}
             toggleModule={toggleModule}
-            handleVideoSelect={handleVideoSelect}
-            selectedVideo={selectedVideo}
+            handleItemSelect={handleItemSelect}
+            selectedItem={selectedItem}
           />
         ))}
       </div>
@@ -51,16 +51,16 @@ CourseSidebar.propTypes = {
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
           .isRequired,
         title: PropTypes.string,
-        modules: PropTypes.array // optional unless used directly here
+        modules: PropTypes.array
       })
     ).isRequired
   }).isRequired,
-  selectedVideo: PropTypes.shape({
+  selectedItem: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
   }),
   openMilestones: PropTypes.object.isRequired,
   openModules: PropTypes.object.isRequired,
   toggleMilestone: PropTypes.func.isRequired,
   toggleModule: PropTypes.func.isRequired,
-  handleVideoSelect: PropTypes.func.isRequired
+  handleItemSelect: PropTypes.func.isRequired
 };

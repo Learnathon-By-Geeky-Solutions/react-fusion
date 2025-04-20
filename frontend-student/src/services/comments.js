@@ -1,6 +1,5 @@
 import { BACKEND } from '../constants';
 
-// Get Comments
 export async function getComments(payload) {
   try {
     const result = await fetch(`${BACKEND}/comment/get-comments`, {
@@ -20,8 +19,8 @@ export async function getComments(payload) {
   }
 }
 
-// Create Comment
 export async function createComment(payload) {
+  console.log('Payload in createComment:', payload);
   try {
     const result = await fetch(`${BACKEND}/comment/create-comment`, {
       method: 'POST',
@@ -29,10 +28,7 @@ export async function createComment(payload) {
         Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        videoId: payload.data.videoId,
-        comment: payload.data.newComment
-      })
+      body: JSON.stringify(payload.data)
     });
 
     const data = await result.json();
@@ -43,7 +39,6 @@ export async function createComment(payload) {
   }
 }
 
-// Update Comment
 export async function updateComment(payload) {
   try {
     const result = await fetch(`${BACKEND}/comment/update-comment`, {
@@ -66,7 +61,6 @@ export async function updateComment(payload) {
   }
 }
 
-// Delete Comment
 export async function deleteComment(payload) {
   try {
     const parsedData = JSON.parse(payload.data);
