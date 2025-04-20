@@ -1,6 +1,9 @@
+import { resolve } from "path"
 import { JwtPayload } from "../../../interfaces/common"
 import prisma from "../../../shared/prisma"
 import { ICheckQuiz, ICreateQuiz, IUpdateQuiz } from "./quiz.interface"
+import { profile } from "console"
+import { resourceUsage } from "process"
 
 
 const createQuiz = async (payload: ICreateQuiz) => {
@@ -40,7 +43,7 @@ const createQuiz = async (payload: ICreateQuiz) => {
 }
 
 const getQuiz = async (user: JwtPayload, quizId: string) => {
-    const result = await prisma.quiz.findUnique({
+    const quiz = await prisma.quiz.findUnique({
         where: { id: quizId },
         include: {
             questions: {
@@ -50,9 +53,48 @@ const getQuiz = async (user: JwtPayload, quizId: string) => {
                     options: true,
                     points: true
                 }
+            },
+            moduleItem: {
+                include: {
+                    module: {
+                        include: {
+                            milestone: true
+                        }
+                    }
+
+                }
             }
         }
     })
+
+    let result: any = quiz
+    if (user.role === 'STUDENT') {
+        const courseId = quiz?.moduleItem?.module.milestone.courseId
+        const progress = await prisma.courseProgress.findUnique({
+            where: {
+                studentId_courseId: {
+                    studentId: user.userId,
+                    courseId: courseId ?? ""
+                }
+            }
+        })
+
+        const quizProgress = await prisma.moduleItemProgress.findUnique({
+            where: {
+                courseProgressId_moduleItemId: {
+                    courseProgressId: progress?.id ?? "",
+                    moduleItemId: quiz?.moudleItemId ?? ""
+                }
+            },
+            include: {
+                QuizProgress: true
+            }
+        })
+
+        result.progress = quizProgress?.QuizProgress || null
+    }
+
+    delete result.moduleItem
     return result
 }
 
