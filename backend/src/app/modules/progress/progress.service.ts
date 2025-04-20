@@ -80,10 +80,6 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 		update: {
 			isCompleted: payload.isCompleted,
 			VideoProgress: {
-				create: {
-					videoId: payload.videoId,
-					timeWatched: payload.timeWatched
-				},
 				update: {
 					timeWatched: payload.timeWatched
 				}
@@ -155,11 +151,6 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		update: {
 			isCompleted: payload.isCompleted,
 			QuizProgress: {
-				create: {
-					score: payload.score,
-					quizId: payload.quizId,
-
-				},
 				update: {
 					score: payload.score
 				}
