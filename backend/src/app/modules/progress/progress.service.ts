@@ -27,7 +27,7 @@ const checkPreviousItemCompletion = async (moduleId: string, order: number, prog
 
 
 	if (!prevProgress?.isCompleted) {
-		throw new ApiError(httpStatus.FORBIDDEN, "Previous naim Not Completed")
+		throw new ApiError(httpStatus.FORBIDDEN, "Previous Item Not Completed")
 
 	}
 
