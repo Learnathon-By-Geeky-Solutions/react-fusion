@@ -53,11 +53,6 @@ export default function NotesSection({ videoId }) {
         note: note
       };
 
-      if (savedNote && savedNote.id) {
-        // Include the ID for updates
-        noteData.id = savedNote.id;
-      }
-
       let response;
       if (savedNote && savedNote.id) {
         response = await fetchData(updateNote, noteData);
@@ -84,10 +79,9 @@ export default function NotesSection({ videoId }) {
 
     setIsLoading(true);
     try {
-      // Convert data to JSON string for API consumption
-      const payload = JSON.stringify({ videoId });
-
-      const response = await fetchData(deleteNote, payload);
+      const response = await fetchData(deleteNote, {
+        videoId
+      });
 
       if (response.success) {
         setSavedNote(null);
