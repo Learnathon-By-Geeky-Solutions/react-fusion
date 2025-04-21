@@ -1,8 +1,6 @@
-import { resourceUsage } from "process";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import { ICreateVideo, IUpdateVideo } from "./video.interface";
-import { profile } from "console";
 
 
 const getVideo = async (user: JwtPayload, videoId: string) => {

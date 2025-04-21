@@ -3,7 +3,6 @@ import ApiError from "../../../errors/ApiError";
 import { JwtPayload } from "../../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import { ICreateCourse, IUpdateCourse } from "./course.interface";
-import { courseController } from "./course.controller";
 
 const createCourse = async (user: JwtPayload, payload: ICreateCourse) => {
     const result = await prisma.course.create({
