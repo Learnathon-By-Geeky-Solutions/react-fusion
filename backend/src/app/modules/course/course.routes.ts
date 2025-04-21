@@ -21,5 +21,5 @@ router.get("/:id", courseController.getSingleCourse)
 
 router.get('/checkenroll/:courseId', auth(UserRole.STUDENT), courseController.checkEnrollment)
 
-router.get('/continue/:courseId', auth(UserRole.STUDENT), courseController.continueCourse)
+router.get('/continue/:courseId', auth(UserRole.STUDENT), accessValidation('course'), courseController.continueCourse)
 export const courseRoutes = router

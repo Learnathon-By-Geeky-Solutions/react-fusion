@@ -1,8 +1,8 @@
 import { JwtPayload } from '../../../interfaces/common'
 import prisma from "../../../shared/prisma"
-import { ICreateNote, IGetNote } from "./note.interface"
+import { ICreateNote } from "./note.interface"
 
-const getNote = async (user: JwtPayload, payload: IGetNote) => {
+const getNote = async (user: JwtPayload, videoId: string) => {
     const result = await prisma.note.findFirst({
         where: {
             AND: [
@@ -13,7 +13,7 @@ const getNote = async (user: JwtPayload, payload: IGetNote) => {
                 },
                 {
                     videoId: {
-                        equals: payload.videoId
+                        equals: videoId
                     }
                 },
             ]
@@ -59,13 +59,13 @@ const updateNote = async (user: JwtPayload, payload: ICreateNote) => {
     return result
 }
 
-const deleteNote = async (user: JwtPayload, payload: IGetNote) => {
+const deleteNote = async (user: JwtPayload, videoId: string) => {
     const result = await prisma.note.deleteMany({
         where: {
             AND: [
                 {
                     videoId: {
-                        equals: payload.videoId
+                        equals: videoId
                     }
                 },
                 {
