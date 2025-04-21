@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { getSingleCourse } from '@/src/services/course';
+import { getSingleCourse, getContinueCourse } from '@/src/services/course';
 import { updateVideoProgress } from '@/src/services/progress';
 import VideoSection from './VideoSection';
 import CourseSidebar from './CourseSidebar';
@@ -28,7 +28,8 @@ export default function CoursePage() {
   const fetchCourseData = async () => {
     try {
       const response = await fetchData(getSingleCourse, { courseId });
-      console.log('CourseId', courseId);
+      const response_2 = await fetchData(getContinueCourse, { courseId });
+      console.log('Response:', response_2);
 
       if (response.success) {
         setCourse(response.data);
@@ -96,30 +97,13 @@ export default function CoursePage() {
     setSelectedItem(itemWithNumbers);
   };
 
-  const calculateQuizIndex = () => {
-    if (!course || !selectedItem) return 0;
-
-    let quizIndex = 0;
-    for (const milestone of course.milestones || []) {
-      for (const module of milestone.modules || []) {
-        for (const item of module.moduleItems || []) {
-          if (item.quiz) quizIndex++;
-          if (item === selectedItem) return quizIndex;
-        }
-      }
-    }
-    return quizIndex;
-  };
-
   const renderSelectedItemTitle = () => {
     if (!selectedItem) return null;
 
-    const quizIndex = calculateQuizIndex();
     return (
       <h2 className='text-2xl font-bold mb-4 text-left'>
         {selectedItem.milestoneNumber}.{selectedItem.moduleNumber}.
-        {selectedItem.itemNumber} -{' '}
-        {selectedItem.video?.title || `Quiz ${quizIndex}`}
+        {selectedItem.itemNumber} - {selectedItem.video?.title || `Take Quiz`}
       </h2>
     );
   };

@@ -66,7 +66,6 @@ export async function buyCourse(payload) {
 }
 
 export async function getSingleCourse(params) {
-  console.log('Param', params);
   try {
     const result = await fetch(`${BACKEND}/course/${params.data.courseId}`, {
       method: 'GET',
@@ -129,4 +128,24 @@ export async function ratingFilter(params) {
   });
   const data = await result.json();
   return data;
+}
+
+export async function getContinueCourse(params) {
+  try {
+    const result = await fetch(
+      `${BACKEND}/course/continue/${params.data.courseId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: params.user.token
+        }
+      }
+    );
+
+    const data = await result.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching enrollment data:', error);
+    return { success: false };
+  }
 }

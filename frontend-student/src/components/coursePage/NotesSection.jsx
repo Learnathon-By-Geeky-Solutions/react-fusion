@@ -28,10 +28,18 @@ export default function NotesSection({ videoId }) {
     try {
       const response = await fetchData(getNote, { videoId });
 
-      if (response.success && response.data) {
-        setSavedNote(response.data);
-        setNote(response.data.note || '');
+      if (response.success) {
+        if (response.data) {
+          // Data exists, set saved note and current note
+          setSavedNote(response.data);
+          setNote(response.data.note || '');
+        } else {
+          // Success but no data means no existing note
+          setSavedNote(null);
+          setNote('');
+        }
       } else {
+        // Handle actual error case
         setSavedNote(null);
         setNote('');
         console.error('Failed to fetch note:', response.message);

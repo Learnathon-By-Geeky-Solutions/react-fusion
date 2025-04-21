@@ -22,6 +22,7 @@ export async function checkQuiz(params) {
 }
 
 export async function getQuiz(params) {
+  console.log('Getting quiz with payload:', params);
   try {
     const result = await fetch(`${BACKEND}/quiz/${params.data.quizId}`, {
       method: 'GET',
@@ -31,6 +32,7 @@ export async function getQuiz(params) {
     });
 
     const data = await result.json();
+    console.log('Get quiz result:', data);
     return data;
   } catch (error) {
     console.error('Error fetching quiz data:', error);

@@ -39,6 +39,7 @@ export async function module(payload) {
 }
 
 export async function updateQuizProgress(payload) {
+  console.log('Updating quiz progress with payload:', payload);
   try {
     const result = await fetch(`${BACKEND}/progress/quiz`, {
       method: 'POST',
@@ -50,6 +51,7 @@ export async function updateQuizProgress(payload) {
     });
 
     const data = await result.json();
+    console.log('Quiz progress', data);
     return data;
   } catch (error) {
     console.error('Error fetching quiz data:', error);

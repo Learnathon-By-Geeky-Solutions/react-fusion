@@ -22,10 +22,10 @@ export default function QuizSection(quizId) {
         if (response.success) {
           setQuiz(response.data);
           if (
-            response.data.marks !== undefined &&
-            response.data.marks !== null
+            response.data.progress.score !== undefined &&
+            response.data.progress.score !== null
           ) {
-            setPreviousBestScore(response.data.marks);
+            setPreviousBestScore(response.data.progress.score);
           }
 
           const initialAnswers = {};
@@ -85,7 +85,6 @@ export default function QuizSection(quizId) {
             isCompleted: true,
             score: response.data.marks
           });
-          console.log('Quiz progress updated successfully');
         } catch (error) {
           console.error('Error updating quiz progress:', error);
         }
@@ -195,18 +194,6 @@ export default function QuizSection(quizId) {
               </button>
             </div>
           )}
-
-          {submitResult && (
-            <div
-              className={`mt-4 p-4 rounded-md ${submitResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
-            >
-              {submitResult.message ||
-                (submitResult.success
-                  ? 'Quiz submitted successfully!'
-                  : 'Failed to submit quiz.')}
-            </div>
-          )}
-
           {quizResults && (
             <div className='mt-6 p-4 bg-blue-50 rounded-md'>
               <div className='font-semibold text-lg'>
