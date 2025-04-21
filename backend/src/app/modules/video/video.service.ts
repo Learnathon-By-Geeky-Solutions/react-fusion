@@ -43,7 +43,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             where: {
                 courseProgressId_moduleItemId: {
                     courseProgressId: progress?.id ?? "",
-                    moduleItemId: video?.moudleItemId ?? ""
+                    moduleItemId: video?.moduleItemId ?? ""
                 }
             },
             include: {
@@ -82,7 +82,7 @@ const deleteVideo = async (videoId: string) => {
 
         const deletedModuleItem = await tx.moduleItem.delete({
             where: {
-                id: video.moudleItemId
+                id: video.moduleItemId
             }
         })
         return deletedModuleItem

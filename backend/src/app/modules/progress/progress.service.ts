@@ -73,7 +73,7 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 	const result = await prisma.moduleItemProgress.upsert({
 		where: {
 			courseProgressId_moduleItemId: {
-				moduleItemId: video.moudleItemId,
+				moduleItemId: video.moduleItemId,
 				courseProgressId: progressData.id
 			}
 		},
@@ -87,7 +87,7 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 		},
 		create: {
 			courseProgressId: progressData.id,
-			moduleItemId: video.moudleItemId,
+			moduleItemId: video.moduleItemId,
 			isCompleted: payload.isCompleted,
 			VideoProgress: {
 				create: {
@@ -144,7 +144,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 	const result = await prisma.moduleItemProgress.upsert({
 		where: {
 			courseProgressId_moduleItemId: {
-				moduleItemId: quiz.moudleItemId,
+				moduleItemId: quiz.moduleItemId,
 				courseProgressId: progressData.id
 			}
 		},
@@ -158,7 +158,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		},
 		create: {
 			courseProgressId: progressData.id,
-			moduleItemId: quiz.moudleItemId,
+			moduleItemId: quiz.moduleItemId,
 			isCompleted: payload.isCompleted,
 			QuizProgress: {
 				create: {

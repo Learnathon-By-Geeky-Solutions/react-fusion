@@ -171,8 +171,8 @@ model Quiz {
   id           String         @id @default(uuid())
   questions    Question[]
   QuizProgress QuizProgress[]
-  moudleItemId String         @unique
-  moduleItem   ModuleItem?    @relation(fields: [moudleItemId], references: [id])
+  moduleItemId String         @unique
+  moduleItem   ModuleItem?    @relation(fields: [moduleItemId], references: [id])
 }
 
 model Question {
@@ -198,8 +198,8 @@ model Video {
   dislike       DislikeUser[]
   VideoProgress VideoProgress[]
 
-  moudleItemId String      @unique
-  moduleItem   ModuleItem? @relation(fields: [moudleItemId], references: [id])
+  moduleItemId String      @unique
+  moduleItem   ModuleItem? @relation(fields: [moduleItemId], references: [id])
 }
 
 model Comment {

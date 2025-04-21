@@ -80,7 +80,7 @@ const getQuiz = async (user: JwtPayload, quizId: string) => {
             where: {
                 courseProgressId_moduleItemId: {
                     courseProgressId: progress?.id ?? "",
-                    moduleItemId: quiz?.moudleItemId ?? ""
+                    moduleItemId: quiz?.moduleItemId ?? ""
                 }
             },
             include: {
@@ -135,7 +135,7 @@ const deleteQuiz = async (quizId: string) => {
         })
         const deletedModuleItem = await prisma.moduleItem.delete({
             where: {
-                id: deletedQuiz.moudleItemId
+                id: deletedQuiz.moduleItemId
             },
         })
 
