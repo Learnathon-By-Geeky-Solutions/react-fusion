@@ -9,16 +9,51 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
             id: videoId
         },
         include: {
-            moduleItem: true,
             notes: {
                 where: {
                     userId: user.userId
                 }
             },
-            comments: true
+            comments: true,
+            moduleItem: {
+                include: {
+                    module: {
+                        include: {
+                            milestone: true
+                        }
+                    }
+                }
+            }
         }
     })
-    return video
+    let result: any = video
+    if (user.role === "STUDENT") {
+        const courseId = video?.moduleItem?.module.milestone.courseId
+        const progress = await prisma.courseProgress.findUnique({
+            where: {
+                studentId_courseId: {
+                    studentId: user.userId,
+                    courseId: courseId ?? ""
+                }
+            }
+        })
+        const videoProgress = await prisma.moduleItemProgress.findUnique({
+            where: {
+                courseProgressId_moduleItemId: {
+                    courseProgressId: progress?.id ?? "",
+                    moduleItemId: video?.moduleItemId ?? ""
+                }
+            },
+            include: {
+                VideoProgress: true
+            }
+
+        })
+
+        result.progress = videoProgress?.VideoProgress ?? null
+    }
+    delete result.moduleItem.module
+    return result
 }
 
 
@@ -45,7 +80,7 @@ const deleteVideo = async (videoId: string) => {
 
         const deletedModuleItem = await tx.moduleItem.delete({
             where: {
-                id: video.moudleItemId
+                id: video.moduleItemId
             }
         })
         return deletedModuleItem

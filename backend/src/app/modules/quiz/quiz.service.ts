@@ -40,7 +40,7 @@ const createQuiz = async (payload: ICreateQuiz) => {
 }
 
 const getQuiz = async (user: JwtPayload, quizId: string) => {
-    const result = await prisma.quiz.findUnique({
+    const quiz = await prisma.quiz.findUnique({
         where: { id: quizId },
         include: {
             questions: {
@@ -50,9 +50,48 @@ const getQuiz = async (user: JwtPayload, quizId: string) => {
                     options: true,
                     points: true
                 }
+            },
+            moduleItem: {
+                include: {
+                    module: {
+                        include: {
+                            milestone: true
+                        }
+                    }
+
+                }
             }
         }
     })
+
+    let result: any = quiz
+    if (user.role === 'STUDENT') {
+        const courseId = quiz?.moduleItem?.module.milestone.courseId
+        const progress = await prisma.courseProgress.findUnique({
+            where: {
+                studentId_courseId: {
+                    studentId: user.userId,
+                    courseId: courseId ?? ""
+                }
+            }
+        })
+
+        const quizProgress = await prisma.moduleItemProgress.findUnique({
+            where: {
+                courseProgressId_moduleItemId: {
+                    courseProgressId: progress?.id ?? "",
+                    moduleItemId: quiz?.moduleItemId ?? ""
+                }
+            },
+            include: {
+                QuizProgress: true
+            }
+        })
+
+        result.progress = quizProgress?.QuizProgress ?? null
+    }
+
+    delete result.moduleItem.module
     return result
 }
 
@@ -96,7 +135,7 @@ const deleteQuiz = async (quizId: string) => {
         })
         const deletedModuleItem = await prisma.moduleItem.delete({
             where: {
-                id: deletedQuiz.moudleItemId
+                id: deletedQuiz.moduleItemId
             },
         })
 

@@ -1,10 +1,5 @@
 import { z } from 'zod'
 
-const noteGetSchema = z.object({
-    body: z.object({
-        videoId: z.string(),
-    })
-})
 const noteCreateSchema = z.object({
     body: z.object({
         videoId: z.string(),
@@ -13,5 +8,4 @@ const noteCreateSchema = z.object({
 })
 
 
-
-export const noteValidataionSchema = { noteGetSchema, noteCreateSchema }
+export const noteValidataionSchema = { noteCreateSchema }

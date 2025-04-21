@@ -27,7 +27,7 @@ const checkPreviousItemCompletion = async (moduleId: string, order: number, prog
 
 
 	if (!prevProgress?.isCompleted) {
-		throw new ApiError(httpStatus.FORBIDDEN, "Previous naim Not Completed")
+		throw new ApiError(httpStatus.FORBIDDEN, "Previous Item Not Completed")
 
 	}
 
@@ -73,17 +73,13 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 	const result = await prisma.moduleItemProgress.upsert({
 		where: {
 			courseProgressId_moduleItemId: {
-				moduleItemId: video.moudleItemId,
+				moduleItemId: video.moduleItemId,
 				courseProgressId: progressData.id
 			}
 		},
 		update: {
 			isCompleted: payload.isCompleted,
 			VideoProgress: {
-				create: {
-					videoId: payload.videoId,
-					timeWatched: payload.timeWatched
-				},
 				update: {
 					timeWatched: payload.timeWatched
 				}
@@ -91,7 +87,7 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 		},
 		create: {
 			courseProgressId: progressData.id,
-			moduleItemId: video.moudleItemId,
+			moduleItemId: video.moduleItemId,
 			isCompleted: payload.isCompleted,
 			VideoProgress: {
 				create: {
@@ -148,18 +144,13 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 	const result = await prisma.moduleItemProgress.upsert({
 		where: {
 			courseProgressId_moduleItemId: {
-				moduleItemId: quiz.moudleItemId,
+				moduleItemId: quiz.moduleItemId,
 				courseProgressId: progressData.id
 			}
 		},
 		update: {
 			isCompleted: payload.isCompleted,
 			QuizProgress: {
-				create: {
-					score: payload.score,
-					quizId: payload.quizId,
-
-				},
 				update: {
 					score: payload.score
 				}
@@ -167,7 +158,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		},
 		create: {
 			courseProgressId: progressData.id,
-			moduleItemId: quiz.moudleItemId,
+			moduleItemId: quiz.moduleItemId,
 			isCompleted: payload.isCompleted,
 			QuizProgress: {
 				create: {

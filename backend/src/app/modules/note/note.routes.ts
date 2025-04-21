@@ -8,8 +8,8 @@ import accessValidation from "../../middlewares/accessValidation";
 
 const router = express.Router()
 
-router.post("/get", auth(UserRole.STUDENT), validateRequest(noteValidataionSchema.noteGetSchema), accessValidation('video'), noteController.getNote)
-router.post("/create", auth(UserRole.STUDENT), validateRequest(noteValidataionSchema.noteCreateSchema), accessValidation('video'), noteController.createNote)
-router.post("/update", auth(UserRole.STUDENT), validateRequest(noteValidataionSchema.noteCreateSchema), accessValidation('video'), noteController.updateNote)
-router.delete("/delete", auth(UserRole.STUDENT), validateRequest(noteValidataionSchema.noteGetSchema), accessValidation('video'), noteController.deleteNote)
+router.get("/:videoId", auth(UserRole.STUDENT), accessValidation('video'), noteController.getNote)
+router.post("/", auth(UserRole.STUDENT), validateRequest(noteValidataionSchema.noteCreateSchema), accessValidation('video'), noteController.createNote)
+router.put("/", auth(UserRole.STUDENT), validateRequest(noteValidataionSchema.noteCreateSchema), accessValidation('video'), noteController.updateNote)
+router.delete("/:videoId", auth(UserRole.STUDENT), accessValidation('video'), noteController.deleteNote)
 export const noteRoutes = router
