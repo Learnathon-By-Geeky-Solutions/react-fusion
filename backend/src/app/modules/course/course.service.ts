@@ -247,19 +247,18 @@ const continueCourse = async (user: JwtPayload, courseId: string) => {
         orderBy: { order: 'asc' }
     })
 
-    if (!lastMilestone) {
-        lastMilestone = await prisma.milestone.findFirst({
-            where: {
-                courseId,
-                MilestoneProgress: {
-                    none: {
-                        courseProgressId: progress?.id
-                    },
+    lastMilestone ??= await prisma.milestone.findFirst({
+        where: {
+            courseId,
+            MilestoneProgress: {
+                none: {
+                    courseProgressId: progress?.id
                 },
             },
-            orderBy: { order: 'asc' },
-        });
-    }
+        },
+        orderBy: { order: 'asc' },
+    });
+
 
     const lastMilestoneId = lastMilestone?.id
 
@@ -278,21 +277,20 @@ const continueCourse = async (user: JwtPayload, courseId: string) => {
         },
     });
 
-    if (!module) {
-        module = await prisma.module.findFirst({
-            where: {
-                milestoneId: lastMilestoneId,
-                ModuleProgress: {
-                    none: {
-                        courseProgressId: progress?.id,
-                    },
+    module ??= await prisma.module.findFirst({
+        where: {
+            milestoneId: lastMilestoneId,
+            ModuleProgress: {
+                none: {
+                    courseProgressId: progress?.id,
                 },
             },
-            orderBy: {
-                order: 'asc',
-            },
-        });
-    }
+        },
+        orderBy: {
+            order: 'asc',
+        },
+    });
+
 
     const lastModuleId = module?.id
 
@@ -311,21 +309,20 @@ const continueCourse = async (user: JwtPayload, courseId: string) => {
         },
     });
 
-    if (!moduleItem) {
-        moduleItem = await prisma.moduleItem.findFirst({
-            where: {
-                moduleId: lastModuleId,
-                Progress: {
-                    none: {
-                        courseProgressId: progress?.id,
-                    },
+    moduleItem ??= await prisma.moduleItem.findFirst({
+        where: {
+            moduleId: lastModuleId,
+            Progress: {
+                none: {
+                    courseProgressId: progress?.id,
                 },
             },
-            orderBy: {
-                order: 'asc',
-            },
-        });
-    }
+        },
+        orderBy: {
+            order: 'asc',
+        },
+    });
+
 
     const lastModuleItemId = moduleItem?.id
 
