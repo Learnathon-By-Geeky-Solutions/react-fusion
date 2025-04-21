@@ -76,6 +76,17 @@ const checkEnrollment = catchAsync(async (req, res, next) => {
 
 })
 
+
+const continueCourse = catchAsync(async (req, res, next) => {
+    const result = await courseService.continueCourse(req.user as JwtPayload, req.params.courseId)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Course Retrieved Successfully!",
+        data: result
+    })
+
+})
 export const courseController = {
     createCourse,
     updateCourse,
@@ -83,4 +94,5 @@ export const courseController = {
     getAllCourses,
     getSingleCourse,
     checkEnrollment,
+    continueCourse
 }

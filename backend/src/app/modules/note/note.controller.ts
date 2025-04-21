@@ -6,7 +6,7 @@ import httpStatus from "http-status";
 
 
 const getNote = catchAsync(async (req, res, next) => {
-    const result = await noteService.getNote(req.user as JwtPayload, req.body)
+    const result = await noteService.getNote(req.user as JwtPayload, req.params.videoId)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
@@ -37,7 +37,7 @@ const updateNote = catchAsync(async (req, res, next) => {
 })
 
 const deleteNote = catchAsync(async (req, res, next) => {
-    const result = await noteService.deleteNote(req.user as JwtPayload, req.body)
+    const result = await noteService.deleteNote(req.user as JwtPayload, req.params.videoId)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,

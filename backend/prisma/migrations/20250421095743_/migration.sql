@@ -94,6 +94,7 @@ CREATE TABLE "Milestone" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "courseId" TEXT NOT NULL,
+    "order" INTEGER NOT NULL,
 
     CONSTRAINT "Milestone_pkey" PRIMARY KEY ("id")
 );
@@ -103,6 +104,7 @@ CREATE TABLE "Module" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "order" INTEGER NOT NULL,
     "milestoneId" TEXT NOT NULL,
 
     CONSTRAINT "Module_pkey" PRIMARY KEY ("id")
@@ -120,7 +122,7 @@ CREATE TABLE "ModuleItem" (
 -- CreateTable
 CREATE TABLE "Quiz" (
     "id" TEXT NOT NULL,
-    "moudleItemId" TEXT NOT NULL,
+    "moduleItemId" TEXT NOT NULL,
 
     CONSTRAINT "Quiz_pkey" PRIMARY KEY ("id")
 );
@@ -143,10 +145,9 @@ CREATE TABLE "Video" (
     "title" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "length" DOUBLE PRECISION NOT NULL,
-    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "likeCount" INTEGER NOT NULL DEFAULT 0,
     "dislikeCount" INTEGER NOT NULL DEFAULT 0,
-    "moudleItemId" TEXT NOT NULL,
+    "moduleItemId" TEXT NOT NULL,
 
     CONSTRAINT "Video_pkey" PRIMARY KEY ("id")
 );
@@ -252,13 +253,13 @@ CREATE TABLE "module_progress" (
 );
 
 -- CreateTable
-CREATE TABLE "ModuelItemProgress" (
+CREATE TABLE "ModuleItemProgress" (
     "id" TEXT NOT NULL,
     "courseProgressId" TEXT NOT NULL,
     "moduleItemId" TEXT NOT NULL,
     "isCompleted" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "ModuelItemProgress_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ModuleItemProgress_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -277,7 +278,6 @@ CREATE TABLE "quiz_progress" (
     "id" TEXT NOT NULL,
     "moduleItemProgressId" TEXT NOT NULL,
     "quizId" TEXT NOT NULL,
-    "isCompleted" BOOLEAN NOT NULL,
     "score" DOUBLE PRECISION NOT NULL,
     "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -321,10 +321,10 @@ CREATE UNIQUE INDEX "students_email_key" ON "students"("email");
 CREATE UNIQUE INDEX "ModuleItem_moduleId_order_key" ON "ModuleItem"("moduleId", "order");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Quiz_moudleItemId_key" ON "Quiz"("moudleItemId");
+CREATE UNIQUE INDEX "Quiz_moduleItemId_key" ON "Quiz"("moduleItemId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Video_moudleItemId_key" ON "Video"("moudleItemId");
+CREATE UNIQUE INDEX "Video_moduleItemId_key" ON "Video"("moduleItemId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Note_userId_videoId_key" ON "Note"("userId", "videoId");
@@ -348,7 +348,7 @@ CREATE UNIQUE INDEX "milestone_progress_courseProgressId_milestoneId_key" ON "mi
 CREATE UNIQUE INDEX "module_progress_courseProgressId_moduleId_key" ON "module_progress"("courseProgressId", "moduleId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ModuelItemProgress_courseProgressId_moduleItemId_key" ON "ModuelItemProgress"("courseProgressId", "moduleItemId");
+CREATE UNIQUE INDEX "ModuleItemProgress_courseProgressId_moduleItemId_key" ON "ModuleItemProgress"("courseProgressId", "moduleItemId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "video_progress_moduleItemProgressId_key" ON "video_progress"("moduleItemProgressId");
@@ -381,13 +381,13 @@ ALTER TABLE "Module" ADD CONSTRAINT "Module_milestoneId_fkey" FOREIGN KEY ("mile
 ALTER TABLE "ModuleItem" ADD CONSTRAINT "ModuleItem_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Quiz" ADD CONSTRAINT "Quiz_moudleItemId_fkey" FOREIGN KEY ("moudleItemId") REFERENCES "ModuleItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Quiz" ADD CONSTRAINT "Quiz_moduleItemId_fkey" FOREIGN KEY ("moduleItemId") REFERENCES "ModuleItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Question" ADD CONSTRAINT "Question_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Video" ADD CONSTRAINT "Video_moudleItemId_fkey" FOREIGN KEY ("moudleItemId") REFERENCES "ModuleItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Video" ADD CONSTRAINT "Video_moduleItemId_fkey" FOREIGN KEY ("moduleItemId") REFERENCES "ModuleItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES "Video"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -408,7 +408,7 @@ ALTER TABLE "DislikeUser" ADD CONSTRAINT "DislikeUser_videoId_fkey" FOREIGN KEY 
 ALTER TABLE "DislikeUser" ADD CONSTRAINT "DislikeUser_userId_fkey" FOREIGN KEY ("userId") REFERENCES "students"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Note" ADD CONSTRAINT "Note_userId_fkey" FOREIGN KEY ("userId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Note" ADD CONSTRAINT "Note_userId_fkey" FOREIGN KEY ("userId") REFERENCES "students"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Note" ADD CONSTRAINT "Note_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES "Video"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -447,19 +447,19 @@ ALTER TABLE "module_progress" ADD CONSTRAINT "module_progress_courseProgressId_f
 ALTER TABLE "module_progress" ADD CONSTRAINT "module_progress_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ModuelItemProgress" ADD CONSTRAINT "ModuelItemProgress_courseProgressId_fkey" FOREIGN KEY ("courseProgressId") REFERENCES "course_progress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ModuleItemProgress" ADD CONSTRAINT "ModuleItemProgress_courseProgressId_fkey" FOREIGN KEY ("courseProgressId") REFERENCES "course_progress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ModuelItemProgress" ADD CONSTRAINT "ModuelItemProgress_moduleItemId_fkey" FOREIGN KEY ("moduleItemId") REFERENCES "ModuleItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ModuleItemProgress" ADD CONSTRAINT "ModuleItemProgress_moduleItemId_fkey" FOREIGN KEY ("moduleItemId") REFERENCES "ModuleItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "video_progress" ADD CONSTRAINT "video_progress_moduleItemProgressId_fkey" FOREIGN KEY ("moduleItemProgressId") REFERENCES "ModuelItemProgress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "video_progress" ADD CONSTRAINT "video_progress_moduleItemProgressId_fkey" FOREIGN KEY ("moduleItemProgressId") REFERENCES "ModuleItemProgress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "video_progress" ADD CONSTRAINT "video_progress_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES "Video"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "quiz_progress" ADD CONSTRAINT "quiz_progress_moduleItemProgressId_fkey" FOREIGN KEY ("moduleItemProgressId") REFERENCES "ModuelItemProgress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "quiz_progress" ADD CONSTRAINT "quiz_progress_moduleItemProgressId_fkey" FOREIGN KEY ("moduleItemProgressId") REFERENCES "ModuleItemProgress"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "quiz_progress" ADD CONSTRAINT "quiz_progress_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
