@@ -1,6 +1,25 @@
 import { BACKEND } from '../constants';
 
-export async function milestone(payload) {
+export async function updateCourseProgress(payload) {
+  try {
+    const result = await fetch(`${BACKEND}/progress/module`, {
+      method: 'POST',
+      headers: {
+        Authorization: payload.user.token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload.data)
+    });
+
+    const data = await result.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching module data:', error);
+    return { success: false };
+  }
+}
+
+export async function updateMilestoneProgress(payload) {
   try {
     const result = await fetch(`${BACKEND}/progress/milestone`, {
       method: 'POST',
@@ -19,7 +38,7 @@ export async function milestone(payload) {
   }
 }
 
-export async function module(payload) {
+export async function updateModuleProgress(payload) {
   try {
     const result = await fetch(`${BACKEND}/progress/module`, {
       method: 'POST',

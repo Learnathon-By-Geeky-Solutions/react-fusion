@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useApi from '@/src/hooks/useApi';
 import PropTypes from 'prop-types';
-
 import {
   getNote,
   createNote,
@@ -30,16 +29,13 @@ export default function NotesSection({ videoId }) {
 
       if (response.success) {
         if (response.data) {
-          // Data exists, set saved note and current note
           setSavedNote(response.data);
           setNote(response.data.note || '');
         } else {
-          // Success but no data means no existing note
           setSavedNote(null);
           setNote('');
         }
       } else {
-        // Handle actual error case
         setSavedNote(null);
         setNote('');
         console.error('Failed to fetch note:', response.message);
@@ -114,7 +110,6 @@ export default function NotesSection({ videoId }) {
     }
   };
 
-  // Extract the nested ternary for the save button className into a function
   const getSaveButtonClassName = () => {
     const isButtonEnabled = note.trim() && !isLoading;
     if (isButtonEnabled) {
@@ -124,7 +119,6 @@ export default function NotesSection({ videoId }) {
     }
   };
 
-  // Determine button text based on state
   const getSaveButtonText = () => {
     if (isLoading) {
       return 'Saving...';
