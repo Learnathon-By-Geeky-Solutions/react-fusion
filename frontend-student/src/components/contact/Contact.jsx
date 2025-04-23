@@ -1,9 +1,9 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { toast } from 'sonner';
 
 function ContactUs() {
-  // Initial form values
   const initialValues = {
     name: '',
     email: '',
@@ -11,7 +11,6 @@ function ContactUs() {
     message: ''
   };
 
-  // Validation schema
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     email: Yup.string()
@@ -21,16 +20,13 @@ function ContactUs() {
     message: Yup.string().required('Message is required')
   });
 
-  // Handle form submission (just a placeholder since no implementation needed)
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    // This would be where you send the form data to your server
     console.log('Form values:', values);
 
-    // Reset form after submission (for demo purposes)
     setTimeout(() => {
       setSubmitting(false);
       resetForm();
-      alert('Message sent successfully!');
+      toast.success('Message sent successfully!');
     }, 500);
   };
 

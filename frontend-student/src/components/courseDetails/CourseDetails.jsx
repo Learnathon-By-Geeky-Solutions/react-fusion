@@ -8,6 +8,7 @@ import { nanoid } from 'nanoid';
 import { motion } from 'framer-motion';
 import CourseDetailsSidebar from './CourseDetailsSidebar';
 import InstructorDetails from './InstructorDetails';
+import { toast } from 'sonner';
 
 export default function CourseDetails() {
   const { id } = useParams();
@@ -43,9 +44,16 @@ export default function CourseDetails() {
       const token = localStorage.getItem('token');
 
       if (!token) {
-        alert('Please login to purchase this course');
-        navigate('/login');
-        setPurchasing(false);
+        toast.error('Please login to purchase this course', {
+          duration: 3000,
+          action: {
+            text: 'Login',
+            onClick: () => {
+              navigate('/login');
+              setPurchasing(false);
+            }
+          }
+        });
         return;
       }
 
@@ -57,22 +65,36 @@ export default function CourseDetails() {
       const response = await fetchData(buyCourse, purchaseData);
 
       if (response.success) {
-        alert('Course purchased successfully!');
-        navigate(`/enrolled/${id}`);
+        toast.success('Course purchased successfully!', {
+          duration: 3000,
+          action: {
+            text: 'View Course',
+            onClick: () => {
+              navigate(`/enrolled/${id}`);
+            }
+          }
+        });
       } else {
-        alert(
-          response.message || 'Failed to purchase course. Please try again.'
-        );
+        toast.error('Failed to purchase course. Please try again.', {
+          duration: 3000,
+          action: {
+            text: 'Retry',
+            onClick: () => {
+              handleBuyCourse();
+            }
+          }
+        });
       }
     } catch (error) {
       console.error('Error purchasing course:', error);
-      alert('An error occurred while purchasing the course. Please try again.');
+      toast.error(
+        'An error occurred while purchasing the course. Please try again.'
+      );
     } finally {
       setPurchasing(false);
     }
   };
 
-  // Animation variants
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: {
