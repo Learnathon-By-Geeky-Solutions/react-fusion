@@ -1,6 +1,7 @@
 import { BACKEND } from '../constants';
 
 export async function updateCourseProgress(payload) {
+  console.log('Payload video', payload);
   try {
     const result = await fetch(`${BACKEND}/progress/module`, {
       method: 'POST',

@@ -7,9 +7,12 @@ import ReactPlayer from 'react-player/youtube';
 
 export default function VideoSection({ videoId, title }) {
   const [videoData, setVideoData] = useState(null);
+  const [completed, setCompleted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
+  const [startTime, setStartTime] = useState(0);
+  const [hasSeekAndStarted, setHasSeekAndStarted] = useState(false);
   const playerRef = useRef(null);
   const progressTimerRef = useRef(null);
   const { fetchData } = useApi();
@@ -21,6 +24,15 @@ export default function VideoSection({ videoId, title }) {
         console.log('Video data response:', response);
         if (response.success) {
           setVideoData(response.data);
+
+          if (response.data.progress != null) {
+            setCompleted(response.data.progress.isCompleted);
+
+            if (response.data.progress) {
+              setStartTime(response.data.progress.VideoProgress.timeWatched);
+              setCurrentTime(response.data.progress.VideoProgress.timeWatched);
+            }
+          }
         } else {
           console.error('Failed to fetch video data:', response.message);
         }
@@ -31,6 +43,7 @@ export default function VideoSection({ videoId, title }) {
 
     if (videoId) {
       fetchVideoData();
+      setHasSeekAndStarted(false);
     }
 
     return () => {
@@ -53,7 +66,7 @@ export default function VideoSection({ videoId, title }) {
           setCurrentTime(timeWatched);
 
           if (timeWatched % 10 === 0 && timeWatched > 0) {
-            updateProgress(timeWatched);
+            updateProgress(timeWatched, completed);
           }
         }
       }, 1000);
@@ -66,14 +79,36 @@ export default function VideoSection({ videoId, title }) {
     };
   }, [isPlaying, videoId]);
 
+  useEffect(() => {
+    if (playerRef.current && startTime > 0 && !hasSeekAndStarted) {
+      const seekTimer = setTimeout(() => {
+        playerRef.current.seekTo(startTime);
+        setIsPlaying(true);
+        setHasSeekAndStarted(true);
+      }, 500);
+
+      return () => clearTimeout(seekTimer);
+    }
+  }, [startTime, playerRef.current, hasSeekAndStarted]);
+
   const handleVideoEnded = () => {
     setIsPlaying(false);
     if (videoDuration > 0) {
       updateProgress(videoDuration, true);
+      try {
+        const response_update = fetchData(checkVideo, { videoId });
+        if (response_update.data.progress != null) {
+          setCompleted(response_update.data.progress.isCompleted);
+        } else {
+          console.error('Failed to fetch video data:', response_update.message);
+        }
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
     }
   };
 
-  const updateProgress = async (timeWatched, isCompleted = false) => {
+  const updateProgress = async (timeWatched, isCompleted) => {
     try {
       await fetchData(updateVideoProgress, {
         videoId,
@@ -99,7 +134,7 @@ export default function VideoSection({ videoId, title }) {
     setIsPlaying(false);
     if (playerRef.current) {
       const timeWatched = Math.floor(playerRef.current.getCurrentTime());
-      updateProgress(timeWatched);
+      updateProgress(timeWatched, completed);
     }
   };
 
@@ -122,7 +157,8 @@ export default function VideoSection({ videoId, title }) {
               youtube: {
                 playerVars: {
                   modestbranding: 1,
-                  rel: 0
+                  rel: 0,
+                  start: startTime > 0 ? Math.floor(startTime) : undefined
                 }
               }
             }}
@@ -133,11 +169,6 @@ export default function VideoSection({ videoId, title }) {
           </div>
         )}
       </div>
-      {videoData && currentTime > 0 && (
-        <div className='p-3 text-sm text-gray-600'>
-          Progress: {Math.floor((currentTime / videoDuration) * 100)}%
-        </div>
-      )}
     </div>
   );
 }

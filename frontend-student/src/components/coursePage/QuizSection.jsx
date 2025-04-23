@@ -22,8 +22,8 @@ export default function QuizSection(quizId) {
         if (response.success) {
           setQuiz(response.data);
           if (
-            response.data.progress.score !== undefined &&
-            response.data.progress.score !== null
+            response.data.progress !== undefined &&
+            response.data.progress !== null
           ) {
             setPreviousBestScore(response.data.progress.score);
           }

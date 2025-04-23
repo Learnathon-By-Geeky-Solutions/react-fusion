@@ -11,6 +11,7 @@ import CourseSidebar from './CourseSidebar';
 import useApi from '@/src/hooks/useApi';
 import CourseContent from './CourseContent';
 import CourseCompletionModal from './CourseCompletionModal';
+import { getQuiz } from '@/src/services/quiz';
 
 export default function CoursePage() {
   const { courseId } = useParams();
@@ -357,6 +358,11 @@ export default function CoursePage() {
           isCompleted: true,
           timeWatched: 0
         });
+      } else if (selectedItem.quiz) {
+        const quiz_response = await fetchData(getSingleCourse, { courseId });
+        if (quiz_response.data.progress == null) {
+          alert('Complete the quiz first to continue');
+        }
       }
 
       // Find the next content
