@@ -59,13 +59,11 @@ export default function QuizSection(quizId) {
     try {
       setSubmitting(true);
 
-      // Format data for submission
       const answers = Object.keys(selectedAnswers).map((questionId) => ({
         id: questionId,
         answer: selectedAnswers[questionId]
       }));
 
-      // Make sure to structure the data exactly as expected
       const response = await fetchData(checkQuiz, {
         quizId: quizId.quiz,
         quizData: {
@@ -77,7 +75,6 @@ export default function QuizSection(quizId) {
       setQuizResults(response.data);
       console.log('Quiz submission result:', response);
 
-      // Update progress if successful
       if (response.success && response.data) {
         try {
           await fetchData(updateQuizProgress, {

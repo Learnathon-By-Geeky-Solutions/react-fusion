@@ -29,7 +29,6 @@ export async function getQuiz(params) {
     });
 
     const data = await result.json();
-    console.log('Quiz data:', data);
     return data;
   } catch (error) {
     console.error('Error fetching quiz data:', error);

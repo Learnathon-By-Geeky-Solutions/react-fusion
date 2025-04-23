@@ -41,13 +41,11 @@ export default function CoursePage() {
 
   const fetchCourseData = async () => {
     try {
-      // First get the full course data
       const response = await fetchData(getSingleCourse, { courseId });
 
       if (response.success) {
         setCourse(response.data);
 
-        // Then get the continuation data
         const continueResponse = await fetchData(getContinueCourse, {
           courseId
         });
@@ -57,67 +55,105 @@ export default function CoursePage() {
           const progress = continueResponse.data.progress;
           setCourseProgress(progress);
 
-          // Store the next milestone and module IDs from progress data
-          setResumeData({
-            nextMilestoneId: progress.nextMilestone,
-            nextModuleId: progress.nextModule,
-            firstLockedItemId: null // Will be set later
-          });
+          // Handle case where all modules are completed (nextMilestone, nextModule, nextContent all null)
+          if (
+            !progress.nextMilestone &&
+            !progress.nextModule &&
+            !progress.nextModuleItem
+          ) {
+            // Course is fully completed, set the last item as selected
+            const lastMilestone =
+              response.data.milestones[response.data.milestones.length - 1];
+            const lastModule =
+              lastMilestone.modules[lastMilestone.modules.length - 1];
+            const lastItem =
+              lastModule.moduleItems[lastModule.moduleItems.length - 1];
 
-          // Find the milestone and module to resume from
-          const milestoneIndex = response.data.milestones.findIndex(
-            (m) => m.id === progress.nextMilestone
-          );
+            // Open all milestones and modules since everything is completed
+            const allMilestonesOpen = {};
+            const allModulesOpen = {};
 
-          if (milestoneIndex !== -1) {
-            // Open this milestone in the sidebar
-            setOpenMilestones((prev) => ({
-              ...prev,
-              [progress.nextMilestone]: true
-            }));
+            response.data.milestones.forEach((milestone) => {
+              allMilestonesOpen[milestone.id] = true;
+              milestone.modules.forEach((module) => {
+                allModulesOpen[module.id] = true;
+              });
+            });
 
-            const milestone = response.data.milestones[milestoneIndex];
-            const moduleIndex = milestone.modules.findIndex(
-              (m) => m.id === progress.nextModule
+            setOpenMilestones(allMilestonesOpen);
+            setOpenModules(allModulesOpen);
+
+            setSelectedItem({
+              ...lastItem,
+              milestoneNumber: response.data.milestones.length,
+              moduleNumber: lastMilestone.modules.length,
+              itemNumber: lastModule.moduleItems.length
+            });
+
+            setResumeData({
+              nextMilestoneId: null,
+              nextModuleId: null,
+              firstLockedItemId: null
+            });
+          } else {
+            // Normal progress case
+            setResumeData({
+              nextMilestoneId: progress.nextMilestone,
+              nextModuleId: progress.nextModule,
+              firstLockedItemId: null
+            });
+
+            // Find the milestone and module to resume from
+            const milestoneIndex = response.data.milestones.findIndex(
+              (m) => m.id === progress.nextMilestone
             );
 
-            if (moduleIndex !== -1) {
-              // Open this module in the sidebar
-              setOpenModules((prev) => ({
+            if (milestoneIndex !== -1) {
+              // Open this milestone in the sidebar
+              setOpenMilestones((prev) => ({
                 ...prev,
-                [progress.nextModule]: true
+                [progress.nextMilestone]: true
               }));
 
-              const module = milestone.modules[moduleIndex];
+              const milestone = response.data.milestones[milestoneIndex];
+              const moduleIndex = milestone.modules.findIndex(
+                (m) => m.id === progress.nextModule
+              );
 
-              // Find the specific module item to resume from using nextModuleItem
-              if (module.moduleItems && module.moduleItems.length > 0) {
-                let resumeItemIndex = 0;
+              if (moduleIndex !== -1) {
+                setOpenModules((prev) => ({
+                  ...prev,
+                  [progress.nextModule]: true
+                }));
 
-                // If we have a nextModuleItem, find its index in the module items
-                if (progress.nextModuleItem) {
-                  const itemIndex = module.moduleItems.findIndex(
-                    (item) => item.id === progress.nextModuleItem
-                  );
+                const module = milestone.modules[moduleIndex];
 
-                  if (itemIndex !== -1) {
-                    resumeItemIndex = itemIndex;
+                if (module.moduleItems && module.moduleItems.length > 0) {
+                  let resumeItemIndex = 0;
+
+                  if (progress.nextModuleItem) {
+                    const itemIndex = module.moduleItems.findIndex(
+                      (item) => item.id === progress.nextModuleItem
+                    );
+
+                    if (itemIndex !== -1) {
+                      resumeItemIndex = itemIndex;
+                    }
                   }
+
+                  const resumeItem = module.moduleItems[resumeItemIndex];
+
+                  setSelectedItem({
+                    ...resumeItem,
+                    milestoneNumber: milestoneIndex + 1,
+                    moduleNumber: moduleIndex + 1,
+                    itemNumber: resumeItemIndex + 1
+                  });
                 }
-
-                const resumeItem = module.moduleItems[resumeItemIndex];
-
-                setSelectedItem({
-                  ...resumeItem,
-                  milestoneNumber: milestoneIndex + 1,
-                  moduleNumber: moduleIndex + 1,
-                  itemNumber: resumeItemIndex + 1
-                });
               }
             }
           }
         } else {
-          // If no progress data, start from the beginning
           initializeWithFirstItem(response.data);
         }
       }
@@ -131,7 +167,6 @@ export default function CoursePage() {
     }
   };
 
-  // Helper function to initialize with the first item
   const initializeWithFirstItem = (courseData) => {
     if (
       !courseData ||
@@ -206,7 +241,6 @@ export default function CoursePage() {
     setSelectedItem(itemWithNumbers);
   };
 
-  // Calculate total content count for course progress
   const calculateTotalContentCount = () => {
     if (!course) return 0;
 
@@ -220,7 +254,6 @@ export default function CoursePage() {
     return count;
   };
 
-  // Function to find the next content item
   const findNextContent = () => {
     if (!course || !selectedItem) return null;
 
@@ -250,7 +283,6 @@ export default function CoursePage() {
           const item = module.moduleItems[itemIdx];
           const itemNum = itemIdx + 1;
 
-          // Check if this is the current item
           if (
             selectedItem.id === item.id ||
             selectedItem.video?.id === item.video?.id ||
@@ -260,16 +292,9 @@ export default function CoursePage() {
 
             // Check if this is the last item in the module
             if (itemIdx === module.moduleItems.length - 1) {
-              // Mark that we need to complete this module
-              console.log('[CoursePage] Last item in module detected');
             }
-
-            // Move to the next item
             continue;
-          }
-
-          // If we already found the current item, this is the next one
-          else if (foundCurrent) {
+          } else if (foundCurrent) {
             nextItem = item;
             nextMilestoneNum = milestoneNum;
             nextModuleNum = moduleNum;
@@ -287,7 +312,6 @@ export default function CoursePage() {
       }
     }
 
-    // If we found the current but no next, we've reached the end of the course
     if (foundCurrent) {
       return {
         isEndOfCourse: true,
@@ -296,10 +320,9 @@ export default function CoursePage() {
       };
     }
 
-    return null; // No next item found (and current not found)
+    return null;
   };
 
-  // Function to check if the current item is the last one in its module
   const isLastItemInModule = () => {
     if (!course || !selectedItem) return false;
 
@@ -313,7 +336,6 @@ export default function CoursePage() {
     return selectedItem.itemNumber === currentModule.moduleItems.length;
   };
 
-  // Function to check if the current module is the last one in its milestone
   const isLastModuleInMilestone = () => {
     if (!course || !selectedItem) return false;
 
@@ -325,14 +347,12 @@ export default function CoursePage() {
     return selectedItem.moduleNumber === currentMilestone.modules.length;
   };
 
-  // Function to check if the current milestone is the last one in the course
   const isLastMilestoneInCourse = () => {
     if (!course || !selectedItem) return false;
 
     return selectedItem.milestoneNumber === course.milestones.length;
   };
 
-  // Function to handle progression through the course
   const handleCourseProgression = async () => {
     try {
       const currentMilestone =
@@ -343,46 +363,30 @@ export default function CoursePage() {
       const isLastItem = isLastItemInModule();
       const isLastModule = isLastModuleInMilestone();
       const isLastMilestone = isLastMilestoneInCourse();
-
-      console.log(
-        `[CoursePage] Progression: Last Item? ${isLastItem}, Last Module? ${isLastModule}, Last Milestone? ${isLastMilestone}`
-      );
-
-      // If this is the last item in the module, mark module as completed
       if (isLastItem) {
         await fetchData(updateModuleProgress, {
           moduleId: currentModule.id,
           isCompleted: true
         });
-        console.log(
-          `[CoursePage] Module ${currentModule.id} marked as completed`
-        );
 
-        // If this is also the last module in the milestone, mark milestone as completed
         if (isLastModule) {
           await fetchData(updateMilestoneProgress, {
             milestoneId: currentMilestone.id,
             isCompleted: true
           });
-          console.log(
-            `[CoursePage] Milestone ${currentMilestone.id} marked as completed`
-          );
 
-          // If this is also the last milestone in the course, mark course as completed
           if (isLastMilestone) {
             await fetchData(updateCourseProgress, {
               courseId,
               isCompleted: true,
               progress: calculateTotalContentCount()
             });
-            console.log(`[CoursePage] Course ${courseId} marked as completed`);
             setShowCompletionModal(true);
-            return true; // Return true to indicate course completion
+            return true;
           }
         }
       }
 
-      // Refresh the course progress data
       const progressResponse = await fetchData(getContinueCourse, {
         courseId
       });
@@ -391,7 +395,17 @@ export default function CoursePage() {
         const updatedProgress = progressResponse.data.progress;
         setCourseProgress(updatedProgress);
 
-        // Update resume data with new next milestone and module IDs
+        // If all progress values are null, that means everything is completed
+        if (
+          !updatedProgress.nextMilestone &&
+          !updatedProgress.nextModule &&
+          !updatedProgress.nextModuleItem
+        ) {
+          // Keep everything as is, with current content as last shown content
+          // All milestones and modules remain unlocked
+          return false;
+        }
+
         setResumeData({
           nextMilestoneId: updatedProgress.nextMilestone,
           nextModuleId: updatedProgress.nextModule,
@@ -399,17 +413,15 @@ export default function CoursePage() {
         });
       }
 
-      return false; // Return false to indicate course is not yet completed
+      return false;
     } catch (error) {
       console.error('[CoursePage] Error in handleCourseProgression:', error);
       return false;
     }
   };
 
-  // Function to handle marking as complete and navigating to the next content
   const handleMarkCompletedAndNext = async () => {
     try {
-      // Mark the current item as completed
       if (selectedItem.video) {
         await fetchData(updateVideoProgress, {
           videoId: selectedItem.video.id,
@@ -432,15 +444,12 @@ export default function CoursePage() {
         }
       }
 
-      // Handle course progression (marking modules/milestones/course as completed)
       const isCourseCompleted = await handleCourseProgression();
 
       if (isCourseCompleted) {
-        // Course is completed, modal will be shown by handleCourseProgression
         return;
       }
 
-      // Find the next content to navigate to
       const nextContent = findNextContent();
 
       if (!nextContent) {
@@ -448,31 +457,25 @@ export default function CoursePage() {
         return;
       }
 
-      // Handle end of course scenario
       if (nextContent.isEndOfCourse) {
         setShowCompletionModal(true);
         return;
       }
 
-      // Navigate to the next content
       if (nextContent.item) {
-        // Update module/milestone panels if needed
         const nextMilestone = course.milestones[nextContent.milestoneNum - 1];
         const nextModule = nextMilestone.modules[nextContent.moduleNum - 1];
 
-        // Ensure the milestone is open
         setOpenMilestones((prev) => ({
           ...prev,
           [nextMilestone.id]: true
         }));
 
-        // Ensure the module is open
         setOpenModules((prev) => ({
           ...prev,
           [nextModule.id]: true
         }));
 
-        // Select the next item
         handleItemSelect(
           nextContent.item,
           nextContent.milestoneNum,

@@ -7,6 +7,7 @@ import {
   updateNote,
   deleteNote
 } from '@/src/services/note';
+import AISummaryComponent from './AISummaryComponent';
 
 export default function NotesSection({ videoId }) {
   const [note, setNote] = useState('');
@@ -110,6 +111,17 @@ export default function NotesSection({ videoId }) {
     }
   };
 
+  const handleAISummary = (summaryText) => {
+    const currentNoteContent = savedNote?.note || '';
+    // If there's existing content, add the AI summary after it
+    const newNoteContent = currentNoteContent
+      ? `${currentNoteContent}\n\n${summaryText}`
+      : summaryText;
+
+    setNote(newNoteContent);
+    setIsEditing(true);
+  };
+
   const getSaveButtonClassName = () => {
     const isButtonEnabled = note.trim() && !isLoading;
     if (isButtonEnabled) {
@@ -133,26 +145,32 @@ export default function NotesSection({ videoId }) {
     <div className='mt-6 p-4 bg-gray-100 rounded-lg'>
       <div className='flex justify-between items-center'>
         <h2 className='text-lg font-semibold'>Note</h2>
-        {savedNote && !isEditing && (
-          <div className='flex gap-2'>
-            <button
-              onClick={() => setIsEditing(true)}
-              className='text-blue-500 hover:text-blue-700 transition'
-              title='Edit Note'
-              disabled={isLoading}
-            >
-              ✏️ Edit
-            </button>
-            <button
-              onClick={handleDeleteNote}
-              className='text-red-500 hover:text-red-700 transition'
-              title='Delete Note'
-              disabled={isLoading}
-            >
-              🗑️ Remove
-            </button>
-          </div>
-        )}
+        <div className='flex gap-2'>
+          <AISummaryComponent
+            videoId={videoId}
+            onSummaryGenerated={handleAISummary}
+          />
+          {savedNote && !isEditing && (
+            <>
+              <button
+                onClick={() => setIsEditing(true)}
+                className='text-blue-500 hover:text-blue-700 transition'
+                title='Edit Note'
+                disabled={isLoading}
+              >
+                ✏️ Edit
+              </button>
+              <button
+                onClick={handleDeleteNote}
+                className='text-red-500 hover:text-red-700 transition'
+                title='Delete Note'
+                disabled={isLoading}
+              >
+                🗑️ Remove
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {isLoading && (
