@@ -15,7 +15,7 @@ export default function AISummaryComponent({ videoId, onSummaryGenerated }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const { fetchData } = useApi();
-  const GEMINI_API_KEY = 'AIzaSyCH5PKIMfZNSdF360WZn7lJ2LM0FTW5BQc';
+  const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
