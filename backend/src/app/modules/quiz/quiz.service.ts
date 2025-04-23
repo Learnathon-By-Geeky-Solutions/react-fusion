@@ -88,7 +88,7 @@ const getQuiz = async (user: JwtPayload, quizId: string) => {
             }
         })
 
-        result.progress = quizProgress?.QuizProgress ?? null
+        result.progress = quizProgress ?? null
     }
 
     delete result.moduleItem.module
