@@ -50,7 +50,7 @@ const getVideo = async (user: JwtPayload, videoId: string) => {
 
         })
 
-        result.progress = videoProgress?.VideoProgress ?? null
+        result.progress = videoProgress ?? null
     }
     delete result.moduleItem.module
     return result
