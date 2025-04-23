@@ -25,7 +25,7 @@ export default function QuizSection(quizId) {
             response.data.progress !== undefined &&
             response.data.progress !== null
           ) {
-            setPreviousBestScore(response.data.progress.score);
+            setPreviousBestScore(response.data.progress.QuizProgress.score);
           }
 
           const initialAnswers = {};
@@ -82,7 +82,7 @@ export default function QuizSection(quizId) {
         try {
           await fetchData(updateQuizProgress, {
             quizId: quizId.quiz,
-            isCompleted: true,
+            isCompleted: false,
             score: response.data.marks
           });
         } catch (error) {

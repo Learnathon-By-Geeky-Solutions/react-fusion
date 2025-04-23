@@ -60,7 +60,7 @@ export default function CourseContent({
               onClick={handleMarkCompletedAndNext}
               className='bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded flex items-center'
             >
-              Continue to Next
+              Mark Completed and Next
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 className='h-5 w-5 ml-2'

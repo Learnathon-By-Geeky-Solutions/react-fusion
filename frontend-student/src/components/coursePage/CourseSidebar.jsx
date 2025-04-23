@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import MilestoneItem from './MilestoneItem';
+import { checkVideo } from '@/src/services/video';
+import { getQuiz } from '@/src/services/quiz';
+import useApi from '@/src/hooks/useApi';
 
 export default function CourseSidebar({
   course,
@@ -9,58 +12,148 @@ export default function CourseSidebar({
   openModules,
   toggleMilestone,
   toggleModule,
-  handleItemSelect
+  handleItemSelect,
+  resumeData
 }) {
-  return (
-    <div className='bg-gray-50 p-4 rounded-lg shadow-lg border border-gray-200 max-h-screen overflow-y-auto'>
-      <h2 className='text-xl font-bold mb-4 text-gray-800 flex items-center'>
-        <svg
-          className='w-5 h-5 mr-2 text-blue-500'
-          fill='currentColor'
-          viewBox='0 0 20 20'
-          xmlns='http://www.w3.org/2000/svg'
-        >
-          <path d='M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z'></path>
-        </svg>
-        Course Content
-      </h2>
+  const { fetchData } = useApi();
+  const [firstLockedItemId, setFirstLockedItemId] = useState(null);
+  const [unlockableItems, setUnlockableItems] = useState({});
 
-      <div className='space-y-3'>
-        {course.milestones.map((milestone, mIndex) => (
-          <MilestoneItem
-            key={milestone.id}
-            milestone={milestone}
-            mIndex={mIndex}
-            openMilestones={openMilestones}
-            openModules={openModules}
-            toggleMilestone={toggleMilestone}
-            toggleModule={toggleModule}
-            handleItemSelect={handleItemSelect}
-            selectedItem={selectedItem}
-          />
-        ))}
-      </div>
+  useEffect(() => {
+    // Only run this effect when resumeData changes
+    if (!resumeData.nextMilestoneId || !resumeData.nextModuleId) return;
+
+    const loadModuleProgress = async () => {
+      try {
+        // Find the milestone and module in the course data
+        const milestone = course?.milestones?.find(
+          (m) => m.id === resumeData.nextMilestoneId
+        );
+        if (!milestone) return;
+
+        const module = milestone?.modules?.find(
+          (m) => m.id === resumeData.nextModuleId
+        );
+        if (!module || !module.moduleItems || module.moduleItems.length === 0)
+          return;
+
+        // Get the first item's progress to determine where to start
+        const firstItem = module.moduleItems[0];
+
+        // Check progress only for the first item of the module
+        let firstItemProgress = null;
+
+        if (firstItem.video) {
+          const videoData = await fetchData(checkVideo, {
+            videoId: firstItem.video.id
+          });
+          firstItemProgress = videoData?.data?.progress;
+        } else if (firstItem.quiz) {
+          const quizData = await fetchData(getQuiz, {
+            quizId: firstItem.quiz.id
+          });
+          firstItemProgress = quizData?.data?.progress;
+        }
+
+        // Build a map of unlockable items
+        // If firstItemProgress is null, it's the first unlocked item
+        const unlockable = {};
+        let foundFirstLocked = false;
+
+        // First item logic
+        if (firstItemProgress === null) {
+          setFirstLockedItemId(firstItem.id);
+          unlockable[firstItem.id] = true; // First locked item is unlockable
+          foundFirstLocked = true;
+        } else {
+          // First item is completed, we need to check forward
+          let foundIncompleteItem = false;
+
+          // Map items to be unlockable until we find the first locked item
+          for (let i = 0; i < module.moduleItems.length; i++) {
+            const item = module.moduleItems[i];
+
+            // If we haven't found an incomplete item yet, this item is unlockable
+            if (!foundIncompleteItem) {
+              unlockable[item.id] = true;
+            }
+
+            // If this is the FIRST incomplete item, we need to mark it as first locked but unlockable
+            if (!foundFirstLocked && i > 0) {
+              // We need to check the progress of this item
+              let itemProgress = null;
+
+              if (item.video) {
+                const videoData = await fetchData(checkVideo, {
+                  videoId: item.video.id
+                });
+                itemProgress = videoData?.data?.progress;
+              } else if (item.quiz) {
+                const quizData = await fetchData(getQuiz, {
+                  quizId: item.quiz.id
+                });
+                itemProgress = quizData?.data?.progress;
+              }
+
+              if (itemProgress === null) {
+                setFirstLockedItemId(item.id);
+                unlockable[item.id] = true;
+                foundFirstLocked = true;
+                foundIncompleteItem = true;
+              }
+            }
+          }
+        }
+
+        setUnlockableItems(unlockable);
+      } catch (error) {
+        console.error('Error loading module progress:', error);
+      }
+    };
+
+    loadModuleProgress();
+  }, [resumeData, course]);
+
+  return (
+    <div className='bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 overflow-auto max-h-[calc(100vh-180px)]'>
+      <h2 className='text-lg font-semibold mb-4'>Course Content</h2>
+
+      {course.milestones.map((milestone, index) => (
+        <MilestoneItem
+          key={milestone.id}
+          milestone={milestone}
+          mIndex={index}
+          openMilestones={openMilestones}
+          openModules={openModules}
+          toggleMilestone={toggleMilestone}
+          toggleModule={toggleModule}
+          handleItemSelect={handleItemSelect}
+          selectedItem={selectedItem}
+          firstLockedItemId={firstLockedItemId}
+          currentMilestoneId={resumeData.nextMilestoneId}
+          currentModuleId={resumeData.nextModuleId}
+          unlockableItems={unlockableItems}
+        />
+      ))}
     </div>
   );
 }
 
 CourseSidebar.propTypes = {
   course: PropTypes.shape({
-    milestones: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-          .isRequired,
-        title: PropTypes.string,
-        modules: PropTypes.array
-      })
-    ).isRequired
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    title: PropTypes.string.isRequired,
+    milestones: PropTypes.arrayOf(PropTypes.object).isRequired
   }).isRequired,
-  selectedItem: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  }),
+  selectedItem: PropTypes.object,
   openMilestones: PropTypes.object.isRequired,
   openModules: PropTypes.object.isRequired,
   toggleMilestone: PropTypes.func.isRequired,
   toggleModule: PropTypes.func.isRequired,
-  handleItemSelect: PropTypes.func.isRequired
+  handleItemSelect: PropTypes.func.isRequired,
+  resumeData: PropTypes.shape({
+    nextMilestoneId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    nextModuleId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    firstLockedItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  })
 };

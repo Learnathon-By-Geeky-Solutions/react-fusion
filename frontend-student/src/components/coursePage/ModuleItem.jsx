@@ -9,10 +9,13 @@ export default function ModuleItem({
   openModules,
   toggleModule,
   handleItemSelect,
-  selectedItem
+  selectedItem,
+  firstLockedItemId,
+  isCurrentMilestone,
+  isCurrentModule,
+  unlockableItems
 }) {
   const isOpen = openModules[module.id];
-
   let quizCount = 0;
 
   return (
@@ -60,6 +63,26 @@ export default function ModuleItem({
             quizCount++;
           }
 
+          // Determine if the item should be unlocked
+          // It's unlocked if:
+          // 1. It's in a previous milestone compared to current milestone
+          // 2. It's in a previous module within the current milestone
+          // 3. It's in the current module and in the unlockableItems list
+
+          const isPreviousMilestone =
+            !isCurrentMilestone &&
+            mIndex < parseInt(selectedItem?.milestoneNumber || 0) - 1;
+          const isPreviousModule =
+            isCurrentMilestone &&
+            !isCurrentModule &&
+            modIndex < parseInt(selectedItem?.moduleNumber || 0) - 1;
+          const isUnlockableItem =
+            isCurrentModule && unlockableItems && unlockableItems[item.id];
+
+          const isUnlocked =
+            isPreviousMilestone || isPreviousModule || isUnlockableItem;
+          const isFirstLocked = item.id === firstLockedItemId;
+
           return (
             <ContentItem
               key={item.id}
@@ -71,6 +94,8 @@ export default function ModuleItem({
               indexPath={`${mIndex + 1}.${modIndex + 1}.${itemIndex + 1}`}
               itemNumber={itemIndex + 1}
               quizNumber={item.quiz ? quizCount : undefined}
+              isFirstLockedItem={isFirstLocked}
+              isLocked={!isUnlocked && !isFirstLocked}
             />
           );
         })}
@@ -97,5 +122,9 @@ ModuleItem.propTypes = {
   openModules: PropTypes.object.isRequired,
   toggleModule: PropTypes.func.isRequired,
   handleItemSelect: PropTypes.func.isRequired,
-  selectedItem: PropTypes.object
+  selectedItem: PropTypes.object,
+  firstLockedItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  isCurrentMilestone: PropTypes.bool,
+  isCurrentModule: PropTypes.bool,
+  unlockableItems: PropTypes.object
 };

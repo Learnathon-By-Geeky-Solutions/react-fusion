@@ -10,9 +10,14 @@ export default function MilestoneItem({
   toggleMilestone,
   toggleModule,
   handleItemSelect,
-  selectedItem
+  selectedItem,
+  firstLockedItemId,
+  currentMilestoneId,
+  currentModuleId,
+  unlockableItems
 }) {
   const isOpen = openMilestones[milestone.id];
+  const isCurrentMilestone = milestone.id === currentMilestoneId;
 
   return (
     <div className='mb-3'>
@@ -62,6 +67,10 @@ export default function MilestoneItem({
             toggleModule={toggleModule}
             handleItemSelect={handleItemSelect}
             selectedItem={selectedItem}
+            firstLockedItemId={firstLockedItemId}
+            isCurrentMilestone={isCurrentMilestone}
+            isCurrentModule={module.id === currentModuleId}
+            unlockableItems={unlockableItems}
           />
         ))}
       </div>
@@ -88,5 +97,9 @@ MilestoneItem.propTypes = {
   toggleMilestone: PropTypes.func.isRequired,
   toggleModule: PropTypes.func.isRequired,
   handleItemSelect: PropTypes.func.isRequired,
-  selectedItem: PropTypes.object
+  selectedItem: PropTypes.object,
+  firstLockedItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  currentMilestoneId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  currentModuleId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  unlockableItems: PropTypes.object
 };

@@ -1,7 +1,6 @@
 import { BACKEND } from '../constants';
 
 export async function checkQuiz(params) {
-  console.log('Checking quiz with payload:', params);
   try {
     const result = await fetch(`${BACKEND}/quiz/check/${params.data.quizId}`, {
       method: 'POST',
@@ -13,7 +12,6 @@ export async function checkQuiz(params) {
     });
 
     const data = await result.json();
-    console.log('Check quiz result:', data);
     return data;
   } catch (error) {
     console.error('Error checking quiz:', error);
@@ -22,7 +20,6 @@ export async function checkQuiz(params) {
 }
 
 export async function getQuiz(params) {
-  console.log('Getting quiz with payload:', params);
   try {
     const result = await fetch(`${BACKEND}/quiz/${params.data.quizId}`, {
       method: 'GET',
@@ -32,7 +29,7 @@ export async function getQuiz(params) {
     });
 
     const data = await result.json();
-    console.log('Get quiz result:', data);
+    console.log('Quiz data:', data);
     return data;
   } catch (error) {
     console.error('Error fetching quiz data:', error);
