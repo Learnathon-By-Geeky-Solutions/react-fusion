@@ -21,7 +21,7 @@ export default function VideoSection({ videoId, title }) {
     async function fetchVideoData() {
       try {
         const response = await fetchData(checkVideo, { videoId });
-        console.log('Video data response:', response);
+        // console.log('Video data response:', response);
         if (response.success) {
           setVideoData(response.data);
 
@@ -94,7 +94,7 @@ export default function VideoSection({ videoId, title }) {
   const handleVideoEnded = () => {
     setIsPlaying(false);
     if (videoDuration > 0) {
-      updateProgress(videoDuration, true);
+      updateProgress(videoDuration, false);
       try {
         const response_update = fetchData(checkVideo, { videoId });
         if (response_update.data.progress != null) {

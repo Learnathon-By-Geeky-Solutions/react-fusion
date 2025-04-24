@@ -31,7 +31,7 @@ export default function RecentCourseActivity({ courses }) {
                 key={index}
                 className='border-b border-gray-100 pb-4 last:border-0 last:pb-0'
               >
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center text-left'>
                   <div>
                     <h4 className='font-medium text-gray-800'>
                       {courseTitle || 'Untitled Course'}

@@ -47,6 +47,7 @@ export async function getEnrolledCourses(payload) {
 }
 
 export async function buyCourse(payload) {
+  console.log('buyCourse', payload);
   try {
     const result = await fetch(`${BACKEND}/transaction/buy-course`, {
       method: 'POST',
@@ -58,6 +59,7 @@ export async function buyCourse(payload) {
     });
 
     const data = await result.json();
+    console.log('buyCourse response', data);
     return data;
   } catch (error) {
     console.error('Error buying course:', error);

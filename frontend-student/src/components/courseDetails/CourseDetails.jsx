@@ -22,7 +22,7 @@ export default function CourseDetails() {
     async function fetchCourse() {
       try {
         const response = await fetchData(getSingleCourse, { courseId: id });
-
+        console.log('Response', response);
         if (response.success) {
           setCourse(response.data);
         }
@@ -42,18 +42,14 @@ export default function CourseDetails() {
     try {
       const txnId = nanoid(16);
       const token = localStorage.getItem('token');
-
       if (!token) {
         toast.error('Please login to purchase this course', {
-          duration: 3000,
-          action: {
-            text: 'Login',
-            onClick: () => {
-              navigate('/login');
-              setPurchasing(false);
-            }
-          }
+          duration: 3000
         });
+
+        navigate('/login');
+        setPurchasing(false);
+
         return;
       }
 
@@ -66,23 +62,13 @@ export default function CourseDetails() {
 
       if (response.success) {
         toast.success('Course purchased successfully!', {
-          duration: 3000,
-          action: {
-            text: 'View Course',
-            onClick: () => {
-              navigate(`/enrolled/${id}`);
-            }
-          }
+          duration: 3000
         });
+
+        navigate(`/enrolled/${id}`);
       } else {
         toast.error('Failed to purchase course. Please try again.', {
-          duration: 3000,
-          action: {
-            text: 'Retry',
-            onClick: () => {
-              handleBuyCourse();
-            }
-          }
+          duration: 3000
         });
       }
     } catch (error) {

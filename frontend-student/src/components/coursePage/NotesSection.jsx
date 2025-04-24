@@ -207,7 +207,7 @@ export default function NotesSection({ videoId }) {
         </>
       ) : (
         !isLoading && (
-          <div className='mt-2 p-3 bg-white rounded-lg min-h-[100px] whitespace-pre-wrap text-left'>
+          <div className='mt-2 p-4 bg-white rounded-lg min-h-[100px] whitespace-pre-wrap text-justify'>
             {savedNote?.note || 'No notes yet.'}
           </div>
         )
