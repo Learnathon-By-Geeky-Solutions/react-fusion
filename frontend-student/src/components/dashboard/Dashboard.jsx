@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
-import { getDashboard } from '@/src/services/dashboard';
+import { getDashboard, getSingleCourse } from '@/src/services/dashboard';
 import { profile } from '@/src/services/profile';
 import DashboardSummary from './DashboardSummary';
 import ProgressStats from './ProgressStats';
 import ProgressCharts from './ProgressCharts';
 import RecentCourseActivity from './RecentCourseActivity';
-// import LoadingSpinner from '@/src/components/ui/LoadingSpinner';
 
 function LoadingSpinner({ message = 'Loading...' }) {
   return (
@@ -22,7 +21,7 @@ function LoadingSpinner({ message = 'Loading...' }) {
 
 export default function Dashboard() {
   const [courses, setCourses] = useState([]);
-  const [analytics, setAnalytics] = useState([]);
+  const [detailedCourses, setDetailedCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [overallProgress, setOverallProgress] = useState(0);
   const [profileData, setProfileData] = useState(null);
@@ -36,7 +35,9 @@ export default function Dashboard() {
     totalModules: 0,
     completedModules: 0,
     totalMilestones: 0,
-    completedMilestones: 0
+    completedMilestones: 0,
+    totalScore: 0,
+    userScore: 0
   });
   const { fetchData } = useApi();
   const fetchInitiated = useRef(false);
@@ -56,35 +57,41 @@ export default function Dashboard() {
           setProfileData(profileResponse.data);
         }
 
-        // Fetch dashboard data
+        // Fetch enrolled courses from dashboard
         const dashboardResponse = await fetchData(getDashboard, {});
+        console.log('Dashboard Response:', dashboardResponse);
 
         if (dashboardResponse.success) {
           const enrolledCourses =
             dashboardResponse?.data?.enrolledCourses || [];
           setCourses(enrolledCourses);
-          setAnalytics(enrolledCourses);
 
-          // Calculate overall progress based on modules
-          const totalModules = enrolledCourses.reduce(
-            (sum, course) => sum + (course.summary?.totalModules || 0),
-            0
+          // Fetch detailed data for each course
+
+          const detailedCoursesPromises = enrolledCourses.map((course) =>
+            fetchData(getSingleCourse, { data: course.courseId })
           );
 
-          const completedModules = enrolledCourses.reduce(
-            (sum, course) => sum + (course.summary?.completedModules || 0),
-            0
+          const detailedCoursesResults = await Promise.all(
+            detailedCoursesPromises
+          );
+          console.log('Detailed Courses Results:', detailedCoursesResults);
+
+          const detailedCoursesData = detailedCoursesResults
+            .filter((response) => response.success)
+            .map((response) => response.data);
+
+          setDetailedCourses(detailedCoursesData);
+          console.log(
+            'Detailed Courses Data after filtering success:',
+            detailedCoursesData
           );
 
-          const progress =
-            totalModules > 0 ? (completedModules / totalModules) * 100 : 0;
+          // Calculate statistics across all courses
+          const stats = detailedCoursesData.reduce(
+            (acc, courseData) => {
+              const summary = courseData.summary || {};
 
-          setOverallProgress(progress);
-
-          // Calculate total stats
-          const stats = enrolledCourses.reduce(
-            (acc, course) => {
-              const summary = course.summary || {};
               return {
                 totalVideos: acc.totalVideos + (summary.totalVideos || 0),
                 completedVideos:
@@ -101,7 +108,9 @@ export default function Dashboard() {
                 totalMilestones:
                   acc.totalMilestones + (summary.totalMilestones || 0),
                 completedMilestones:
-                  acc.completedMilestones + (summary.completedMilestones || 0)
+                  acc.completedMilestones + (summary.completedMilestones || 0),
+                totalScore: acc.totalScore + (summary.totalScore || 0),
+                userScore: acc.userScore + (summary.userScore || 0)
               };
             },
             {
@@ -114,11 +123,21 @@ export default function Dashboard() {
               totalModules: 0,
               completedModules: 0,
               totalMilestones: 0,
-              completedMilestones: 0
+              completedMilestones: 0,
+              totalScore: 0,
+              userScore: 0
             }
           );
 
           setTotalStats(stats);
+
+          // Calculate overall progress
+          const progress =
+            stats.totalModules > 0
+              ? (stats.completedModules / stats.totalModules) * 100
+              : 0;
+
+          setOverallProgress(progress);
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -158,7 +177,10 @@ export default function Dashboard() {
 
         {/* Recent Course Activity */}
         <RecentCourseActivity
-          courses={analytics}
+          courses={detailedCourses.map((courseData) => ({
+            ...courseData.course,
+            courseData: courseData
+          }))}
           onViewDetails={(courseId) => navigate(`/analytics/${courseId}`)}
         />
       </div>

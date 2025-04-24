@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { calculatePercentage, formatTime } from '@/src/utils/formatters';
 
 export default function RecentCourseActivity({ courses, onViewDetails }) {
   const navigate = useNavigate();
+  useEffect(() => {
+    console.log('Courses:', courses);
+    console.log('OnViewDetails:', onViewDetails);
+  }, [courses]);
 
   return (
     <div className='bg-white rounded-xl shadow-md p-6'>
@@ -13,16 +18,19 @@ export default function RecentCourseActivity({ courses, onViewDetails }) {
       {courses.length > 0 ? (
         <div className='space-y-4'>
           {courses.slice(0, 3).map((course, index) => {
-            // Calculate progress based on modules
-            const moduleProgress =
-              course.summary?.totalModules > 0
-                ? Math.round(
-                    (course.summary.completedModules /
-                      course.summary.totalModules) *
-                      100
-                  )
-                : 0;
-
+            console.log('Course:', course);
+            const courseTitle = course.courseData.courseProgress.course.title;
+            const courseId = course.courseData.courseProgress.course.id;
+            const summary = course.courseData?.summary;
+            const totalContents =
+              (summary?.totalQuizzes || 0) + (summary?.totalVideos || 0);
+            const completedContents =
+              (summary?.completedQuizzes || 0) +
+              (summary?.completedVideos || 0);
+            const displayProgress = calculatePercentage(
+              completedContents,
+              totalContents
+            );
             return (
               <div
                 key={index}
@@ -31,20 +39,20 @@ export default function RecentCourseActivity({ courses, onViewDetails }) {
                 <div className='flex justify-between items-center'>
                   <div>
                     <h4 className='font-medium text-gray-800'>
-                      {course.courseTitle || 'Untitled Course'}
+                      {courseTitle || 'Untitled Course'}
                     </h4>
                     <p className='text-sm text-gray-500 mt-1 text-left'>
-                      {course.summary?.completedModules || 0} of{' '}
-                      {course.summary?.totalModules || 0} modules completed
+                      {completedContents || 0} of {totalContents || 0} contents
+                      completed
                     </p>
                   </div>
                   <div className='flex items-center space-x-4'>
                     <div className='flex items-center'>
                       <Activity className='h-5 w-5 text-blue-500 mr-2' />
-                      <span className='font-bold'>{moduleProgress}%</span>
+                      <span className='font-bold'>{displayProgress}%</span>
                     </div>
                     <button
-                      onClick={() => onViewDetails(course.courseId)}
+                      onClick={() => navigate(`/analytics/${courseId}`)}
                       className='text-blue-600 hover:text-blue-800 text-sm font-medium'
                     >
                       Details
@@ -54,7 +62,7 @@ export default function RecentCourseActivity({ courses, onViewDetails }) {
                 <div className='mt-2 w-full bg-gray-200 rounded-full h-2'>
                   <div
                     className='bg-blue-500 h-2 rounded-full'
-                    style={{ width: `${moduleProgress}%` }}
+                    style={{ width: `${displayProgress}%` }}
                   ></div>
                 </div>
               </div>

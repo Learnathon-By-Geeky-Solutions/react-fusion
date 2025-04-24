@@ -19,14 +19,18 @@ export async function getDashboard(payload) {
 }
 
 export async function getSingleCourse(payload) {
+  console.log('Fetching single course data for:', payload);
   try {
-    const result = await fetch(`${BACKEND}/analytics/student/${payload.data}`, {
-      method: 'GET',
-      headers: {
-        Authorization: payload.user.token,
-        'Content-Type': 'application/json'
+    const result = await fetch(
+      `${BACKEND}/analytics/student/${payload.data.data}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: payload.user.token,
+          'Content-Type': 'application/json'
+        }
       }
-    });
+    );
 
     const data = await result.json();
     return data;

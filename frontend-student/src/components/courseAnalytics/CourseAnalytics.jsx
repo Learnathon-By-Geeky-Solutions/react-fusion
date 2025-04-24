@@ -34,11 +34,12 @@ export default function CourseAnalytics() {
 
   useEffect(() => {
     if (!courseId) return;
+    console.log('Course ID:', courseId);
 
     async function fetchCourseData() {
       try {
         setIsLoading(true);
-        const response = await fetchData(getSingleCourse, courseId);
+        const response = await fetchData(getSingleCourse, { data: courseId });
 
         if (response.success) {
           setCourseData(response.data);
