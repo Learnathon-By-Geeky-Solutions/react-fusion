@@ -65,7 +65,7 @@ export default function VideoSection({ videoId, title }) {
           const timeWatched = Math.floor(playerRef.current.getCurrentTime());
           setCurrentTime(timeWatched);
 
-          if (timeWatched % 10 === 0 && timeWatched > 0) {
+          if (timeWatched % 60 === 0 && timeWatched > 0) {
             updateProgress(timeWatched, completed);
           }
         }
