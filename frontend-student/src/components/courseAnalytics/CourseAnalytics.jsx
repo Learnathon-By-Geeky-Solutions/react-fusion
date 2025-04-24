@@ -34,12 +34,12 @@ export default function CourseAnalytics() {
 
   useEffect(() => {
     if (!courseId) return;
-    console.log('Course ID:', courseId);
 
     async function fetchCourseData() {
       try {
         setIsLoading(true);
         const response = await fetchData(getSingleCourse, { data: courseId });
+        console.log('Course Data:', response);
 
         if (response.success) {
           setCourseData(response.data);
@@ -330,46 +330,10 @@ export default function CourseAnalytics() {
             </div>
           </div>
 
-          {/* Module Progress */}
+          {/* Content Progress (replacing Module Progress) */}
           <div className='bg-white rounded-xl shadow-md p-6'>
             <h3 className='text-lg font-medium text-gray-700 mb-4'>
-              Module Progress
-            </h3>
-            <div className='space-y-4'>
-              {courseProgress?.ModuleProgress?.length > 0 ? (
-                courseProgress.ModuleProgress.map((module, index) => (
-                  <div key={index} className='mb-3'>
-                    <div className='flex justify-between items-center mb-1'>
-                      <p className='text-sm font-medium text-gray-700'>
-                        Module {index + 1}: {module.title || 'Untitled Module'}
-                      </p>
-                      <span className='text-sm font-bold text-gray-700'>
-                        {module.isCompleted ? '100%' : '0%'}
-                      </span>
-                    </div>
-                    <div className='w-full bg-gray-200 rounded-full h-2'>
-                      <div
-                        className='bg-blue-500 h-2 rounded-full'
-                        style={{ width: module.isCompleted ? '100%' : '0%' }}
-                      ></div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className='text-gray-500 text-center py-4'>
-                  No module progress data available.
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Metrics */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
-          {/* Content Completion */}
-          <div className='bg-white rounded-xl shadow-md p-6'>
-            <h3 className='text-lg font-medium text-gray-700 mb-4'>
-              Content Completion
+              Content Progress
             </h3>
             <div className='space-y-4'>
               <div className='flex items-center justify-between pb-2 border-b border-gray-100'>
@@ -428,8 +392,61 @@ export default function CourseAnalytics() {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Quiz Performance */}
+        {/* Additional Metrics */}
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+          {/* Video Watch Time (replacing Content Completion) */}
+          <div className='bg-white rounded-xl shadow-md p-6'>
+            <h3 className='text-lg font-medium text-gray-700 mb-4'>
+              Video Watch Time
+            </h3>
+            <div className='flex flex-col items-center justify-center h-full'>
+              <div className='relative h-40 w-40 mb-4'>
+                <div className='absolute inset-0 flex items-center justify-center'>
+                  <span className='text-4xl font-bold text-green-600'>
+                    {watchTimePercentage}%
+                  </span>
+                </div>
+                <ResponsiveContainer width='100%' height='100%'>
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { value: summary?.userWatchTime || 0 },
+                        {
+                          value:
+                            (summary?.totalWatchTime || 0) -
+                            (summary?.userWatchTime || 0)
+                        }
+                      ]}
+                      cx='50%'
+                      cy='50%'
+                      innerRadius={50}
+                      outerRadius={70}
+                      startAngle={90}
+                      endAngle={-270}
+                      dataKey='value'
+                    >
+                      <Cell fill='#4ade80' />
+                      <Cell fill='#e2e8f0' />
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <p className='text-center text-gray-600'>
+                You've watched {formatTime(summary?.userWatchTime || 0)} out of{' '}
+                {formatTime(summary?.totalWatchTime || 0)} total videos
+              </p>
+              {watchTimePercentage >= 80 && (
+                <div className='mt-3 text-green-600 flex items-center'>
+                  <Clock className='h-5 w-5 mr-1' />
+                  <span>Great progress!</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Quiz Performance (kept the same) */}
           <div className='bg-white rounded-xl shadow-md p-6'>
             <h3 className='text-lg font-medium text-gray-700 mb-4'>
               Quiz Performance

@@ -1,14 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { calculatePercentage, formatTime } from '@/src/utils/formatters';
+import { calculatePercentage } from '@/src/utils/formatters';
 
-export default function RecentCourseActivity({ courses, onViewDetails }) {
+export default function RecentCourseActivity({ courses }) {
   const navigate = useNavigate();
-  useEffect(() => {
-    console.log('Courses:', courses);
-    console.log('OnViewDetails:', onViewDetails);
-  }, [courses]);
 
   return (
     <div className='bg-white rounded-xl shadow-md p-6'>
@@ -18,7 +14,6 @@ export default function RecentCourseActivity({ courses, onViewDetails }) {
       {courses.length > 0 ? (
         <div className='space-y-4'>
           {courses.slice(0, 3).map((course, index) => {
-            console.log('Course:', course);
             const courseTitle = course.courseData.courseProgress.course.title;
             const courseId = course.courseData.courseProgress.course.id;
             const summary = course.courseData?.summary;

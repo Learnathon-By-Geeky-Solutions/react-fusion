@@ -59,7 +59,6 @@ export default function Dashboard() {
 
         // Fetch enrolled courses from dashboard
         const dashboardResponse = await fetchData(getDashboard, {});
-        console.log('Dashboard Response:', dashboardResponse);
 
         if (dashboardResponse.success) {
           const enrolledCourses =
@@ -75,17 +74,12 @@ export default function Dashboard() {
           const detailedCoursesResults = await Promise.all(
             detailedCoursesPromises
           );
-          console.log('Detailed Courses Results:', detailedCoursesResults);
 
           const detailedCoursesData = detailedCoursesResults
             .filter((response) => response.success)
             .map((response) => response.data);
 
           setDetailedCourses(detailedCoursesData);
-          console.log(
-            'Detailed Courses Data after filtering success:',
-            detailedCoursesData
-          );
 
           // Calculate statistics across all courses
           const stats = detailedCoursesData.reduce(
@@ -181,7 +175,6 @@ export default function Dashboard() {
             ...courseData.course,
             courseData: courseData
           }))}
-          onViewDetails={(courseId) => navigate(`/analytics/${courseId}`)}
         />
       </div>
     </div>
