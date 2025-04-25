@@ -12,7 +12,6 @@ const checkPreviousItemCompletion = async (moduleId: string, order: number, prog
 				moduleId: moduleId,
 				order: order - 1
 			}
-			,
 		}
 	})
 
