@@ -99,6 +99,21 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 		}
 
 	})
+	const lastItem = await prisma.moduleItem.findFirst({
+		where: {
+			moduleId: video?.moduleItem?.moduleId
+		},
+		orderBy: { order: 'desc' }
+	})
+
+	if (video?.moduleItem?.order === lastItem?.order) {
+		const updatedModule = await updateModule(user, {
+			moduleId: video?.moduleItem?.moduleId ?? "",
+			isCompleted: true,
+
+		})
+	}
+
 	return result
 }
 
@@ -171,11 +186,27 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		}
 
 	})
+
+	const lastItem = await prisma.moduleItem.findFirst({
+		where: {
+			moduleId: quiz?.moduleItem?.moduleId
+		},
+		orderBy: { order: 'desc' }
+	})
+
+	if (quiz?.moduleItem?.order === lastItem?.order) {
+		console.log('🚀 lastItem  : true')
+		const updatedModule = await updateModule(user, {
+			moduleId: quiz?.moduleItem?.moduleId ?? "",
+			isCompleted: true,
+		})
+	}
 	return result
 }
 
 
 const updateModule = async (user: JwtPayload, payload: IModuleUpdate) => {
+	console.log('🚀 updatemodule called: true')
 	const module = await prisma.module.findUnique({
 		where: {
 			id: payload.moduleId
