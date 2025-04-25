@@ -12,7 +12,6 @@ const checkPreviousItemCompletion = async (moduleId: string, order: number, prog
 				moduleId: moduleId,
 				order: order - 1
 			}
-			,
 		}
 	})
 
@@ -99,6 +98,21 @@ const updateVideo = async (user: JwtPayload, payload: IVideoUpdate) => {
 		}
 
 	})
+	const lastItem = await prisma.moduleItem.findFirst({
+		where: {
+			moduleId: video?.moduleItem?.moduleId
+		},
+		orderBy: { order: 'desc' }
+	})
+
+	if (video?.moduleItem?.order === lastItem?.order) {
+		await updateModule(user, {
+			moduleId: video?.moduleItem?.moduleId ?? "",
+			isCompleted: true,
+
+		})
+	}
+
 	return result
 }
 
@@ -171,6 +185,20 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 		}
 
 	})
+
+	const lastItem = await prisma.moduleItem.findFirst({
+		where: {
+			moduleId: quiz?.moduleItem?.moduleId
+		},
+		orderBy: { order: 'desc' }
+	})
+
+	if (quiz?.moduleItem?.order === lastItem?.order) {
+		await updateModule(user, {
+			moduleId: quiz?.moduleItem?.moduleId ?? "",
+			isCompleted: true,
+		})
+	}
 	return result
 }
 
@@ -238,6 +266,19 @@ const updateModule = async (user: JwtPayload, payload: IModuleUpdate) => {
 		}
 	})
 
+	const lastItem = await prisma.module.findFirst({
+		where: {
+			milestoneId: module?.milestoneId
+		},
+		orderBy: { order: "desc" }
+	})
+	if (lastItem?.order === module?.order) {
+		await updateMilestone(user, {
+			milestoneId: module?.milestoneId ?? "",
+			isCompleted: true
+		})
+	}
+
 	return result
 }
 
@@ -300,6 +341,21 @@ const updateMilestone = async (user: JwtPayload, payload: IMilestoneUpdate) => {
 			isCompleted: payload.isCompleted,
 		}
 	})
+
+	const lastMilestone = await prisma.milestone.findFirst({
+		where: {
+			courseId: milestone?.courseId
+		},
+		orderBy: { order: "desc" }
+	})
+
+	if (lastMilestone?.order == milestone?.order) {
+		await updateCourse(user, {
+			courseId: milestone?.courseId ?? "",
+			isCompleted: true,
+			progress: 100
+		})
+	}
 	return result
 }
 
