@@ -49,10 +49,11 @@ export default function CoursePage() {
         const continueResponse = await fetchData(getContinueCourse, {
           courseId
         });
-        // console.log('Continue Response:', continueResponse);
+        console.log('Continue Response:', continueResponse);
 
         if (continueResponse.success && continueResponse.data) {
           const progress = continueResponse.data.progress;
+
           setCourseProgress(progress);
 
           // Handle case where all modules are completed (nextMilestone, nextModule, nextContent all null)
@@ -238,74 +239,6 @@ export default function CoursePage() {
     setSelectedItem(itemWithNumbers);
   };
 
-  const findNextContent = () => {
-    if (!course || !selectedItem) return null;
-
-    let foundCurrent = false;
-    let nextItem = null;
-    let nextMilestoneNum, nextModuleNum, nextItemNum;
-    let currentMilestoneId, currentModuleId;
-
-    // Find current milestone and module
-    const currentMilestone =
-      course.milestones[selectedItem.milestoneNumber - 1];
-    const currentModule =
-      currentMilestone?.modules[selectedItem.moduleNumber - 1];
-
-    currentMilestoneId = currentMilestone?.id;
-    currentModuleId = currentModule?.id;
-
-    for (let mIdx = 0; mIdx < course.milestones.length; mIdx++) {
-      const milestone = course.milestones[mIdx];
-      const milestoneNum = mIdx + 1;
-
-      for (let modIdx = 0; modIdx < milestone.modules.length; modIdx++) {
-        const module = milestone.modules[modIdx];
-        const moduleNum = modIdx + 1;
-
-        for (let itemIdx = 0; itemIdx < module.moduleItems.length; itemIdx++) {
-          const item = module.moduleItems[itemIdx];
-          const itemNum = itemIdx + 1;
-
-          if (
-            selectedItem.id === item.id ||
-            selectedItem.video?.id === item.video?.id ||
-            (selectedItem.quiz?.id && selectedItem.quiz?.id === item.quiz?.id)
-          ) {
-            foundCurrent = true;
-
-            if (itemIdx === module.moduleItems.length - 1) {
-            }
-            continue;
-          } else if (foundCurrent) {
-            nextItem = item;
-            nextMilestoneNum = milestoneNum;
-            nextModuleNum = moduleNum;
-            nextItemNum = itemNum;
-            return {
-              item: nextItem,
-              milestoneNum: nextMilestoneNum,
-              moduleNum: nextModuleNum,
-              itemNum: nextItemNum,
-              currentMilestoneId,
-              currentModuleId
-            };
-          }
-        }
-      }
-    }
-
-    if (foundCurrent) {
-      return {
-        isEndOfCourse: true,
-        currentMilestoneId,
-        currentModuleId
-      };
-    }
-
-    return null;
-  };
-
   const handleMarkCompletedAndNext = async () => {
     try {
       if (selectedItem.video) {
@@ -330,77 +263,7 @@ export default function CoursePage() {
         }
       }
 
-      let progressResponse = await fetchData(getContinueCourse, {
-        courseId
-      });
-      let updatedProgress = progressResponse.data.progress;
-
-      while (updatedProgress.nextModuleItem == null) {
-        if (updatedProgress.nextMilestone == null) {
-          const data = await fetchData(updateCourseProgress, {
-            courseId,
-            isCompleted: true,
-            progress: 1
-          });
-          setShowCompletionModal(true);
-          break;
-        } else if (updatedProgress.nextModule == null) {
-          const data = await fetchData(updateMilestoneProgress, {
-            milestoneId: updatedProgress.nextMilestone,
-            isCompleted: true
-          });
-        } else {
-          const data = await fetchData(updateModuleProgress, {
-            moduleId: updatedProgress.nextModule,
-            isCompleted: true
-          });
-        }
-        progressResponse = await fetchData(getContinueCourse, {
-          courseId
-        });
-        updatedProgress = progressResponse.data.progress;
-        console.log('Updated Progress:', updatedProgress);
-      }
-
-      setResumeData({
-        nextMilestoneId: updatedProgress.nextMilestone,
-        nextModuleId: updatedProgress.nextModule,
-        nextModuleItem: updatedProgress.nextModuleItem
-      });
-
-      const nextContent = findNextContent();
-
-      if (!nextContent) {
-        console.error('[CoursePage] Could not determine next content');
-        return;
-      }
-
-      if (nextContent.isEndOfCourse) {
-        setShowCompletionModal(true);
-        return;
-      }
-
-      if (nextContent.item) {
-        const nextMilestone = course.milestones[nextContent.milestoneNum - 1];
-        const nextModule = nextMilestone.modules[nextContent.moduleNum - 1];
-
-        setOpenMilestones((prev) => ({
-          ...prev,
-          [nextMilestone.id]: true
-        }));
-
-        setOpenModules((prev) => ({
-          ...prev,
-          [nextModule.id]: true
-        }));
-
-        handleItemSelect(
-          nextContent.item,
-          nextContent.milestoneNum,
-          nextContent.moduleNum,
-          nextContent.itemNum
-        );
-      }
+      fetchCourseData();
     } catch (error) {
       console.error('[CoursePage] Error in handleMarkCompletedAndNext:', error);
     }
