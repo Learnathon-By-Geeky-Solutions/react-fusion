@@ -9,7 +9,6 @@ export default function VideoSection({ videoId, title }) {
   const [videoData, setVideoData] = useState(null);
   const [completed, setCompleted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [hasSeekAndStarted, setHasSeekAndStarted] = useState(false);
@@ -29,7 +28,6 @@ export default function VideoSection({ videoId, title }) {
 
             if (response.data.progress) {
               setStartTime(response.data.progress.VideoProgress.timeWatched);
-              setCurrentTime(response.data.progress.VideoProgress.timeWatched);
             }
           }
         } else {
@@ -62,7 +60,6 @@ export default function VideoSection({ videoId, title }) {
       progressTimerRef.current = setInterval(() => {
         if (playerRef.current) {
           const timeWatched = Math.floor(playerRef.current.getCurrentTime());
-          setCurrentTime(timeWatched);
 
           if (timeWatched % 60 === 0 && timeWatched > 0) {
             updateProgress(timeWatched, completed);

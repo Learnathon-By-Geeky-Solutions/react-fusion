@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default function DashboardSummary({ overallProgress }) {
   return (
@@ -20,3 +21,7 @@ export default function DashboardSummary({ overallProgress }) {
     </div>
   );
 }
+
+DashboardSummary.propTypes = {
+  overallProgress: PropTypes.number.isRequired
+};

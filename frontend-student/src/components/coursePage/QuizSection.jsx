@@ -9,7 +9,6 @@ export default function QuizSection(quizId) {
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [submitResult, setSubmitResult] = useState(null);
   const [quizResults, setQuizResults] = useState(null);
   const [previousBestScore, setPreviousBestScore] = useState(null);
 
@@ -71,7 +70,6 @@ export default function QuizSection(quizId) {
         }
       });
 
-      setSubmitResult(response);
       setQuizResults(response.data);
 
       if (response.success && response.data) {
@@ -87,7 +85,6 @@ export default function QuizSection(quizId) {
       }
     } catch (error) {
       console.error('Error submitting quiz:', error);
-      setSubmitResult({ success: false, message: 'Failed to submit quiz' });
     } finally {
       setSubmitting(false);
     }
