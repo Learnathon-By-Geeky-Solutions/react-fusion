@@ -19,7 +19,6 @@ export default function Login() {
     }
   }, [user, navigate]);
 
-  // Validation schema
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .email('Please enter a valid email')
@@ -62,7 +61,7 @@ export default function Login() {
   };
 
   return (
-    <div className='flex bg-gray-50 pt-17 max-w-6xl mx-auto'>
+    <div className='flex bg-gray-50 pt-18 max-w-6xl mx-auto'>
       {/* Left side decorative panel */}
       <div className='hidden lg:flex lg:w-1/2 bg-gradient-to-r from-blue-500 to-blue-800 p-12 flex-col justify-between py-20'>
         <div>

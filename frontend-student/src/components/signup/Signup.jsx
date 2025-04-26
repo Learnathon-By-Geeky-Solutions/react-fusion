@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { authService } from '@/src/services/auth';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import { toast } from 'sonner';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -11,20 +12,17 @@ export default function Signup() {
     try {
       const result = await authService.signUpUser(data);
       if (result.success) {
-        // Success toast notification
-        alert('User Created. Please log in.');
+        toast.success('User Created. Please log in.');
         navigate('/login');
       } else {
-        // Error toast notification
-        alert('ERROR!');
+        toast.error(result.message || 'Signup failed. Please try again.');
       }
     } catch (error) {
       console.error('Signup error:', error);
-      alert('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     }
   };
 
-  // Validation schema
   const SignupSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),

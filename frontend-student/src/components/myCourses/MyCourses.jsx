@@ -32,7 +32,6 @@ export default function EnrolledCourses() {
     return thumbnail === 'str' ? noimage : thumbnail;
   };
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

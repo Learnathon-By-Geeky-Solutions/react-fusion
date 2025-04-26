@@ -13,7 +13,7 @@ const app: Application = express();
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const rateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 1 * 60 * 1000, 
   limit: 500,
   standardHeaders: 'draft-8',
   legacyHeaders: false,

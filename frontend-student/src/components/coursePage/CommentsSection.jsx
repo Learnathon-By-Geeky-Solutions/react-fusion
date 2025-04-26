@@ -19,7 +19,7 @@ export default function CommentsSection({ videoId }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
   const { fetchData } = useApi();
-  
+
   useEffect(() => {
     const userId = localStorage.getItem('userId');
     if (userId) {
@@ -59,7 +59,10 @@ export default function CommentsSection({ videoId }) {
     if (!newComment.trim() || !videoId) return;
 
     try {
-      const response = await fetchData(createComment, { videoId, comment: newComment});
+      const response = await fetchData(createComment, {
+        videoId,
+        comment: newComment
+      });
 
       if (response.success) {
         fetchComments(videoId);
@@ -81,7 +84,10 @@ export default function CommentsSection({ videoId }) {
     if (!editCommentText.trim()) return;
 
     try {
-      const response = await fetchData(updateComment, {editingCommentId,editCommentText});
+      const response = await fetchData(updateComment, {
+        editingCommentId,
+        editCommentText
+      });
 
       if (response.success) {
         fetchComments(videoId);
@@ -101,7 +107,10 @@ export default function CommentsSection({ videoId }) {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      const response = await fetchData(deleteComment, JSON.stringify({ commentId }));
+      const response = await fetchData(
+        deleteComment,
+        JSON.stringify({ commentId })
+      );
 
       if (response.success) {
         setComments(comments.filter((comment) => comment.id !== commentId));
@@ -119,7 +128,6 @@ export default function CommentsSection({ videoId }) {
 
     if (isNaN(date.getTime())) return 'Invalid date';
 
-    // Format as "Apr 7, 2025 • 1:54 PM"
     const options = {
       month: 'short',
       day: 'numeric',
@@ -143,10 +151,11 @@ export default function CommentsSection({ videoId }) {
   };
 
   const isCommentOwner = (comment) => {
-    return comment.isOwner || (comment.userId && comment.userId === currentUserId);
+    return (
+      comment.isOwner || (comment.userId && comment.userId === currentUserId)
+    );
   };
 
-  // Extract this component instead of using a nested ternary
   const renderCommentContent = (comment) => {
     if (editingCommentId === comment.id) {
       return (
@@ -175,7 +184,7 @@ export default function CommentsSection({ videoId }) {
         </div>
       );
     }
-    
+
     return (
       <div>
         <div className='flex justify-between items-start'>
@@ -222,16 +231,18 @@ export default function CommentsSection({ videoId }) {
     );
   };
 
-  // Extracted function to render the comments list content
   const renderCommentsListContent = () => {
     if (loadingComments) {
       return (
         <div className='flex justify-center items-center p-6'>
-          <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500' aria-label="Loading comments"></div>
+          <div
+            className='animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500'
+            aria-label='Loading comments'
+          ></div>
         </div>
       );
     }
-    
+
     if (comments && comments.length > 0) {
       return comments.map((comment) => (
         <div
@@ -242,7 +253,7 @@ export default function CommentsSection({ videoId }) {
         </div>
       ));
     }
-    
+
     return (
       <div className='text-center p-8 bg-gray-50 rounded-lg border border-dashed border-gray-300'>
         <p className='text-gray-500 italic'>
@@ -260,8 +271,8 @@ export default function CommentsSection({ videoId }) {
         onClick={toggleCollapse}
         onKeyDown={handleKeyDown}
         aria-expanded={!isCollapsed}
-        aria-controls="comments-section-content"
-        type="button"
+        aria-controls='comments-section-content'
+        type='button'
       >
         <div className='flex items-center space-x-2'>
           <h2 className='text-lg font-semibold'>
@@ -270,16 +281,16 @@ export default function CommentsSection({ videoId }) {
         </div>
         <div className='flex items-center'>
           {isCollapsed ? (
-            <ChevronDown className='h-5 w-5' aria-hidden="true" />
+            <ChevronDown className='h-5 w-5' aria-hidden='true' />
           ) : (
-            <ChevronUp className='h-5 w-5' aria-hidden="true" />
+            <ChevronUp className='h-5 w-5' aria-hidden='true' />
           )}
         </div>
       </button>
 
       {/* Collapsible content */}
       {!isCollapsed && (
-        <div id="comments-section-content" className='p-4'>
+        <div id='comments-section-content' className='p-4'>
           {/* Add comment form */}
           <form onSubmit={handleAddComment} className='mb-6'>
             <div className='flex items-start space-x-2'>
@@ -305,16 +316,14 @@ export default function CommentsSection({ videoId }) {
                   title='Post comment'
                 >
                   <Send className='h-4 w-4' />
-                  <span className="sr-only">Post comment</span>
+                  <span className='sr-only'>Post comment</span>
                 </button>
               </div>
             </div>
           </form>
 
           {/* Comments List */}
-          <div className='space-y-4'>
-            {renderCommentsListContent()}
-          </div>
+          <div className='space-y-4'>{renderCommentsListContent()}</div>
         </div>
       )}
     </div>

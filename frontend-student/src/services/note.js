@@ -1,15 +1,14 @@
 import { BACKEND } from '../constants';
 
-// Create Note  
 export async function createNote(payload) {
   try {
-    const result = await fetch(`${BACKEND}/note/create`, {
+    const result = await fetch(`${BACKEND}/note`, {
       method: 'POST',
       headers: {
         Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(JSON.parse(payload.data))
+      body: JSON.stringify(payload.data)
     });
 
     const data = await result.json();
@@ -20,16 +19,13 @@ export async function createNote(payload) {
   }
 }
 
-// Get Notes
 export async function getNote(payload) {
   try {
-    const result = await fetch(`${BACKEND}/note/get`, {
-      method: 'POST',
+    const result = await fetch(`${BACKEND}/note/${payload.data.videoId}`, {
+      method: 'GET',
       headers: {
-        Authorization: payload.user.token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(JSON.parse(payload.data))
+        Authorization: payload.user.token
+      }
     });
 
     const data = await result.json();
@@ -40,16 +36,15 @@ export async function getNote(payload) {
   }
 }
 
-// Update Note
 export async function updateNote(payload) {
   try {
-    const result = await fetch(`${BACKEND}/note/update`, {
-      method: 'POST',
+    const result = await fetch(`${BACKEND}/note`, {
+      method: 'PUT',
       headers: {
         Authorization: payload.user.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(JSON.parse(payload.data))
+      body: JSON.stringify(payload.data)
     });
 
     const data = await result.json();
@@ -63,19 +58,17 @@ export async function updateNote(payload) {
 // Delete Note
 export async function deleteNote(payload) {
   try {
-    const result = await fetch(`${BACKEND}/note/delete`, {
+    const result = await fetch(`${BACKEND}/note/${payload.data.videoId}`, {
       method: 'DELETE',
       headers: {
-        Authorization: payload.user.token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(JSON.parse(payload.data))
+        Authorization: payload.user.token
+      }
     });
 
     const data = await result.json();
     return data;
   } catch (error) {
-    console.error('Error deleting note:', error);
+    console.error('Error getting note:', error);
     return { success: false };
   }
 }

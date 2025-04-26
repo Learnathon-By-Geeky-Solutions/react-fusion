@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import getSingleCourse from '@/src/services/singleCourse';
-import { buyCourse } from '@/src/services/buyCourse';
+import { getSingleCourse, buyCourse } from '@/src/services/course';
 import { noimage } from '../../assets';
 import useApi from '@/src/hooks/useApi';
 import { nanoid } from 'nanoid';
 import { motion } from 'framer-motion';
+import CourseDetailsSidebar from './CourseDetailsSidebar';
+import InstructorDetails from './InstructorDetails';
+import { toast } from 'sonner';
 
 export default function CourseDetails() {
   const { id } = useParams();
@@ -13,16 +15,12 @@ export default function CourseDetails() {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
-  const [activeAccordion, setActiveAccordion] = useState(null);
-  const [activeModule, setActiveModule] = useState(null);
   const { fetchData } = useApi();
 
   useEffect(() => {
     async function fetchCourse() {
       try {
-        const payload = { id };
-        const response = await fetchData(getSingleCourse, payload);
-
+        const response = await fetchData(getSingleCourse, { courseId: id });
         if (response.success) {
           setCourse(response.data);
         }
@@ -42,11 +40,14 @@ export default function CourseDetails() {
     try {
       const txnId = nanoid(16);
       const token = localStorage.getItem('token');
-
       if (!token) {
-        alert('Please login to purchase this course');
+        toast.error('Please login to purchase this course', {
+          duration: 3000
+        });
+
         navigate('/login');
         setPurchasing(false);
+
         return;
       }
 
@@ -58,22 +59,26 @@ export default function CourseDetails() {
       const response = await fetchData(buyCourse, purchaseData);
 
       if (response.success) {
-        alert('Course purchased successfully!');
+        toast.success('Course purchased successfully!', {
+          duration: 3000
+        });
+
         navigate(`/enrolled/${id}`);
       } else {
-        alert(
-          response.message || 'Failed to purchase course. Please try again.'
-        );
+        toast.error('Failed to purchase course. Please try again.', {
+          duration: 3000
+        });
       }
     } catch (error) {
       console.error('Error purchasing course:', error);
-      alert('An error occurred while purchasing the course. Please try again.');
+      toast.error(
+        'An error occurred while purchasing the course. Please try again.'
+      );
     } finally {
       setPurchasing(false);
     }
   };
 
-  // Animation variants
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -91,15 +96,6 @@ export default function CourseDetails() {
         staggerChildren: 0.1
       }
     }
-  };
-
-  const toggleMilestone = (id) => {
-    setActiveAccordion(activeAccordion === id ? null : id);
-    setActiveModule(null);
-  };
-
-  const toggleModule = (id) => {
-    setActiveModule(activeModule === id ? null : id);
   };
 
   if (loading) {
@@ -300,7 +296,7 @@ export default function CourseDetails() {
                 <div className='flex items-center justify-between mb-4'>
                   <h3 className='text-2xl font-bold text-gray-900'>Price</h3>
                   <p className='text-3xl font-bold text-blue-600'>
-                    ৳ {course.price}
+                    $ {course.price}
                   </p>
                 </div>
                 <button
@@ -355,118 +351,56 @@ export default function CourseDetails() {
             </div>
           </div>
 
-          {/* Course Modules */}
+          {/* Course Modules - Course Overview Card */}
           <motion.div
-            className='mt-6'
-            variants={staggerContainer}
             initial='hidden'
             animate='visible'
+            variants={staggerContainer}
+            className='mt-8 bg-white rounded-lg shadow-md p-6'
           >
-            <h2 className='text-2xl font-bold text-gray-900 mb-4 flex items-center'>
-              <svg
-                className='w-6 h-6 text-blue-600 mr-2'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
-                />
-              </svg>
-              Course Content
+            <h2 className='text-2xl font-bold text-gray-900 mb-4'>
+              Course Overview
             </h2>
-
             <div className='space-y-4'>
-              {course.milestones.map((milestone, index) => (
-                <motion.div
-                  key={milestone.id}
-                  variants={fadeIn}
-                  className='border border-gray-200 rounded-lg overflow-hidden shadow-sm'
+              {course.milestones?.map((milestone, index) => (
+                <div
+                  key={`milestone-${milestone._id || index}`}
+                  className='bg-gray-50 p-4 rounded-lg'
                 >
-                  <button
-                    className={`p-4 flex justify-between items-center cursor-pointer transition-colors ${
-                      activeAccordion === milestone.id
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white text-gray-800 hover:bg-blue-50'
-                    }`}
-                    onClick={() => toggleMilestone(milestone.id)}
-                  >
-                    <div className='flex items-center'>
-                      <span className='flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold mr-3'>
-                        {index + 1}
-                      </span>
-                      <h3 className='font-semibold text-lg'>
-                        {milestone.title}
-                      </h3>
-                    </div>
-                    <svg
-                      className={`w-5 h-5 transition-transform duration-300 ${activeAccordion === milestone.id ? 'transform rotate-180 text-white' : 'text-blue-600'}`}
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M19 9l-7 7-7-7'
-                      />
-                    </svg>
-                  </button>
+                  <div className='flex items-center mb-2'>
+                    <span className='bg-blue-600 text-white px-2 py-1 rounded-full text-sm mr-3'>
+                      {index + 1}
+                    </span>
+                    <h3 className='text-lg font-semibold'>{milestone.title}</h3>
+                  </div>
+                  {milestone.description && (
+                    <p className='text-gray-600 ml-10 mb-2 text-left'>
+                      {milestone.description}
+                    </p>
+                  )}
 
-                  {activeAccordion === milestone.id && (
-                    <div className='bg-gray-50 p-4 space-y-3'>
-                      {milestone.modules.map((module, moduleIndex) => (
-                        <div
-                          key={module.id}
-                          className='border border-gray-200 rounded-lg overflow-hidden'
-                        >
-                          <button
-                            className={`p-3 flex justify-between items-center cursor-pointer ${
-                              activeModule === module.id
-                                ? 'bg-blue-100 text-blue-900'
-                                : 'bg-white hover:bg-gray-100'
-                            }`}
-                            onClick={() => toggleModule(module.id)}
-                          >
-                            <div className='flex items-center'>
-                              <span className='flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white font-medium text-sm mr-3'>
-                                {moduleIndex + 1}
-                              </span>
-                              <h4 className='font-medium'>{module.title}</h4>
-                            </div>
-                            <div className='flex items-center'>
-                              <span className='text-sm text-gray-500 mr-3'>
-                                {module.videos.length} videos
-                              </span>
-                              <svg
-                                className={`w-4 h-4 text-blue-600 transition-transform duration-300 ${activeModule === module.id ? 'transform rotate-180' : ''}`}
-                                fill='none'
-                                stroke='currentColor'
-                                viewBox='0 0 24 24'
-                              >
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='2'
-                                  d='M19 9l-7 7-7-7'
-                                />
-                              </svg>
-                            </div>
-                          </button>
+                  <div className='ml-10 grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 text-left'>
+                    {milestone.modules?.map((module, moduleIndex) => (
+                      <div
+                        key={`item-${item._id ? item._id : module._id + '-' + itemIndex}`}
+                        className='bg-white border border-gray-200 rounded-md p-3'
+                      >
+                        <p className='font-medium text-gray-800'>
+                          {index + 1}.{moduleIndex + 1} {module.title}
+                        </p>
+                        <p className='text-sm text-gray-500 mt-1 text-justify'>
+                          {module.description}
+                        </p>
 
-                          {activeModule === module.id && (
-                            <div className='bg-gray-50 pl-12 pr-4 py-3 space-y-2'>
-                              {module.videos.map((video, videoIndex) => (
-                                <div
-                                  key={video.id}
-                                  className='flex items-center p-2 rounded-md hover:bg-gray-100 transition-colors'
-                                >
+                        <div className='mt-2 space-y-1'>
+                          {module.moduleItems?.map((item, itemIndex) => {
+                            let itemContent;
+
+                            if (item.video) {
+                              itemContent = (
+                                <>
                                   <svg
-                                    className='w-5 h-5 text-blue-600 mr-2'
+                                    className='w-4 h-4 text-blue-500 mr-2'
                                     fill='none'
                                     stroke='currentColor'
                                     viewBox='0 0 24 24'
@@ -484,24 +418,56 @@ export default function CourseDetails() {
                                       d='M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
                                     />
                                   </svg>
-                                  <span className='text-gray-800'>
-                                    {videoIndex + 1}. {video.title}
+                                  <span className='text-left'>
+                                    {item.video.title}
                                   </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                                </>
+                              );
+                            } else if (item.quiz) {
+                              itemContent = (
+                                <>
+                                  <svg
+                                    className='w-4 h-4 text-yellow-500 mr-2'
+                                    fill='none'
+                                    stroke='currentColor'
+                                    viewBox='0 0 24 24'
+                                  >
+                                    <path
+                                      strokeLinecap='round'
+                                      strokeLinejoin='round'
+                                      strokeWidth='2'
+                                      d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+                                    />
+                                  </svg>
+                                  <span>Quiz {itemIndex + 1}</span>
+                                </>
+                              );
+                            } else {
+                              itemContent = null;
+                            }
+
+                            return itemContent ? (
+                              <div
+                                key={`item-${item._id || `${module._id}-${itemIndex}`}`}
+                                className='flex items-center text-sm text-gray-600 text-left'
+                              >
+                                {itemContent}
+                              </div>
+                            ) : null;
+                          })}
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </motion.div>
+
+          <InstructorDetails course={course} />
         </motion.div>
 
-        {/* Right Side: Thumbnail, Pricing & Instructor Info */}
+        {/* Right Side: Sidebar */}
         <motion.div
           className='lg:col-span-1 space-y-6'
           initial='hidden'
@@ -509,7 +475,7 @@ export default function CourseDetails() {
           variants={fadeIn}
         >
           {/* Course Thumbnail & Price */}
-          <div className='bg-white shadow-lg rounded-lg overflow-hidden sticky top-24'>
+          <div className='bg-white shadow-lg rounded-lg overflow-hidden'>
             <div className='relative'>
               <img
                 src={course.thumbnail === 'str' ? noimage : course.thumbnail}
@@ -518,7 +484,7 @@ export default function CourseDetails() {
               />
               <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end'>
                 <div className='p-4 text-white'>
-                  <div className='text-3xl font-bold'>৳ {course.price}</div>
+                  <div className='text-3xl font-bold'>$ {course.price}</div>
                 </div>
               </div>
             </div>
@@ -558,9 +524,7 @@ export default function CourseDetails() {
                         d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
                       />
                     </svg>
-                    <span className='text-gray-700'>
-                      Certificate of Completion
-                    </span>
+                    <span className='text-gray-700'>Certificate Included</span>
                   </div>
                 </div>
                 <div className='flex items-center justify-between'>
@@ -634,80 +598,8 @@ export default function CourseDetails() {
             </div>
           </div>
 
-          {/* Instructor Info */}
-          <div className='hidden lg:block bg-white shadow-lg rounded-lg overflow-hidden'>
-            <div className='p-6 bg-blue-600 text-white'>
-              <h3 className='text-xl font-bold'>Meet Your Instructor</h3>
-            </div>
-            <div className='p-6'>
-              <div className='flex items-start'>
-                <div className='bg-blue-100 rounded-full p-3 mr-4'>
-                  <svg
-                    className='w-8 h-8 text-blue-600'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth='2'
-                      d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className='text-xl font-semibold text-gray-900'>
-                    {course.instructor.name}
-                  </h4>
-                  <p className='text-blue-600 font-medium'>
-                    {course.instructor.designation}
-                  </p>
-                  <p className='text-gray-600 mt-1'>
-                    {course.instructor.currentWorkingPlace}
-                  </p>
-                  <div className='mt-3 space-y-2'>
-                    <div className='flex items-center'>
-                      <svg
-                        className='w-5 h-5 text-gray-500 mr-2'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth='2'
-                          d='M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
-                        />
-                      </svg>
-                      <span className='text-gray-600'>
-                        Experience: {course.instructor.experience} years
-                      </span>
-                    </div>
-                    <div className='flex items-center'>
-                      <svg
-                        className='w-5 h-5 text-gray-500 mr-2'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth='2'
-                          d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'
-                        />
-                      </svg>
-                      <span className='text-gray-600'>
-                        {course.instructor.contactNumber}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Instructor Card - Desktop Only */}
+          <CourseDetailsSidebar course={course} />
         </motion.div>
       </div>
     </div>

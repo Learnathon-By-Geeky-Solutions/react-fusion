@@ -18,6 +18,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import Profile from './components/profile/Profile';
 import AboutUs from './components/about/About';
 import ContactUs from './components/contact/Contact';
+import CourseAnalytics from './components/courseAnalytics/CourseAnalytics';
 
 const routes = createBrowserRouter([
   {
@@ -60,7 +61,7 @@ const routes = createBrowserRouter([
         element: <CourseDetails />
       },
       {
-        path: '/enrolled/:id',
+        path: '/enrolled/:courseId',
         element: (
           <ProtectedRoute>
             <CoursePage />
@@ -88,6 +89,14 @@ const routes = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: '/analytics/:courseId',
+        element: (
+          <ProtectedRoute>
+            <CourseAnalytics />
           </ProtectedRoute>
         )
       }

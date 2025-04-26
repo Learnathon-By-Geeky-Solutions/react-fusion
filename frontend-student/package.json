@@ -30,6 +30,7 @@
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-player": "^2.16.0",
     "react-router-dom": "^7.3.0",
     "recharts": "^2.15.2",
     "sonner": "^2.0.1",
@@ -48,6 +49,6 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "prettier": "^3.5.3",
-    "vite": "^6.2.5"
+    "vite": "^6.2.6"
   }
 }
