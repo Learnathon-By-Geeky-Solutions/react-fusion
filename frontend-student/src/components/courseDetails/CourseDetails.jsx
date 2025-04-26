@@ -382,7 +382,7 @@ export default function CourseDetails() {
                   <div className='ml-10 grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 text-left'>
                     {milestone.modules?.map((module, moduleIndex) => (
                       <div
-                        key={`module-${module._id || `${milestone._id}-${moduleIndex}`}`}
+                        key={`item-${item._id ? item._id : module._id + '-' + itemIndex}`}
                         className='bg-white border border-gray-200 rounded-md p-3'
                       >
                         <p className='font-medium text-gray-800'>
