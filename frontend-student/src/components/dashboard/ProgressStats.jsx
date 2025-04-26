@@ -66,6 +66,13 @@ export default function ProgressStats({ totalStats }) {
 
 ProgressStats.propTypes = {
   totalStats: PropTypes.shape({
-    completedVideos: PropTypes.number.isRequired
+    completedVideos: PropTypes.number.isRequired,
+    totalVideos: PropTypes.number.isRequired,
+    userWatchTime: PropTypes.number.isRequired,
+    totalWatchTime: PropTypes.number.isRequired,
+    completedQuizzes: PropTypes.number.isRequired,
+    totalQuizzes: PropTypes.number.isRequired,
+    completedMilestones: PropTypes.number.isRequired,
+    totalMilestones: PropTypes.number.isRequired
   }).isRequired
 };

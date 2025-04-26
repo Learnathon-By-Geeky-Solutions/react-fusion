@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { calculatePercentage } from '@/src/utils/formatters';
@@ -13,7 +14,7 @@ export default function RecentCourseActivity({ courses }) {
       </h3>
       {courses.length > 0 ? (
         <div className='space-y-4'>
-          {courses.slice(0, 3).map((course, index) => {
+          {courses.slice(0, 3).map((course) => {
             const courseTitle = course.courseData.courseProgress.course.title;
             const courseId = course.courseData.courseProgress.course.id;
             const summary = course.courseData?.summary;
@@ -28,7 +29,7 @@ export default function RecentCourseActivity({ courses }) {
             );
             return (
               <div
-                key={index}
+                key={courseId}
                 className='border-b border-gray-100 pb-4 last:border-0 last:pb-0'
               >
                 <div className='flex justify-between items-center text-left'>
@@ -83,3 +84,24 @@ export default function RecentCourseActivity({ courses }) {
     </div>
   );
 }
+
+RecentCourseActivity.propTypes = {
+  courses: PropTypes.arrayOf(
+    PropTypes.shape({
+      courseData: PropTypes.shape({
+        courseProgress: PropTypes.shape({
+          course: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            title: PropTypes.string
+          }).isRequired
+        }).isRequired,
+        summary: PropTypes.shape({
+          totalQuizzes: PropTypes.number,
+          totalVideos: PropTypes.number,
+          completedQuizzes: PropTypes.number,
+          completedVideos: PropTypes.number
+        })
+      }).isRequired
+    })
+  ).isRequired
+};
