@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
 import { getSingleCourse } from '@/src/services/dashboard';
 import { formatTime } from '@/src/utils/formatters';
+import PropTypes from 'prop-types'; // Import PropTypes for props validation
 import {
   BookOpen,
   Clock,
@@ -24,6 +25,11 @@ function LoadingSpinner({ message = 'Loading...' }) {
     </div>
   );
 }
+
+// Add PropTypes validation for LoadingSpinner
+LoadingSpinner.propTypes = {
+  message: PropTypes.string
+};
 
 export default function CourseAnalytics() {
   const navigate = useNavigate();
@@ -63,26 +69,41 @@ export default function CourseAnalytics() {
   const course = courseProgress?.course || {};
 
   const moduleCompletionData = [
-    { name: 'Completed', value: summary?.completedModules || 0 },
+    {
+      name: 'Completed',
+      value: summary?.completedModules || 0,
+      id: 'completed-modules'
+    },
     {
       name: 'Remaining',
-      value: (summary?.totalModules || 0) - (summary?.completedModules || 0)
+      value: (summary?.totalModules || 0) - (summary?.completedModules || 0),
+      id: 'remaining-modules'
     }
   ];
 
   const videoCompletionData = [
-    { name: 'Completed', value: summary?.completedVideos || 0 },
+    {
+      name: 'Completed',
+      value: summary?.completedVideos || 0,
+      id: 'completed-videos'
+    },
     {
       name: 'Remaining',
-      value: (summary?.totalVideos || 0) - (summary?.completedVideos || 0)
+      value: (summary?.totalVideos || 0) - (summary?.completedVideos || 0),
+      id: 'remaining-videos'
     }
   ];
 
   const quizCompletionData = [
-    { name: 'Completed', value: summary?.completedQuizzes || 0 },
+    {
+      name: 'Completed',
+      value: summary?.completedQuizzes || 0,
+      id: 'completed-quizzes'
+    },
     {
       name: 'Remaining',
-      value: (summary?.totalQuizzes || 0) - (summary?.completedQuizzes || 0)
+      value: (summary?.totalQuizzes || 0) - (summary?.completedQuizzes || 0),
+      id: 'remaining-quizzes'
     }
   ];
 
@@ -112,6 +133,24 @@ export default function CourseAnalytics() {
     summary?.totalScore > 0
       ? Math.round((summary.userScore / summary.totalScore) * 100)
       : 0;
+
+  // Data for the watch time pie chart with unique IDs
+  const watchTimeData = [
+    { value: summary?.userWatchTime || 0, id: 'user-watch-time' },
+    {
+      value: (summary?.totalWatchTime || 0) - (summary?.userWatchTime || 0),
+      id: 'remaining-watch-time'
+    }
+  ];
+
+  // Data for the quiz performance pie chart with unique IDs
+  const quizScoreData = [
+    { value: summary?.userScore || 0, id: 'user-score' },
+    {
+      value: (summary?.totalScore || 0) - (summary?.userScore || 0),
+      id: 'remaining-score'
+    }
+  ];
 
   return (
     <div className='analytics-page p-6 bg-gray-50 min-h-screen pt-20'>
@@ -250,10 +289,12 @@ export default function CourseAnalytics() {
                         paddingAngle={5}
                         dataKey='value'
                       >
-                        {moduleCompletionData.map((entry, index) => (
+                        {moduleCompletionData.map((entry) => (
                           <Cell
-                            key={`cell-module-${index}`}
-                            fill={COLORS[index % COLORS.length]}
+                            key={entry.id}
+                            fill={
+                              entry.name === 'Completed' ? COLORS[0] : COLORS[1]
+                            }
                           />
                         ))}
                       </Pie>
@@ -279,10 +320,12 @@ export default function CourseAnalytics() {
                         paddingAngle={5}
                         dataKey='value'
                       >
-                        {videoCompletionData.map((entry, index) => (
+                        {videoCompletionData.map((entry) => (
                           <Cell
-                            key={`cell-video-${index}`}
-                            fill={COLORS[index % COLORS.length]}
+                            key={entry.id}
+                            fill={
+                              entry.name === 'Completed' ? COLORS[0] : COLORS[1]
+                            }
                           />
                         ))}
                       </Pie>
@@ -310,10 +353,12 @@ export default function CourseAnalytics() {
                         paddingAngle={5}
                         dataKey='value'
                       >
-                        {quizCompletionData.map((entry, index) => (
+                        {quizCompletionData.map((entry) => (
                           <Cell
-                            key={`cell-quiz-${index}`}
-                            fill={COLORS[index % COLORS.length]}
+                            key={entry.id}
+                            fill={
+                              entry.name === 'Completed' ? COLORS[0] : COLORS[1]
+                            }
                           />
                         ))}
                       </Pie>
@@ -408,14 +453,7 @@ export default function CourseAnalytics() {
                 <ResponsiveContainer width='100%' height='100%'>
                   <PieChart>
                     <Pie
-                      data={[
-                        { value: summary?.userWatchTime || 0 },
-                        {
-                          value:
-                            (summary?.totalWatchTime || 0) -
-                            (summary?.userWatchTime || 0)
-                        }
-                      ]}
+                      data={watchTimeData}
                       cx='50%'
                       cy='50%'
                       innerRadius={50}
@@ -424,8 +462,8 @@ export default function CourseAnalytics() {
                       endAngle={-270}
                       dataKey='value'
                     >
-                      <Cell fill='#4ade80' />
-                      <Cell fill='#e2e8f0' />
+                      <Cell key='user-watch-time-cell' fill='#4ade80' />
+                      <Cell key='remaining-watch-time-cell' fill='#e2e8f0' />
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
@@ -458,14 +496,7 @@ export default function CourseAnalytics() {
                 <ResponsiveContainer width='100%' height='100%'>
                   <PieChart>
                     <Pie
-                      data={[
-                        { value: summary?.userScore || 0 },
-                        {
-                          value:
-                            (summary?.totalScore || 0) -
-                            (summary?.userScore || 0)
-                        }
-                      ]}
+                      data={quizScoreData}
                       cx='50%'
                       cy='50%'
                       innerRadius={50}
@@ -474,8 +505,8 @@ export default function CourseAnalytics() {
                       endAngle={-270}
                       dataKey='value'
                     >
-                      <Cell fill='#4ade80' />
-                      <Cell fill='#e2e8f0' />
+                      <Cell key='user-score-cell' fill='#4ade80' />
+                      <Cell key='remaining-score-cell' fill='#e2e8f0' />
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
