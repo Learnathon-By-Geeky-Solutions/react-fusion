@@ -36,115 +36,116 @@ export default function CoursePage() {
     fetchCourseData();
   }, []);
 
+  // Helper functions to extract logic from fetchCourseData
+  const handleCompletedCourse = (courseData) => {
+    const lastMilestone =
+      courseData.milestones[courseData.milestones.length - 1];
+    const lastModule = lastMilestone.modules[lastMilestone.modules.length - 1];
+    const lastItem = lastModule.moduleItems[lastModule.moduleItems.length - 1];
+
+    const allMilestonesOpen = {};
+    const allModulesOpen = {};
+
+    courseData.milestones.forEach((milestone) => {
+      allMilestonesOpen[milestone.id] = true;
+      milestone.modules.forEach((module) => {
+        allModulesOpen[module.id] = true;
+      });
+    });
+
+    setOpenMilestones(allMilestonesOpen);
+    setOpenModules(allModulesOpen);
+
+    setSelectedItem({
+      ...lastItem,
+      milestoneNumber: courseData.milestones.length,
+      moduleNumber: lastMilestone.modules.length,
+      itemNumber: lastModule.moduleItems.length
+    });
+
+    setResumeData({
+      nextMilestoneId: null,
+      nextModuleId: null,
+      firstLockedItemId: null
+    });
+  };
+
+  const handleInProgressCourse = (courseData, progress) => {
+    setResumeData({
+      nextMilestoneId: progress.nextMilestone,
+      nextModuleId: progress.nextModule,
+      firstLockedItemId: null
+    });
+
+    const milestoneIndex = courseData.milestones.findIndex(
+      (m) => m.id === progress.nextMilestone
+    );
+
+    if (milestoneIndex === -1) return;
+
+    setOpenMilestones((prev) => ({
+      ...prev,
+      [progress.nextMilestone]: true
+    }));
+
+    const milestone = courseData.milestones[milestoneIndex];
+    const moduleIndex = milestone.modules.findIndex(
+      (m) => m.id === progress.nextModule
+    );
+
+    if (moduleIndex === -1) return;
+
+    setOpenModules((prev) => ({
+      ...prev,
+      [progress.nextModule]: true
+    }));
+
+    const module = milestone.modules[moduleIndex];
+    if (!module.moduleItems || module.moduleItems.length === 0) return;
+
+    let resumeItemIndex = 0;
+    if (progress.nextModuleItem) {
+      const itemIndex = module.moduleItems.findIndex(
+        (item) => item.id === progress.nextModuleItem
+      );
+      if (itemIndex !== -1) {
+        resumeItemIndex = itemIndex;
+      }
+    }
+
+    const resumeItem = module.moduleItems[resumeItemIndex];
+    setSelectedItem({
+      ...resumeItem,
+      milestoneNumber: milestoneIndex + 1,
+      moduleNumber: moduleIndex + 1,
+      itemNumber: resumeItemIndex + 1
+    });
+  };
+
   const fetchCourseData = async () => {
     try {
       const response = await fetchData(getSingleCourse, { courseId });
 
-      if (response.success) {
-        setCourse(response.data);
+      if (!response.success) {
+        setLoading(false);
+        return;
+      }
 
-        const continueResponse = await fetchData(getContinueCourse, {
-          courseId
-        });
+      setCourse(response.data);
+      const continueResponse = await fetchData(getContinueCourse, { courseId });
 
-        if (continueResponse.success && continueResponse.data) {
-          const progress = continueResponse.data.progress;
+      if (continueResponse.success && continueResponse.data) {
+        const progress = continueResponse.data.progress;
+        const isCompleted = !progress.nextMilestone;
+        setIsCourseCompleted(isCompleted);
 
-          const isCompleted = !progress.nextMilestone;
-
-          setIsCourseCompleted(isCompleted);
-
-          if (isCompleted) {
-            const lastMilestone =
-              response.data.milestones[response.data.milestones.length - 1];
-            const lastModule =
-              lastMilestone.modules[lastMilestone.modules.length - 1];
-            const lastItem =
-              lastModule.moduleItems[lastModule.moduleItems.length - 1];
-
-            const allMilestonesOpen = {};
-            const allModulesOpen = {};
-
-            response.data.milestones.forEach((milestone) => {
-              allMilestonesOpen[milestone.id] = true;
-              milestone.modules.forEach((module) => {
-                allModulesOpen[module.id] = true;
-              });
-            });
-
-            setOpenMilestones(allMilestonesOpen);
-            setOpenModules(allModulesOpen);
-
-            setSelectedItem({
-              ...lastItem,
-              milestoneNumber: response.data.milestones.length,
-              moduleNumber: lastMilestone.modules.length,
-              itemNumber: lastModule.moduleItems.length
-            });
-
-            setResumeData({
-              nextMilestoneId: null,
-              nextModuleId: null,
-              firstLockedItemId: null
-            });
-          } else {
-            setResumeData({
-              nextMilestoneId: progress.nextMilestone,
-              nextModuleId: progress.nextModule,
-              firstLockedItemId: null
-            });
-
-            const milestoneIndex = response.data.milestones.findIndex(
-              (m) => m.id === progress.nextMilestone
-            );
-
-            if (milestoneIndex !== -1) {
-              setOpenMilestones((prev) => ({
-                ...prev,
-                [progress.nextMilestone]: true
-              }));
-
-              const milestone = response.data.milestones[milestoneIndex];
-              const moduleIndex = milestone.modules.findIndex(
-                (m) => m.id === progress.nextModule
-              );
-
-              if (moduleIndex !== -1) {
-                setOpenModules((prev) => ({
-                  ...prev,
-                  [progress.nextModule]: true
-                }));
-
-                const module = milestone.modules[moduleIndex];
-
-                if (module.moduleItems && module.moduleItems.length > 0) {
-                  let resumeItemIndex = 0;
-
-                  if (progress.nextModuleItem) {
-                    const itemIndex = module.moduleItems.findIndex(
-                      (item) => item.id === progress.nextModuleItem
-                    );
-
-                    if (itemIndex !== -1) {
-                      resumeItemIndex = itemIndex;
-                    }
-                  }
-
-                  const resumeItem = module.moduleItems[resumeItemIndex];
-
-                  setSelectedItem({
-                    ...resumeItem,
-                    milestoneNumber: milestoneIndex + 1,
-                    moduleNumber: moduleIndex + 1,
-                    itemNumber: resumeItemIndex + 1
-                  });
-                }
-              }
-            }
-          }
+        if (isCompleted) {
+          handleCompletedCourse(response.data);
         } else {
-          initializeWithFirstItem(response.data);
+          handleInProgressCourse(response.data, progress);
         }
+      } else {
+        initializeWithFirstItem(response.data);
       }
     } catch (error) {
       console.error('[CoursePage] Error fetching course details:', error);
@@ -194,23 +195,17 @@ export default function CoursePage() {
   };
 
   const toggleMilestone = (milestoneId) => {
-    setOpenMilestones((prev) => {
-      const newState = {
-        ...prev,
-        [milestoneId]: !prev[milestoneId]
-      };
-      return newState;
-    });
+    setOpenMilestones((prev) => ({
+      ...prev,
+      [milestoneId]: !prev[milestoneId]
+    }));
   };
 
   const toggleModule = (moduleId) => {
-    setOpenModules((prev) => {
-      const newState = {
-        ...prev,
-        [moduleId]: !prev[moduleId]
-      };
-      return newState;
-    });
+    setOpenModules((prev) => ({
+      ...prev,
+      [moduleId]: !prev[moduleId]
+    }));
   };
 
   const handleItemSelect = (
@@ -229,12 +224,15 @@ export default function CoursePage() {
     setSelectedItem(itemWithNumbers);
   };
 
-  const navigateToNextItem = () => {
-    if (!course || !selectedItem) return;
+  // Helper functions for navigateToNextItem
+  const findCurrentIndices = () => {
+    if (!course || !selectedItem) return { allIndices: null };
 
-    let currentMilestoneIndex = -1;
-    let currentModuleIndex = -1;
-    let currentItemIndex = -1;
+    let currentIndices = {
+      milestoneIndex: -1,
+      moduleIndex: -1,
+      itemIndex: -1
+    };
 
     for (let i = 0; i < course.milestones.length; i++) {
       const milestone = course.milestones[i];
@@ -250,66 +248,132 @@ export default function CoursePage() {
               item.quiz &&
               item.quiz.id === selectedItem.quiz.id)
           ) {
-            currentMilestoneIndex = i;
-            currentModuleIndex = j;
-            currentItemIndex = k;
-            break;
+            currentIndices = {
+              milestoneIndex: i,
+              moduleIndex: j,
+              itemIndex: k
+            };
+            return { allIndices: currentIndices };
           }
         }
-        if (currentItemIndex !== -1) break;
       }
-      if (currentModuleIndex !== -1) break;
     }
 
-    if (currentMilestoneIndex !== -1) {
-      const milestone = course.milestones[currentMilestoneIndex];
-      const module = milestone.modules[currentModuleIndex];
+    return { allIndices: null };
+  };
 
-      if (currentItemIndex < module.moduleItems.length - 1) {
-        const nextItem = module.moduleItems[currentItemIndex + 1];
+  const navigateToNextInSameModule = (milestone, module, itemIndex) => {
+    const nextItem = module.moduleItems[itemIndex + 1];
+    const milestoneIndex = course.milestones.indexOf(milestone);
+    const moduleIndex = milestone.modules.indexOf(module);
+
+    setSelectedItem({
+      ...nextItem,
+      milestoneNumber: milestoneIndex + 1,
+      moduleNumber: moduleIndex + 1,
+      itemNumber: itemIndex + 2
+    });
+  };
+
+  const navigateToNextModule = (milestone, moduleIndex) => {
+    const nextModule = milestone.modules[moduleIndex + 1];
+    const milestoneIndex = course.milestones.indexOf(milestone);
+
+    if (nextModule.moduleItems.length > 0) {
+      const nextItem = nextModule.moduleItems[0];
+      setSelectedItem({
+        ...nextItem,
+        milestoneNumber: milestoneIndex + 1,
+        moduleNumber: moduleIndex + 2,
+        itemNumber: 1
+      });
+      setOpenModules((prev) => ({
+        ...prev,
+        [nextModule.id]: true
+      }));
+    }
+  };
+
+  const navigateToNextMilestone = (milestoneIndex) => {
+    const nextMilestone = course.milestones[milestoneIndex + 1];
+
+    if (nextMilestone.modules.length > 0) {
+      const nextModule = nextMilestone.modules[0];
+      if (nextModule.moduleItems.length > 0) {
+        const nextItem = nextModule.moduleItems[0];
         setSelectedItem({
           ...nextItem,
-          milestoneNumber: currentMilestoneIndex + 1,
-          moduleNumber: currentModuleIndex + 1,
-          itemNumber: currentItemIndex + 2
+          milestoneNumber: milestoneIndex + 2,
+          moduleNumber: 1,
+          itemNumber: 1
         });
-      } else if (currentModuleIndex < milestone.modules.length - 1) {
-        const nextModule = milestone.modules[currentModuleIndex + 1];
-        if (nextModule.moduleItems.length > 0) {
-          const nextItem = nextModule.moduleItems[0];
-          setSelectedItem({
-            ...nextItem,
-            milestoneNumber: currentMilestoneIndex + 1,
-            moduleNumber: currentModuleIndex + 2,
-            itemNumber: 1
-          });
-          setOpenModules((prev) => ({
-            ...prev,
-            [nextModule.id]: true
-          }));
-        }
-      } else if (currentMilestoneIndex < course.milestones.length - 1) {
-        const nextMilestone = course.milestones[currentMilestoneIndex + 1];
-        if (nextMilestone.modules.length > 0) {
-          const nextModule = nextMilestone.modules[0];
-          if (nextModule.moduleItems.length > 0) {
-            const nextItem = nextModule.moduleItems[0];
-            setSelectedItem({
-              ...nextItem,
-              milestoneNumber: currentMilestoneIndex + 2,
-              moduleNumber: 1,
-              itemNumber: 1
-            });
-            setOpenMilestones((prev) => ({
-              ...prev,
-              [nextMilestone.id]: true
-            }));
-            setOpenModules((prev) => ({
-              ...prev,
-              [nextModule.id]: true
-            }));
-          }
-        }
+        setOpenMilestones((prev) => ({
+          ...prev,
+          [nextMilestone.id]: true
+        }));
+        setOpenModules((prev) => ({
+          ...prev,
+          [nextModule.id]: true
+        }));
+      }
+    }
+  };
+
+  const navigateToNextItem = () => {
+    const { allIndices } = findCurrentIndices();
+    if (!allIndices) return;
+
+    const { milestoneIndex, moduleIndex, itemIndex } = allIndices;
+    const milestone = course.milestones[milestoneIndex];
+    const module = milestone.modules[moduleIndex];
+
+    if (itemIndex < module.moduleItems.length - 1) {
+      navigateToNextInSameModule(milestone, module, itemIndex);
+    } else if (moduleIndex < milestone.modules.length - 1) {
+      navigateToNextModule(milestone, moduleIndex);
+    } else if (milestoneIndex < course.milestones.length - 1) {
+      navigateToNextMilestone(milestoneIndex);
+    }
+  };
+
+  const handleVideoCompletion = async () => {
+    await fetchData(updateVideoProgress, {
+      videoId: selectedItem.video.id,
+      isCompleted: true,
+      timeWatched: 0
+    });
+  };
+
+  const handleQuizCompletion = async () => {
+    const quiz_response = await fetchData(getQuiz, {
+      quizId: selectedItem.quiz.id
+    });
+
+    if (quiz_response.data.progress == null) {
+      setShowQuizModal(true);
+      return false;
+    }
+
+    await fetchData(updateQuizProgress, {
+      quizId: selectedItem.quiz.id,
+      isCompleted: true,
+      score: quiz_response.data.progress.QuizProgress.score
+    });
+
+    return true;
+  };
+
+  const checkCourseCompletion = async () => {
+    const continueResponse = await fetchData(getContinueCourse, {
+      courseId
+    });
+
+    if (continueResponse.success && continueResponse.data) {
+      const progress = continueResponse.data.progress;
+      const isCompleted = !progress.nextMilestone;
+
+      if (isCompleted) {
+        setShowCompletionModal(true);
       }
     }
   };
@@ -318,45 +382,19 @@ export default function CoursePage() {
     try {
       if (isCourseCompleted) {
         navigateToNextItem();
-      } else {
-        if (selectedItem.video) {
-          await fetchData(updateVideoProgress, {
-            videoId: selectedItem.video.id,
-            isCompleted: true,
-            timeWatched: 0
-          });
-        } else if (selectedItem.quiz) {
-          const quiz_response = await fetchData(getQuiz, {
-            quizId: selectedItem.quiz.id
-          });
-          if (quiz_response.data.progress == null) {
-            setShowQuizModal(true);
-            return;
-          } else if (quiz_response.data.progress !== null) {
-            await fetchData(updateQuizProgress, {
-              quizId: selectedItem.quiz.id,
-              isCompleted: true,
-              score: quiz_response.data.progress.QuizProgress.score
-            });
-          }
-        }
+        return;
+      }
 
-        const continueResponse = await fetchData(getContinueCourse, {
-          courseId
-        });
+      let shouldContinue = true;
 
-        if (continueResponse.success && continueResponse.data) {
-          const progress = continueResponse.data.progress;
-          const isCompleted = !progress.nextMilestone;
+      if (selectedItem.video) {
+        await handleVideoCompletion();
+      } else if (selectedItem.quiz) {
+        shouldContinue = await handleQuizCompletion();
+      }
 
-          if (isCompleted) {
-            <CourseCompletionModal
-              showModal={true}
-              onClose={() => setIsCourseCompleted(true)}
-            />;
-          }
-        }
-
+      if (shouldContinue) {
+        await checkCourseCompletion();
         fetchCourseData();
       }
     } catch (error) {
