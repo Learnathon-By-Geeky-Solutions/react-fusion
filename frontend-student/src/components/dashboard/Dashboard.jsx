@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useApi from '@/src/hooks/useApi';
 import { getDashboard, getSingleCourse } from '@/src/services/dashboard';
 import { profile } from '@/src/services/profile';
+import PropTypes from 'prop-types';
 import DashboardSummary from './DashboardSummary';
 import ProgressStats from './ProgressStats';
 import ProgressCharts from './ProgressCharts';
@@ -18,6 +18,10 @@ function LoadingSpinner({ message = 'Loading...' }) {
     </div>
   );
 }
+
+LoadingSpinner.propTypes = {
+  message: PropTypes.string
+};
 
 export default function Dashboard() {
   const [courses, setCourses] = useState([]);
@@ -41,7 +45,6 @@ export default function Dashboard() {
   });
   const { fetchData } = useApi();
   const fetchInitiated = useRef(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (fetchInitiated.current) return;

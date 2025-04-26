@@ -1,36 +1,57 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import PropTypes from 'prop-types';
 
 export default function ProgressCharts({ totalStats }) {
   const videoProgressData = [
-    { name: 'Completed', value: totalStats.completedVideos },
+    {
+      name: 'Completed',
+      value: totalStats.completedVideos,
+      id: 'completed-videos'
+    },
     {
       name: 'Remaining',
-      value: totalStats.totalVideos - totalStats.completedVideos
+      value: totalStats.totalVideos - totalStats.completedVideos,
+      id: 'remaining-videos'
     }
   ];
 
   const quizProgressData = [
-    { name: 'Completed', value: totalStats.completedQuizzes },
+    {
+      name: 'Completed',
+      value: totalStats.completedQuizzes,
+      id: 'completed-quizzes'
+    },
     {
       name: 'Remaining',
-      value: totalStats.totalQuizzes - totalStats.completedQuizzes
+      value: totalStats.totalQuizzes - totalStats.completedQuizzes,
+      id: 'remaining-quizzes'
     }
   ];
 
   const moduleProgressData = [
-    { name: 'Completed', value: totalStats.completedModules },
+    {
+      name: 'Completed',
+      value: totalStats.completedModules,
+      id: 'completed-modules'
+    },
     {
       name: 'Remaining',
-      value: totalStats.totalModules - totalStats.completedModules
+      value: totalStats.totalModules - totalStats.completedModules,
+      id: 'remaining-modules'
     }
   ];
 
   const milestoneProgressData = [
-    { name: 'Completed', value: totalStats.completedMilestones },
+    {
+      name: 'Completed',
+      value: totalStats.completedMilestones,
+      id: 'completed-milestones'
+    },
     {
       name: 'Remaining',
-      value: totalStats.totalMilestones - totalStats.completedMilestones
+      value: totalStats.totalMilestones - totalStats.completedMilestones,
+      id: 'remaining-milestones'
     }
   ];
 
@@ -59,10 +80,12 @@ export default function ProgressCharts({ totalStats }) {
                     paddingAngle={5}
                     dataKey='value'
                   >
-                    {videoProgressData.map((entry, index) => (
+                    {videoProgressData.map((entry) => (
                       <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
+                        key={entry.id}
+                        fill={
+                          entry.name === 'Completed' ? COLORS[0] : COLORS[1]
+                        }
                       />
                     ))}
                   </Pie>
@@ -98,10 +121,12 @@ export default function ProgressCharts({ totalStats }) {
                     paddingAngle={5}
                     dataKey='value'
                   >
-                    {quizProgressData.map((entry, index) => (
+                    {quizProgressData.map((entry) => (
                       <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
+                        key={entry.id}
+                        fill={
+                          entry.name === 'Completed' ? COLORS[0] : COLORS[1]
+                        }
                       />
                     ))}
                   </Pie>
@@ -144,10 +169,12 @@ export default function ProgressCharts({ totalStats }) {
                     paddingAngle={5}
                     dataKey='value'
                   >
-                    {moduleProgressData.map((entry, index) => (
+                    {moduleProgressData.map((entry) => (
                       <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
+                        key={entry.id}
+                        fill={
+                          entry.name === 'Completed' ? COLORS[0] : COLORS[1]
+                        }
                       />
                     ))}
                   </Pie>
@@ -183,10 +210,12 @@ export default function ProgressCharts({ totalStats }) {
                     paddingAngle={5}
                     dataKey='value'
                   >
-                    {milestoneProgressData.map((entry, index) => (
+                    {milestoneProgressData.map((entry) => (
                       <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
+                        key={entry.id}
+                        fill={
+                          entry.name === 'Completed' ? COLORS[0] : COLORS[1]
+                        }
                       />
                     ))}
                   </Pie>
@@ -211,3 +240,16 @@ export default function ProgressCharts({ totalStats }) {
     </div>
   );
 }
+
+ProgressCharts.propTypes = {
+  totalStats: PropTypes.shape({
+    completedVideos: PropTypes.number.isRequired,
+    totalVideos: PropTypes.number.isRequired,
+    completedQuizzes: PropTypes.number.isRequired,
+    totalQuizzes: PropTypes.number.isRequired,
+    completedModules: PropTypes.number.isRequired,
+    totalModules: PropTypes.number.isRequired,
+    completedMilestones: PropTypes.number.isRequired,
+    totalMilestones: PropTypes.number.isRequired
+  }).isRequired
+};

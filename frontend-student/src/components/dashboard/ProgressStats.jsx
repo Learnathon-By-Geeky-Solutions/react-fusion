@@ -1,6 +1,7 @@
 import React from 'react';
 import { BookOpen, Clock, CheckCircle, Award } from 'lucide-react';
 import { formatTime } from '@/src/utils/formatters';
+import PropTypes from 'prop-types';
 
 export default function ProgressStats({ totalStats }) {
   return (
@@ -62,3 +63,9 @@ export default function ProgressStats({ totalStats }) {
     </div>
   );
 }
+
+ProgressStats.propTypes = {
+  totalStats: PropTypes.shape({
+    completedVideos: PropTypes.number.isRequired
+  }).isRequired
+};
