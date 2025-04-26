@@ -51,21 +51,17 @@ export default function Dashboard() {
         setIsLoading(true);
         fetchInitiated.current = true;
 
-        // Fetch profile data
         const profileResponse = await fetchData(profile, {});
         if (profileResponse.success) {
           setProfileData(profileResponse.data);
         }
 
-        // Fetch enrolled courses from dashboard
         const dashboardResponse = await fetchData(getDashboard, {});
 
         if (dashboardResponse.success) {
           const enrolledCourses =
             dashboardResponse?.data?.enrolledCourses || [];
           setCourses(enrolledCourses);
-
-          // Fetch detailed data for each course
 
           const detailedCoursesPromises = enrolledCourses.map((course) =>
             fetchData(getSingleCourse, { data: course.courseId })
@@ -81,7 +77,6 @@ export default function Dashboard() {
 
           setDetailedCourses(detailedCoursesData);
 
-          // Calculate statistics across all courses
           const stats = detailedCoursesData.reduce(
             (acc, courseData) => {
               const summary = courseData.summary || {};
@@ -124,12 +119,15 @@ export default function Dashboard() {
           );
 
           setTotalStats(stats);
+          console.log('Stats:', stats);
 
-          // Calculate overall progress
-          const progress =
-            stats.totalModules > 0
-              ? (stats.completedModules / stats.totalModules) * 100
-              : 0;
+          let progress = 0;
+          if (stats.totalVideos > 0) {
+            const totalItem = stats.totalVideos + stats.totalQuizzes;
+            const completedItem =
+              stats.completedVideos + stats.completedQuizzes;
+            progress = (completedItem / totalItem) * 100;
+          }
 
           setOverallProgress(progress);
         }
