@@ -186,6 +186,10 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 
 	})
 
+	if(!payload.isCompleted) {
+		return result;
+	}
+
 	const lastItem = await prisma.moduleItem.findFirst({
 		where: {
 			moduleId: quiz?.moduleItem?.moduleId
@@ -199,6 +203,7 @@ const updateQuiz = async (user: JwtPayload, payload: IQuizUpdate) => {
 			isCompleted: true,
 		})
 	}
+	
 	return result
 }
 
@@ -233,6 +238,7 @@ const updateModule = async (user: JwtPayload, payload: IModuleUpdate) => {
 		}
 
 	})
+
 	const completeModuleItems = await prisma.moduleItem.count({
 		where: {
 			moduleId: payload.moduleId,
