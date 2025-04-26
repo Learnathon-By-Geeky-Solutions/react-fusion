@@ -99,6 +99,15 @@ export default function QuizSection(quizId) {
     return correctQuestion && correctQuestion.answer === optionText;
   };
 
+  const handleOptionKeyDown = (e, questionId, optionText) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (!quizResults) {
+        handleOptionSelect(questionId, optionText);
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className='bg-white rounded-lg shadow-md p-6'>
@@ -148,13 +157,22 @@ export default function QuizSection(quizId) {
                   return (
                     <div
                       key={`option-${questionItem.id}-${optIndex}`}
-                      className={`flex items-center p-3 border border-gray-200 rounded-md hover:border-blue-300 transition cursor-pointer ${
+                      className={`flex items-center p-3 border border-gray-200 rounded-md hover:border-blue-300 transition ${
                         quizResults && isCorrect ? 'bg-green-100' : 'bg-white'
                       }`}
                       onClick={() =>
                         !quizResults &&
-                        handleOptionSelect(questionItem.id, optionText)
+                        handleOptionSelect(questionId, optionText)
                       }
+                      role='radio'
+                      aria-checked={
+                        selectedAnswers[questionItem.id] === optionText
+                      }
+                      tabIndex={!quizResults ? 0 : -1}
+                      onKeyDown={(e) =>
+                        handleOptionKeyDown(e, questionItem.id, optionText)
+                      }
+                      aria-disabled={!!quizResults}
                     >
                       <div
                         className={`w-6 h-6 flex items-center justify-center mr-3 border-2 ${selectedAnswers[questionItem.id] === optionText ? 'border-blue-500 bg-blue-500' : 'border-gray-300'} rounded-full`}
