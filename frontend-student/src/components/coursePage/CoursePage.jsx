@@ -47,19 +47,16 @@ export default function CoursePage() {
         const continueResponse = await fetchData(getContinueCourse, {
           courseId
         });
-        console.log('Continue Response:', continueResponse);
 
         if (continueResponse.success && continueResponse.data) {
           const progress = continueResponse.data.progress;
 
           setCourseProgress(progress);
 
-          // Check if course is completed
           const isCompleted = !progress.nextMilestone;
 
           setIsCourseCompleted(isCompleted);
 
-          // Handle case where all modules are completed (nextMilestone, nextModule, nextContent all null)
           if (isCompleted) {
             const lastMilestone =
               response.data.milestones[response.data.milestones.length - 1];
@@ -68,7 +65,6 @@ export default function CoursePage() {
             const lastItem =
               lastModule.moduleItems[lastModule.moduleItems.length - 1];
 
-            // Open all milestones and modules since everything is completed
             const allMilestonesOpen = {};
             const allModulesOpen = {};
 
@@ -101,13 +97,11 @@ export default function CoursePage() {
               firstLockedItemId: null
             });
 
-            // Find the milestone and module to resume from
             const milestoneIndex = response.data.milestones.findIndex(
               (m) => m.id === progress.nextMilestone
             );
 
             if (milestoneIndex !== -1) {
-              // Open this milestone in the sidebar
               setOpenMilestones((prev) => ({
                 ...prev,
                 [progress.nextMilestone]: true
@@ -239,14 +233,12 @@ export default function CoursePage() {
   };
 
   const navigateToNextItem = () => {
-    // Find the next item in the course structure
     if (!course || !selectedItem) return;
 
     let currentMilestoneIndex = -1;
     let currentModuleIndex = -1;
     let currentItemIndex = -1;
 
-    // Find current position
     for (let i = 0; i < course.milestones.length; i++) {
       const milestone = course.milestones[i];
       for (let j = 0; j < milestone.modules.length; j++) {
@@ -272,12 +264,10 @@ export default function CoursePage() {
       if (currentModuleIndex !== -1) break;
     }
 
-    // Find next item
     if (currentMilestoneIndex !== -1) {
       const milestone = course.milestones[currentMilestoneIndex];
       const module = milestone.modules[currentModuleIndex];
 
-      // Check if there's another item in the same module
       if (currentItemIndex < module.moduleItems.length - 1) {
         const nextItem = module.moduleItems[currentItemIndex + 1];
         setSelectedItem({
@@ -286,9 +276,7 @@ export default function CoursePage() {
           moduleNumber: currentModuleIndex + 1,
           itemNumber: currentItemIndex + 2
         });
-      }
-      // Check if there's another module in the same milestone
-      else if (currentModuleIndex < milestone.modules.length - 1) {
+      } else if (currentModuleIndex < milestone.modules.length - 1) {
         const nextModule = milestone.modules[currentModuleIndex + 1];
         if (nextModule.moduleItems.length > 0) {
           const nextItem = nextModule.moduleItems[0];
@@ -303,9 +291,7 @@ export default function CoursePage() {
             [nextModule.id]: true
           }));
         }
-      }
-      // Check if there's another milestone
-      else if (currentMilestoneIndex < course.milestones.length - 1) {
+      } else if (currentMilestoneIndex < course.milestones.length - 1) {
         const nextMilestone = course.milestones[currentMilestoneIndex + 1];
         if (nextMilestone.modules.length > 0) {
           const nextModule = nextMilestone.modules[0];
@@ -328,7 +314,6 @@ export default function CoursePage() {
           }
         }
       }
-      // If we reach here, we're at the end of the course
     }
   };
 

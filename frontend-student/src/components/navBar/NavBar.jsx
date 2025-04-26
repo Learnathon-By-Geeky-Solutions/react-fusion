@@ -54,7 +54,7 @@ export default function Navbar() {
   const handleLogOut = () => {
     logOutUser();
     setIsMobileMenuOpen(false);
-    setProfileData(null); // Clear profile data on logout
+    setProfileData(null);
     toast.success('User Logged Out');
   };
 

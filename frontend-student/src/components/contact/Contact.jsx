@@ -21,8 +21,6 @@ function ContactUs() {
   });
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    console.log('Form values:', values);
-
     setTimeout(() => {
       setSubmitting(false);
       resetForm();
@@ -32,7 +30,7 @@ function ContactUs() {
 
   return (
     <div className='bg-gray-50 min-h-screen pt-16 pb-12'>
-      <div className='container mx-auto px-4 max-w-6xl'>
+      <div className='container mx-auto max-w-6xl'>
         {/* Page Header */}
         <div className='text-center mb-12'>
           <h1 className='text-3xl md:text-4xl font-bold text-blue-600 mb-2'>

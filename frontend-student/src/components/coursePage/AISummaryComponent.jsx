@@ -79,7 +79,6 @@ export default function AISummaryComponent({ videoId, onSummaryGenerated }) {
     setError('');
 
     try {
-      // First, get the video URL
       const videoResponse = await fetchData(checkVideo, { videoId });
 
       if (!videoResponse.success || !videoResponse.data?.url) {
@@ -90,7 +89,6 @@ export default function AISummaryComponent({ videoId, onSummaryGenerated }) {
       const videoTitle = videoResponse.data.title || 'Video';
       const prompt = generatePrompt(videoUrl, videoTitle);
 
-      // Call Gemini API
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
         {

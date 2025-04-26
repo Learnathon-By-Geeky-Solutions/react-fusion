@@ -119,7 +119,6 @@ export default function Dashboard() {
           );
 
           setTotalStats(stats);
-          console.log('Stats:', stats);
 
           let progress = 0;
           if (stats.totalVideos > 0) {

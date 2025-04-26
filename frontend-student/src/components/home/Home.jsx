@@ -27,7 +27,6 @@ export default function Home() {
     }
   ];
 
-  // Testimonials data
   const testimonials = [
     {
       name: 'Sarah Johnson',
@@ -49,7 +48,6 @@ export default function Home() {
     }
   ];
 
-  // Carousel animation
   useEffect(() => {
     const interval = setInterval(() => {
       if (carouselRef.current) {
@@ -62,7 +60,6 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Feature animation
   useEffect(() => {
     const featureInterval = setInterval(() => {
       setActiveFeature((prev) => (prev + 1) % features.length);

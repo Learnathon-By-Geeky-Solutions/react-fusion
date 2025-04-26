@@ -33,7 +33,6 @@ async function signUpUser(data) {
   });
   const resJson = await res.json();
   if (!resJson.success) {
-    console.log(resJson);
     return resJson;
   }
   //return resJson;

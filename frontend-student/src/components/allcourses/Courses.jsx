@@ -61,12 +61,10 @@ export default function Courses() {
     return thumbnail === 'str' ? noimage : thumbnail;
   };
 
-  // Function to truncate title if it's longer than 40 characters
   const truncateTitle = (title) => {
     return title.length > 40 ? title.substring(0, 40) + '...' : title;
   };
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -244,7 +242,7 @@ export default function Courses() {
   };
 
   return (
-    <div className='bg-gradient-to-b from-gray-50 to-white p-6 max-w-6xl mx-auto mt-20 mb-10'>
+    <div className='bg-gradient-to-b py-6 max-w-6xl mx-auto mt-20 mb-10'>
       <div className='mb-10'>
         <motion.h1
           className='text-4xl md:text-5xl font-bold mb-4 text-gray-900'

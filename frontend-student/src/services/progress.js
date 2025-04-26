@@ -1,7 +1,6 @@
 import { BACKEND } from '../constants';
 
 export async function updateCourseProgress(payload) {
-  console.log('Payload video', payload);
   try {
     const result = await fetch(`${BACKEND}/progress/module`, {
       method: 'POST',
@@ -59,7 +58,6 @@ export async function updateModuleProgress(payload) {
 }
 
 export async function updateQuizProgress(payload) {
-  console.log('Updating quiz progress with payload:', payload);
   try {
     const result = await fetch(`${BACKEND}/progress/quiz`, {
       method: 'POST',
@@ -71,7 +69,6 @@ export async function updateQuizProgress(payload) {
     });
 
     const data = await result.json();
-    console.log('Quiz progress', data);
     return data;
   } catch (error) {
     console.error('Error fetching quiz data:', error);
@@ -80,7 +77,6 @@ export async function updateQuizProgress(payload) {
 }
 
 export async function updateVideoProgress(payload) {
-  console.log('Updating video progress with payload:', payload);
   try {
     const result = await fetch(`${BACKEND}/progress/video`, {
       method: 'POST',
@@ -92,7 +88,6 @@ export async function updateVideoProgress(payload) {
     });
 
     const data = await result.json();
-    console.log('video progress', data);
     return data;
   } catch (error) {
     console.error('Error fetching video data:', error);

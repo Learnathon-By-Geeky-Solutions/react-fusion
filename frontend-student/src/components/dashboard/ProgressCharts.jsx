@@ -2,7 +2,6 @@ import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 export default function ProgressCharts({ totalStats }) {
-  // Data for the progress charts
   const videoProgressData = [
     { name: 'Completed', value: totalStats.completedVideos },
     {

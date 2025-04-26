@@ -21,7 +21,6 @@ export default function VideoSection({ videoId, title }) {
     async function fetchVideoData() {
       try {
         const response = await fetchData(checkVideo, { videoId });
-        // console.log('Video data response:', response);
         if (response.success) {
           setVideoData(response.data);
 

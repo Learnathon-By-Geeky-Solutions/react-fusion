@@ -14,7 +14,6 @@ function Profile() {
       try {
         const data = await fetchData(profile, {});
         setProfileData(data.data);
-        console.log('Profile data:', data.data);
       } catch (err) {
         console.error('Error fetching profile:', err);
         setError('Failed to load profile information. Please try again later.');

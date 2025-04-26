@@ -63,12 +63,6 @@ export default function ModuleItem({
             quizCount++;
           }
 
-          // Determine if the item should be unlocked
-          // It's unlocked if:
-          // 1. It's in a previous milestone compared to current milestone
-          // 2. It's in a previous module within the current milestone
-          // 3. It's in the current module and in the unlockableItems list
-
           const isPreviousMilestone =
             !isCurrentMilestone &&
             mIndex < parseInt(selectedItem?.milestoneNumber || 0) - 1;

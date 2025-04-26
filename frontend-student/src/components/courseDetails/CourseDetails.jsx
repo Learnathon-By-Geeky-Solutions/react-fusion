@@ -22,7 +22,6 @@ export default function CourseDetails() {
     async function fetchCourse() {
       try {
         const response = await fetchData(getSingleCourse, { courseId: id });
-        console.log('Response', response);
         if (response.success) {
           setCourse(response.data);
         }

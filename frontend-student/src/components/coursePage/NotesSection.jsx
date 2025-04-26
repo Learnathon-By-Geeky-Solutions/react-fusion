@@ -113,7 +113,6 @@ export default function NotesSection({ videoId }) {
 
   const handleAISummary = (summaryText) => {
     const currentNoteContent = savedNote?.note || '';
-    // If there's existing content, add the AI summary after it
     const newNoteContent = currentNoteContent
       ? `${currentNoteContent}\n\n${summaryText}`
       : summaryText;

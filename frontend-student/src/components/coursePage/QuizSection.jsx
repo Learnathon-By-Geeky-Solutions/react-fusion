@@ -73,13 +73,12 @@ export default function QuizSection(quizId) {
 
       setSubmitResult(response);
       setQuizResults(response.data);
-      console.log('Quiz submission result:', response);
 
       if (response.success && response.data) {
         try {
           await fetchData(updateQuizProgress, {
             quizId: quizId.quiz,
-            isCompleted: false,
+            isCompleted: true,
             score: response.data.marks
           });
         } catch (error) {

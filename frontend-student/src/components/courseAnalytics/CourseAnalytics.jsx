@@ -39,7 +39,6 @@ export default function CourseAnalytics() {
       try {
         setIsLoading(true);
         const response = await fetchData(getSingleCourse, { data: courseId });
-        console.log('Course Data:', response);
 
         if (response.success) {
           setCourseData(response.data);
@@ -63,7 +62,6 @@ export default function CourseAnalytics() {
   const { courseProgress, summary } = courseData;
   const course = courseProgress?.course || {};
 
-  // Chart data
   const moduleCompletionData = [
     { name: 'Completed', value: summary?.completedModules || 0 },
     {
@@ -90,7 +88,6 @@ export default function CourseAnalytics() {
 
   const COLORS = ['#4ade80', '#e2e8f0'];
 
-  // Calculate percentages
   const modulePercentage =
     summary?.totalModules > 0
       ? Math.round((summary.completedModules / summary.totalModules) * 100)

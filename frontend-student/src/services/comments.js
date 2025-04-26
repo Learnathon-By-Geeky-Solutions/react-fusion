@@ -20,7 +20,6 @@ export async function getComments(payload) {
 }
 
 export async function createComment(payload) {
-  console.log('Payload in createComment:', payload);
   try {
     const result = await fetch(`${BACKEND}/comment/create-comment`, {
       method: 'POST',

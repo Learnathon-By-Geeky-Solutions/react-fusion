@@ -20,12 +20,10 @@ export default function CourseSidebar({
   const [unlockableItems, setUnlockableItems] = useState({});
 
   useEffect(() => {
-    // Only run this effect when resumeData changes
     if (!resumeData.nextMilestoneId || !resumeData.nextModuleId) return;
 
     const loadModuleProgress = async () => {
       try {
-        // Find the milestone and module in the course data
         const milestone = course?.milestones?.find(
           (m) => m.id === resumeData.nextMilestoneId
         );
@@ -37,10 +35,8 @@ export default function CourseSidebar({
         if (!module || !module.moduleItems || module.moduleItems.length === 0)
           return;
 
-        // Get the first item's progress to determine where to start
         const firstItem = module.moduleItems[0];
 
-        // Check progress only for the first item of the module
         let firstItemProgress = null;
 
         if (firstItem.video) {
@@ -55,32 +51,24 @@ export default function CourseSidebar({
           firstItemProgress = quizData?.data?.progress;
         }
 
-        // Build a map of unlockable items
-        // If firstItemProgress is null, it's the first unlocked item
         const unlockable = {};
         let foundFirstLocked = false;
 
-        // First item logic
         if (firstItemProgress === null) {
           setFirstLockedItemId(firstItem.id);
-          unlockable[firstItem.id] = true; // First locked item is unlockable
+          unlockable[firstItem.id] = true;
           foundFirstLocked = true;
         } else {
-          // First item is completed, we need to check forward
           let foundIncompleteItem = false;
 
-          // Map items to be unlockable until we find the first locked item
           for (let i = 0; i < module.moduleItems.length; i++) {
             const item = module.moduleItems[i];
 
-            // If we haven't found an incomplete item yet, this item is unlockable
             if (!foundIncompleteItem) {
               unlockable[item.id] = true;
             }
 
-            // If this is the FIRST incomplete item, we need to mark it as first locked but unlockable
             if (!foundFirstLocked && i > 0) {
-              // We need to check the progress of this item
               let itemProgress = null;
 
               if (item.video) {
