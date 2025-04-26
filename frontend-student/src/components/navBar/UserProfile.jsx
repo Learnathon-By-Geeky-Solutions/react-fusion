@@ -50,7 +50,7 @@ export default function UserProfile({
         )}
         <span className='text-gray-700'>{displayName}</span>
       </button>
-      <div className='absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 z-10'>
+      <div className='absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 z-10'>
         <Link
           to='/profile'
           className='block px-4 py-2 text-gray-700 hover:bg-gray-100'
@@ -66,7 +66,7 @@ export default function UserProfile({
         <hr className='my-1' />
         <button
           onClick={handleLogOut}
-          className='w-full text-left px-4 py-2 text-red-600 hover:bg-red-50'
+          className='w-full px-4 py-2 text-red-600 hover:bg-red-50'
         >
           Log Out
         </button>

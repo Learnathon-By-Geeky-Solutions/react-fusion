@@ -3,9 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getSingleCourse, getContinueCourse } from '@/src/services/course';
 import {
   updateVideoProgress,
-  updateMilestoneProgress,
-  updateModuleProgress,
-  updateCourseProgress
+  updateQuizProgress
 } from '@/src/services/progress';
 import CourseSidebar from './CourseSidebar';
 import useApi from '@/src/hooks/useApi';
@@ -13,7 +11,6 @@ import CourseContent from './CourseContent';
 import CourseCompletionModal from './CourseCompletionModal';
 import QuizCompletionModal from './QuizCompletionModal';
 import { getQuiz } from '@/src/services/quiz';
-import { updateQuizProgress } from '@/src/services/progress';
 
 export default function CoursePage() {
   const { courseId } = useParams();
@@ -27,6 +24,7 @@ export default function CoursePage() {
   const [courseProgress, setCourseProgress] = useState(null);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
+  const [isCourseCompleted, setIsCourseCompleted] = useState(false);
   const [resumeData, setResumeData] = useState({
     nextMilestoneId: null,
     nextModuleId: null,
@@ -56,12 +54,13 @@ export default function CoursePage() {
 
           setCourseProgress(progress);
 
+          // Check if course is completed
+          const isCompleted = !progress.nextMilestone;
+
+          setIsCourseCompleted(isCompleted);
+
           // Handle case where all modules are completed (nextMilestone, nextModule, nextContent all null)
-          if (
-            !progress.nextMilestone &&
-            !progress.nextModule &&
-            !progress.nextModuleItem
-          ) {
+          if (isCompleted) {
             const lastMilestone =
               response.data.milestones[response.data.milestones.length - 1];
             const lastModule =
@@ -239,31 +238,145 @@ export default function CoursePage() {
     setSelectedItem(itemWithNumbers);
   };
 
-  const handleMarkCompletedAndNext = async () => {
-    try {
-      if (selectedItem.video) {
-        await fetchData(updateVideoProgress, {
-          videoId: selectedItem.video.id,
-          isCompleted: true,
-          timeWatched: 0
+  const navigateToNextItem = () => {
+    // Find the next item in the course structure
+    if (!course || !selectedItem) return;
+
+    let currentMilestoneIndex = -1;
+    let currentModuleIndex = -1;
+    let currentItemIndex = -1;
+
+    // Find current position
+    for (let i = 0; i < course.milestones.length; i++) {
+      const milestone = course.milestones[i];
+      for (let j = 0; j < milestone.modules.length; j++) {
+        const module = milestone.modules[j];
+        for (let k = 0; k < module.moduleItems.length; k++) {
+          const item = module.moduleItems[k];
+          if (
+            (selectedItem.video &&
+              item.video &&
+              item.video.id === selectedItem.video.id) ||
+            (selectedItem.quiz &&
+              item.quiz &&
+              item.quiz.id === selectedItem.quiz.id)
+          ) {
+            currentMilestoneIndex = i;
+            currentModuleIndex = j;
+            currentItemIndex = k;
+            break;
+          }
+        }
+        if (currentItemIndex !== -1) break;
+      }
+      if (currentModuleIndex !== -1) break;
+    }
+
+    // Find next item
+    if (currentMilestoneIndex !== -1) {
+      const milestone = course.milestones[currentMilestoneIndex];
+      const module = milestone.modules[currentModuleIndex];
+
+      // Check if there's another item in the same module
+      if (currentItemIndex < module.moduleItems.length - 1) {
+        const nextItem = module.moduleItems[currentItemIndex + 1];
+        setSelectedItem({
+          ...nextItem,
+          milestoneNumber: currentMilestoneIndex + 1,
+          moduleNumber: currentModuleIndex + 1,
+          itemNumber: currentItemIndex + 2
         });
-      } else if (selectedItem.quiz) {
-        const quiz_response = await fetchData(getQuiz, {
-          quizId: selectedItem.quiz.id
-        });
-        if (quiz_response.data.progress == null) {
-          setShowQuizModal(true);
-          return;
-        } else if (quiz_response.data.progress !== null) {
-          await fetchData(updateQuizProgress, {
-            quizId: selectedItem.quiz.id,
-            isCompleted: true,
-            score: quiz_response.data.progress.QuizProgress.score
+      }
+      // Check if there's another module in the same milestone
+      else if (currentModuleIndex < milestone.modules.length - 1) {
+        const nextModule = milestone.modules[currentModuleIndex + 1];
+        if (nextModule.moduleItems.length > 0) {
+          const nextItem = nextModule.moduleItems[0];
+          setSelectedItem({
+            ...nextItem,
+            milestoneNumber: currentMilestoneIndex + 1,
+            moduleNumber: currentModuleIndex + 2,
+            itemNumber: 1
           });
+          setOpenModules((prev) => ({
+            ...prev,
+            [nextModule.id]: true
+          }));
         }
       }
+      // Check if there's another milestone
+      else if (currentMilestoneIndex < course.milestones.length - 1) {
+        const nextMilestone = course.milestones[currentMilestoneIndex + 1];
+        if (nextMilestone.modules.length > 0) {
+          const nextModule = nextMilestone.modules[0];
+          if (nextModule.moduleItems.length > 0) {
+            const nextItem = nextModule.moduleItems[0];
+            setSelectedItem({
+              ...nextItem,
+              milestoneNumber: currentMilestoneIndex + 2,
+              moduleNumber: 1,
+              itemNumber: 1
+            });
+            setOpenMilestones((prev) => ({
+              ...prev,
+              [nextMilestone.id]: true
+            }));
+            setOpenModules((prev) => ({
+              ...prev,
+              [nextModule.id]: true
+            }));
+          }
+        }
+      }
+      // If we reach here, we're at the end of the course
+    }
+  };
 
-      fetchCourseData();
+  const handleMarkCompletedAndNext = async () => {
+    try {
+      if (isCourseCompleted) {
+        navigateToNextItem();
+      } else {
+        if (selectedItem.video) {
+          await fetchData(updateVideoProgress, {
+            videoId: selectedItem.video.id,
+            isCompleted: true,
+            timeWatched: 0
+          });
+        } else if (selectedItem.quiz) {
+          const quiz_response = await fetchData(getQuiz, {
+            quizId: selectedItem.quiz.id
+          });
+          if (quiz_response.data.progress == null) {
+            setShowQuizModal(true);
+            return;
+          } else if (quiz_response.data.progress !== null) {
+            await fetchData(updateQuizProgress, {
+              quizId: selectedItem.quiz.id,
+              isCompleted: true,
+              score: quiz_response.data.progress.QuizProgress.score
+            });
+          }
+        }
+
+        const continueResponse = await fetchData(getContinueCourse, {
+          courseId
+        });
+
+        if (continueResponse.success && continueResponse.data) {
+          const progress = continueResponse.data.progress;
+          const isCompleted = !progress.nextMilestone;
+
+          if (isCompleted) {
+            <CourseCompletionModal
+              showModal={true}
+              onClose={() => setIsCourseCompleted(true)}
+            />;
+          }
+        }
+
+        fetchCourseData();
+      }
     } catch (error) {
       console.error('[CoursePage] Error in handleMarkCompletedAndNext:', error);
     }
@@ -280,6 +393,7 @@ export default function CoursePage() {
           <CourseContent
             selectedItem={selectedItem}
             handleMarkCompletedAndNext={handleMarkCompletedAndNext}
+            isCourseCompleted={isCourseCompleted}
           />
         </div>
 

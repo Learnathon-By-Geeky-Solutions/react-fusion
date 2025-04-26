@@ -6,7 +6,8 @@ import CommentsSection from './CommentsSection';
 
 export default function CourseContent({
   selectedItem,
-  handleMarkCompletedAndNext
+  handleMarkCompletedAndNext,
+  isCourseCompleted
 }) {
   if (!selectedItem) return null;
 
@@ -33,7 +34,7 @@ export default function CourseContent({
               onClick={handleMarkCompletedAndNext}
               className='bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded flex items-center'
             >
-              Mark Completed and Next
+              {isCourseCompleted ? 'Next' : 'Mark Completed and Next'}
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 className='h-5 w-5 ml-2'
@@ -60,7 +61,7 @@ export default function CourseContent({
               onClick={handleMarkCompletedAndNext}
               className='bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded flex items-center'
             >
-              Mark Completed and Next
+              {isCourseCompleted ? 'Next' : 'Mark Completed and Next'}
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 className='h-5 w-5 ml-2'
