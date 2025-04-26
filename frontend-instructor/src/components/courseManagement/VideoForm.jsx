@@ -17,7 +17,7 @@ const VideoForm = ({
   const initialValues = {
     title: videoData?.title || '',
     url: videoData?.url || '',
-    length: videoData?.length || ''
+    length: videoData?.length / 60 || ''
   };
 
   const validationSchema = Yup.object({
@@ -34,7 +34,7 @@ const VideoForm = ({
       const videoParams = {
         title: values.title,
         url: values.url,
-        length: parseInt(values.length, 10)
+        length: parseInt(values.length) * 60
       };
 
       let result;
