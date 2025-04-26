@@ -114,7 +114,10 @@ export default function CourseSidebar({
   }, [resumeData, course]);
 
   return (
-    <div className='bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 overflow-auto max-h-[calc(100vh-180px)]'>
+    <nav
+      className='bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 overflow-auto max-h-[calc(100vh-180px)]'
+      aria-label='Course content navigation'
+    >
       <h2 className='text-lg font-semibold mb-4'>Course Content</h2>
 
       {course.milestones.map((milestone, index) => (
@@ -134,7 +137,7 @@ export default function CourseSidebar({
           unlockableItems={unlockableItems}
         />
       ))}
-    </div>
+    </nav>
   );
 }
 
