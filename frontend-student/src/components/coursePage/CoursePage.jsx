@@ -21,7 +21,6 @@ export default function CoursePage() {
   const [openModules, setOpenModules] = useState({});
   const { fetchData } = useApi();
   const hasFetched = useRef(false);
-  const [courseProgress, setCourseProgress] = useState(null);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [isCourseCompleted, setIsCourseCompleted] = useState(false);
@@ -50,8 +49,6 @@ export default function CoursePage() {
 
         if (continueResponse.success && continueResponse.data) {
           const progress = continueResponse.data.progress;
-
-          setCourseProgress(progress);
 
           const isCompleted = !progress.nextMilestone;
 

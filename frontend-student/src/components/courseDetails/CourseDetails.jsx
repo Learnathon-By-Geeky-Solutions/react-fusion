@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getSingleCourse } from '@/src/services/course';
-import { buyCourse } from '@/src/services/course';
+import { getSingleCourse, buyCourse } from '@/src/services/course';
 import { noimage } from '../../assets';
 import useApi from '@/src/hooks/useApi';
 import { nanoid } from 'nanoid';

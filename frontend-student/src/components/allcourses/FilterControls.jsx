@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 
 const FilterControls = ({
   filterType,
@@ -110,6 +111,13 @@ const FilterControls = ({
       )}
     </div>
   );
+};
+
+FilterControls.propTypes = {
+  filterType: PropTypes.string,
+  filterDirection: PropTypes.oneOf(['asc', 'desc']),
+  onFilterToggle: PropTypes.func.isRequired,
+  onClearFilters: PropTypes.func.isRequired
 };
 
 export default FilterControls;

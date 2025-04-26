@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default function CourseCompletionModal({ showModal, onClose }) {
   if (!showModal) return null;
@@ -55,7 +56,7 @@ export default function CourseCompletionModal({ showModal, onClose }) {
       </div>
 
       {/* CSS for animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes confetti-fall {
           0% {
             transform: translateY(-100%) rotate(0deg);
@@ -130,3 +131,8 @@ export default function CourseCompletionModal({ showModal, onClose }) {
     </div>
   );
 }
+
+CourseCompletionModal.propTypes = {
+  showModal: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired
+};

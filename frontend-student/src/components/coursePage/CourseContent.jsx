@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import VideoSection from './VideoSection';
 import QuizSection from './QuizSection';
 import NotesSection from './NotesSection';
@@ -81,3 +82,20 @@ export default function CourseContent({
     </>
   );
 }
+
+CourseContent.propTypes = {
+  selectedItem: PropTypes.shape({
+    milestoneNumber: PropTypes.number.isRequired,
+    moduleNumber: PropTypes.number.isRequired,
+    itemNumber: PropTypes.number.isRequired,
+    video: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired
+    }),
+    quiz: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    })
+  }),
+  handleMarkCompletedAndNext: PropTypes.func.isRequired,
+  isCourseCompleted: PropTypes.bool.isRequired
+};

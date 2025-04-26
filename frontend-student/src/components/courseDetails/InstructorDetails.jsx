@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default function CourseDetailsSidebar({ course }) {
   if (!course || !course.instructor) {
@@ -43,3 +44,13 @@ export default function CourseDetailsSidebar({ course }) {
     </div>
   );
 }
+
+CourseDetailsSidebar.propTypes = {
+  course: PropTypes.shape({
+    instructor: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      designation: PropTypes.string.isRequired,
+      currentWorkingPlace: PropTypes.string.isRequired
+    }).isRequired
+  })
+};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import useApi from '@/src/hooks/useApi';
 import { checkVideo } from '@/src/services/video';
