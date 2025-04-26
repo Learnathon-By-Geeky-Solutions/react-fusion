@@ -363,7 +363,10 @@ export default function CourseDetails() {
             </h2>
             <div className='space-y-4'>
               {course.milestones?.map((milestone, index) => (
-                <div key={index} className='bg-gray-50 p-4 rounded-lg'>
+                <div
+                  key={`milestone-${milestone._id || index}`}
+                  className='bg-gray-50 p-4 rounded-lg'
+                >
                   <div className='flex items-center mb-2'>
                     <span className='bg-blue-600 text-white px-2 py-1 rounded-full text-sm mr-3'>
                       {index + 1}
@@ -379,7 +382,7 @@ export default function CourseDetails() {
                   <div className='ml-10 grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 text-left'>
                     {milestone.modules?.map((module, moduleIndex) => (
                       <div
-                        key={moduleIndex}
+                        key={`module-${module._id || `${milestone._id}-${moduleIndex}`}`}
                         className='bg-white border border-gray-200 rounded-md p-3'
                       >
                         <p className='font-medium text-gray-800'>
@@ -390,12 +393,11 @@ export default function CourseDetails() {
                         </p>
 
                         <div className='mt-2 space-y-1'>
-                          {module.moduleItems?.map((item, itemIndex) => (
-                            <div
-                              key={itemIndex}
-                              className='flex items-center text-sm text-gray-600 text-left'
-                            >
-                              {item.video ? (
+                          {module.moduleItems?.map((item, itemIndex) => {
+                            let itemContent;
+
+                            if (item.video) {
+                              itemContent = (
                                 <>
                                   <svg
                                     className='w-4 h-4 text-blue-500 mr-2'
@@ -420,7 +422,9 @@ export default function CourseDetails() {
                                     {item.video.title}
                                   </span>
                                 </>
-                              ) : item.quiz ? (
+                              );
+                            } else if (item.quiz) {
+                              itemContent = (
                                 <>
                                   <svg
                                     className='w-4 h-4 text-yellow-500 mr-2'
@@ -437,9 +441,20 @@ export default function CourseDetails() {
                                   </svg>
                                   <span>Quiz {itemIndex + 1}</span>
                                 </>
-                              ) : null}
-                            </div>
-                          ))}
+                              );
+                            } else {
+                              itemContent = null;
+                            }
+
+                            return itemContent ? (
+                              <div
+                                key={`item-${item._id || `${module._id}-${itemIndex}`}`}
+                                className='flex items-center text-sm text-gray-600 text-left'
+                              >
+                                {itemContent}
+                              </div>
+                            ) : null;
+                          })}
                         </div>
                       </div>
                     ))}
