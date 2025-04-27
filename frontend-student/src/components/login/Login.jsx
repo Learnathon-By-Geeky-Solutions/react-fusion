@@ -39,7 +39,7 @@ export default function Login() {
         toast.error(result.message || 'Invalid credentials. Please try again.');
       }
     } catch (error) {
-      toast.error('Something went wrong. Please try again later.');
+      toast.error('Something went wrong. Please try again later.', error);
     } finally {
       setIsLoading(false);
     }
