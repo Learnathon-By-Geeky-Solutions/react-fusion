@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
     <div className='bg-gray-800 text-white py-12'>
       <div className='container mx-auto max-w-6xl'>
-        <div className='grid md:grid-cols-4 gap-8'>
+        <div className='grid md:grid-cols-3 gap-8'>
           <div>
             <h3 className='text-xl font-bold mb-4'>EduNexus</h3>
             <p className='text-gray-300'>
@@ -33,31 +32,11 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className='font-bold mb-4'>Resources</h4>
-            <ul className='space-y-2 text-gray-300'>
-              <li>
-                <a href='#' className='hover:text-white'>
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href='#' className='hover:text-white'>
-                  Help Center
-                </a>
-              </li>
-              <li>
-                <a href='#' className='hover:text-white'>
-                  Tutorials
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
             <h4 className='font-bold mb-4'>Connect</h4>
             <div className='flex space-x-4 justify-center'>
               {/* Facebook */}
               <a
-                href='#'
+                href='https://www.facebook.com/mahfuzsaim9/'
                 className='text-xl hover:text-blue-600'
                 aria-label='Facebook'
               >
@@ -72,7 +51,7 @@ const Footer = () => {
 
               {/* LinkedIn */}
               <a
-                href='#'
+                href='https://www.linkedin.com/in/mahfuz-saim/'
                 className='text-xl hover:text-blue-500'
                 aria-label='LinkedIn'
               >
@@ -87,7 +66,7 @@ const Footer = () => {
 
               {/* Instagram */}
               <a
-                href='#'
+                href='https://www.instagram.com/mahfuz_saim/'
                 className='text-xl hover:text-pink-500'
                 aria-label='Instagram'
               >
@@ -102,7 +81,7 @@ const Footer = () => {
 
               {/* GitHub */}
               <a
-                href='#'
+                href='https://github.com/Learnathon-By-Geeky-Solutions/react-fusion/'
                 className='text-xl hover:text-black'
                 aria-label='GitHub'
               >
