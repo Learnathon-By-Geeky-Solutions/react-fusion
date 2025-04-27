@@ -413,7 +413,7 @@ const AboutUs = () => {
                 </p>
                 <div className='flex space-x-4'>
                   <a
-                    href='#'
+                    href='#team'
                     className='text-gray-400 hover:text-blue-600 transition-colors'
                   >
                     <svg
@@ -426,7 +426,7 @@ const AboutUs = () => {
                     </svg>
                   </a>
                   <a
-                    href='#'
+                    href='#team'
                     className='text-gray-400 hover:text-blue-600 transition-colors'
                   >
                     <svg
@@ -443,7 +443,7 @@ const AboutUs = () => {
                     </svg>
                   </a>
                   <a
-                    href='#'
+                    href='#team'
                     className='text-gray-400 hover:text-blue-600 transition-colors'
                   >
                     <svg
@@ -490,7 +490,7 @@ const AboutUs = () => {
                 </p>
                 <div className='flex space-x-4'>
                   <a
-                    href='#'
+                    href='#team'
                     className='text-gray-400 hover:text-blue-600 transition-colors'
                   >
                     <svg
@@ -503,7 +503,7 @@ const AboutUs = () => {
                     </svg>
                   </a>
                   <a
-                    href='#'
+                    href='#team'
                     className='text-gray-400 hover:text-blue-600 transition-colors'
                   >
                     <svg
@@ -520,7 +520,7 @@ const AboutUs = () => {
                     </svg>
                   </a>
                   <a
-                    href='#'
+                    href='#team'
                     className='text-gray-400 hover:text-blue-600 transition-colors'
                   >
                     <svg
