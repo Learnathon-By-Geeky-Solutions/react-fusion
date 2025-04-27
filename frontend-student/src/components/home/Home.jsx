@@ -8,18 +8,21 @@ export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
   const features = [
     {
+      id: 'feature-1',
       icon: '🎓',
       title: 'Personalized Learning',
       description:
         "AI-powered curriculum that adapts to each student's unique learning style and pace."
     },
     {
+      id: 'feature-2',
       icon: '🌎',
       title: 'Global Classroom',
       description:
         'Connect with students and educators from around the world in real-time collaborative spaces.'
     },
     {
+      id: 'feature-3',
       icon: '📊',
       title: 'Progress Analytics',
       description:
@@ -29,18 +32,21 @@ export default function Home() {
 
   const testimonials = [
     {
+      id: 'testimonial-1',
       name: 'Sarah Johnson',
       role: 'High School Teacher',
       content:
         'EduNexus has transformed my classroom. Students are more engaged and I can track their progress effectively.'
     },
     {
+      id: 'testimonial-2',
       name: 'Michael Chen',
       role: 'University Student',
       content:
         'The collaborative tools helped me connect with study partners worldwide. My grades have improved significantly!'
     },
     {
+      id: 'testimonial-3',
       name: 'Priya Patel',
       role: 'Parent',
       content:
@@ -117,12 +123,16 @@ export default function Home() {
         {/* Image Carousel using Tailwind CSS */}
         <div className='relative w-full h-full overflow-hidden'>
           <div ref={carouselRef} className='flex w-full h-full'>
-            {/* Replace 'image1', 'image2', 'image3' with your actual image imports */}
-            {[image1, image2, image3].map((img, index) => (
-              <div key={index} className='w-full flex-shrink-0'>
+            {/* Using proper unique keys for carousel images */}
+            {[
+              { id: 'carousel-1', src: image1 },
+              { id: 'carousel-2', src: image2 },
+              { id: 'carousel-3', src: image3 }
+            ].map((img) => (
+              <div key={img.id} className='w-full flex-shrink-0'>
                 <img
-                  src={img}
-                  alt={`Education scene ${index + 1}`}
+                  src={img.src}
+                  alt={`Education scene ${img.id}`}
                   className='w-full h-full object-cover'
                 />
               </div>
@@ -212,7 +222,7 @@ export default function Home() {
           <div className='grid md:grid-cols-3 gap-8'>
             {features.map((feature, index) => (
               <motion.div
-                key={index}
+                key={feature.id}
                 className={`p-6 rounded-lg transition-all duration-300 ${
                   activeFeature === index
                     ? 'bg-blue-50 shadow-lg scale-105'
@@ -250,7 +260,7 @@ export default function Home() {
           <div className='grid md:grid-cols-3 gap-8'>
             {testimonials.map((testimonial, index) => (
               <motion.div
-                key={index}
+                key={testimonial.id}
                 className='bg-white p-6 rounded-lg shadow'
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
