@@ -164,7 +164,7 @@ function ContactUs() {
                 <h3 className='font-semibold text-lg mb-4'>Connect With Us</h3>
                 <div className='flex space-x-4 justify-center'>
                   <a
-                    href='#'
+                    href='https://www.facebook.com/mahfuzsaim9/'
                     className='bg-white/20 hover:bg-white/30 rounded-full p-2 transition'
                   >
                     <svg
@@ -181,7 +181,7 @@ function ContactUs() {
                     </svg>
                   </a>
                   <a
-                    href='#'
+                    href='https://www.linkedin.com/in/mahfuz-saim/'
                     className='bg-white/20 hover:bg-white/30 rounded-full p-2 transition'
                   >
                     <svg
@@ -194,7 +194,7 @@ function ContactUs() {
                     </svg>
                   </a>
                   <a
-                    href='#'
+                    href='instagram.com/mahfuz_saim'
                     className='bg-white/20 hover:bg-white/30 rounded-full p-2 transition'
                   >
                     <svg
