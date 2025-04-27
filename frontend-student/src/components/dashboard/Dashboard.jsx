@@ -24,7 +24,6 @@ LoadingSpinner.propTypes = {
 };
 
 export default function Dashboard() {
-  const [courses, setCourses] = useState([]);
   const [detailedCourses, setDetailedCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [overallProgress, setOverallProgress] = useState(0);
@@ -64,7 +63,6 @@ export default function Dashboard() {
         if (dashboardResponse.success) {
           const enrolledCourses =
             dashboardResponse?.data?.enrolledCourses || [];
-          setCourses(enrolledCourses);
 
           const detailedCoursesPromises = enrolledCourses.map((course) =>
             fetchData(getSingleCourse, { data: course.courseId })
