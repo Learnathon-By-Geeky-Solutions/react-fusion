@@ -96,7 +96,7 @@ const getAllCourses = async (payload: any, user: null | JwtPayload) => {
     ] as any
     if (payload?.sortBy) {
         const sortingEntries = Object.entries(payload.sortBy);
-        sortingEntries.map(([key, value]) => (sortBy.push({ [key]: value })))
+        sortingEntries.forEach(([key, value]) => (sortBy.push({ [key]: value })))
     }
 
     const enrollFilter = user && (payload.filters?.enrolled === true ? {
