@@ -6,6 +6,10 @@ on:
       - main
     types: [reopened, synchronize, opened]
 
+  push:
+    branches:
+      - main
+
 permissions:
   contents: read
   id-token: write
