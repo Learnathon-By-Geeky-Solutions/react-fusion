@@ -185,7 +185,7 @@ export default function CourseDashboard() {
                     </div>
                     <div>
                       <div className='text-sm font-medium text-gray-500'>
-                        Total Students
+                        Total Enrollments
                       </div>
                       <div className='text-3xl font-bold text-gray-900'>
                         {profile?.totalStudents || 0}
