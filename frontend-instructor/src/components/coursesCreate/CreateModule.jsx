@@ -4,7 +4,7 @@ import useApi from '@/src/hooks/useApi';
 import { checkMilestone } from '@/src/services/milestone';
 import { checkModule, deleteModule } from '@/src/services/module';
 import { getCourseById } from '@/src/services/course';
-import ModuleForm from '../CourseManagement/ModuleForm';
+import ModuleForm from '../courseManagement/ModuleForm';
 
 const CreateModule = () => {
   const { milestoneId } = useParams();
