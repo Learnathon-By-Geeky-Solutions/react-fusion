@@ -16,6 +16,7 @@ export default function EnrolledCourses() {
     async function fetchCourses() {
       try {
         const data = await fetchData(getEnrolledCourses, {});
+        console.log('Enrolled courses:', data.data);
         setCourses(data.data);
       } catch (err) {
         console.error('Error fetching enrolled courses:', err);
