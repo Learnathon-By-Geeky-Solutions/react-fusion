@@ -172,7 +172,7 @@ export default function Home() {
                 About Us
               </button>
             </motion.div>
-            <motion.div
+            {/* <motion.div
               className='md:w-1/2 bg-blue-600 rounded-lg p-6 text-white'
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -192,7 +192,7 @@ export default function Home() {
                 dedicated to revolutionizing how we learn and teach in the
                 digital age.
               </p>
-            </motion.div>
+            </motion.div> */}
           </div>
         </div>
       </section>

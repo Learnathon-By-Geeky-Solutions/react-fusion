@@ -385,7 +385,7 @@ const AboutUs = () => {
             </p>
           </motion.div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-16 max-w-5xl mx-auto'>
+          <div className='grid grid-cols-1 md:grid-cols-1 gap-16 max-w-5xl mx-auto'>
             <motion.div
               className='bg-white rounded-xl overflow-hidden shadow-lg'
               initial={{ opacity: 0, x: -50 }}
@@ -401,15 +401,17 @@ const AboutUs = () => {
                 />
               </div>
               <div className='p-8'>
-                <h3 className='text-2xl font-bold mb-2 text-gray-900'>Saim</h3>
+                <h3 className='text-2xl font-bold mb-2 text-gray-900'>Mahfuz Saim</h3>
                 <p className='text-blue-600 font-medium mb-4'>
-                  Frontend Developer & UX Specialist
+                  Full Stack Developer
                 </p>
+                
                 <p className='text-gray-600 mb-6'>
-                  With a passion for creating intuitive and engaging user
-                  experiences, Saim leads our frontend development team. His
-                  expertise in modern web technologies ensures that EduNexus
-                  offers a seamless, accessible interface for all learners.
+                  With a passion for creating comprehensive digital solutions,
+                  Saim has gained expertise as a full stack MERN developer. His
+                  expertise spans both frontend and backend technologies, ensuring
+                  that EduNexus delivers a seamless, scalable, and robust learning
+                  platform for all users.
                 </p>
                 <div className='flex space-x-4'>
                   <a
@@ -463,7 +465,7 @@ const AboutUs = () => {
               </div>
             </motion.div>
 
-            <motion.div
+            {/* <motion.div
               className='bg-white rounded-xl overflow-hidden shadow-lg'
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -538,7 +540,7 @@ const AboutUs = () => {
                   </a>
                 </div>
               </div>
-            </motion.div>
+            </motion.div> */}
           </div>
         </div>
       </section>
